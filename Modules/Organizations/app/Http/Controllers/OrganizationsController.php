@@ -3,54 +3,65 @@
 namespace Modules\Organizations\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\OrganizationRequest;
+use App\Http\Resources\OrganizationResource;
+use Modules\Organizations\Models\Organization;
 
 class OrganizationsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of organizations.
+     *
+     * Returns all organizations in the system as a JSON collection.
      */
     public function index()
     {
-        return view('organizations::index');
+        return OrganizationResource::collection(Organization::all());
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created organization.
+     *
+     * Uses OrganizationRequest for validation and creates a new record.
      */
-    public function create()
+    public function store(OrganizationRequest $request)
     {
-        return view('organizations::create');
+        $organization = Organization::create($request->validated());
+        return new OrganizationResource($organization);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Display the specified organization.
+     *
+     * Returns a single organization by its ID.
      */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function show(Organization $organization)
     {
-        return view('organizations::show');
+        return new OrganizationResource($organization);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified organization.
+     *
+     * Uses OrganizationRequest for validation and updates the record.
      */
-    public function edit($id)
+    public function update(OrganizationRequest $request, Organization $organization)
     {
-        return view('organizations::edit');
+        $organization->update($request->validated());
+        return new OrganizationResource($organization);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Remove the specified organization.
+     *
+     * Deletes the organization record from the database.
      */
-    public function update(Request $request, $id) {}
+    public function destroy(Organization $organization)
+    {
+        $organization->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
+        return response()->json([
+            'message' => 'Organization deleted successfully.'
+        ], 200);
+    }
 }

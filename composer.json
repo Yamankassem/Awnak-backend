@@ -25,14 +25,20 @@
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5.3"
+        "phpunit/phpunit": "^11.5"
     },
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/",
-            "Modules\\": "Modules/"
+             "Database\\Factories\\": "database/factories/",
+             "Database\\Seeders\\": "database/seeders/",
+             "Modules\\Organizations\\": "Modules/Organizations/app/",
+             "Modules\\Volunteers\\": "Modules/Volunteers/app/",
+              "Modules\\Documents\\": "Modules/Documents/app/",
+               "Modules\\Auth\\": "Modules/Auth/app/",
+               "Modules\\Communication\\": "Modules/Communication/app/",
+                "Modules\\Core\\": "Modules/Core/app/",
+            "Modules\\Evaluations\\": "Modules/Evaluations/app/"
         },
         "classmap": [
         "Modules/Core/app/Providers",
