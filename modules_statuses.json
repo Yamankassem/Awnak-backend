@@ -1,0 +1,10 @@
+{
+    "Core": true,
+    "Auth": true,
+    "Volunteers": true,
+    "Organizations": true,
+    "Applications": true,
+    "Evaluations": true,
+    "Communication": true,
+    "Documents": true
+}

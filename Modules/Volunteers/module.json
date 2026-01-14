@@ -1,0 +1,11 @@
+{
+    "name": "Volunteers",
+    "alias": "volunteers",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Volunteers\\Providers\\VolunteersServiceProvider"
+    ],
+    "files": []
+}
