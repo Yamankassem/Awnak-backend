@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Modules\Organizations\Models\Organization;
 
+
 class OrganizationTest extends TestCase
 {
     use RefreshDatabase;
@@ -25,7 +26,7 @@ class OrganizationTest extends TestCase
     {
         $this->actingAs(User::factory()->create(), 'sanctum');
 
-        $response = $this->postJson('/api/v1/organizations', [
+        $response = $this->postJson('/api/organizations', [
             'license_number' => 'ABC123',
             'type' => 'NGO',
             'bio' => 'Non-profit organization focused on education',
@@ -59,7 +60,7 @@ class OrganizationTest extends TestCase
     {
         $this->actingAs(User::factory()->create(), 'sanctum');
 
-        $response = $this->getJson('/api/v1/organizations/999');
+        $response = $this->getJson('/api/organizations/999');
         $response->assertStatus(404);
     }
 }

@@ -2,10 +2,12 @@
 
 namespace Modules\Organizations\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\OrganizationRequest;
-use App\Http\Resources\OrganizationResource;
+
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Modules\Organizations\Http\Requests\OrganizationRequest;
 use Modules\Organizations\Models\Organization;
+use Modules\Organizations\Transformers\OrganizationResource;
 
 class OrganizationsController extends Controller
 {
