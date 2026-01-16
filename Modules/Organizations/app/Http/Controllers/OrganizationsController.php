@@ -2,29 +2,30 @@
 
 namespace Modules\Organizations\Http\Controllers;
 
-
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Modules\Organizations\Http\Requests\OrganizationRequest;
 use Modules\Organizations\Models\Organization;
-use Modules\Organizations\Transformers\OrganizationResource;
+use Modules\Organizations\Http\Requests\OrganizationRequest;
+use Modules\Organizations\Transformers\OrganizationResource; 
+use Illuminate\Routing\Controller;
 
 class OrganizationsController extends Controller
 {
     /**
      * Display a listing of organizations.
      *
-     * Returns all organizations in the system as a JSON collection.
+     * Retrieves all organizations from the database
+     * and returns them transformed into a consistent JSON format.
      */
     public function index()
     {
-        return OrganizationResource::collection(Organization::all());
+        $organizations = Organization::all();
+        return OrganizationResource::collection($organizations);
     }
 
     /**
      * Store a newly created organization.
      *
-     * Uses OrganizationRequest for validation and creates a new record.
+     * Validates the request using OrganizationRequest,
+     * creates a new organization record, and returns it transformed.
      */
     public function store(OrganizationRequest $request)
     {
@@ -33,9 +34,9 @@ class OrganizationsController extends Controller
     }
 
     /**
-     * Display the specified organization.
+     * Display a single organization.
      *
-     * Returns a single organization by its ID.
+     * Returns the specified organization transformed into JSON format.
      */
     public function show(Organization $organization)
     {
@@ -43,9 +44,10 @@ class OrganizationsController extends Controller
     }
 
     /**
-     * Update the specified organization.
+     * Update an existing organization.
      *
-     * Uses OrganizationRequest for validation and updates the record.
+     * Validates the request, updates the organization record,
+     * and returns the updated organization transformed.
      */
     public function update(OrganizationRequest $request, Organization $organization)
     {
@@ -54,16 +56,14 @@ class OrganizationsController extends Controller
     }
 
     /**
-     * Remove the specified organization.
+     * Remove an organization.
      *
-     * Deletes the organization record from the database.
+     * Deletes the specified organization record from the database
+     * and returns a 204 No Content response.
      */
     public function destroy(Organization $organization)
     {
         $organization->delete();
-
-        return response()->json([
-            'message' => 'Organization deleted successfully.'
-        ], 200);
+        return response()->json(null, 204);
     }
 }
