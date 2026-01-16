@@ -20,7 +20,7 @@ public function up(): void
         $table->unsignedBigInteger('documentable_id'); 
         $table->string('documentable_type'); 
 
-        $table->unsignedBigInteger('uploaded_by'); // 
+        $table->unsignedBigInteger('uploaded_by'); // user who uploaded the document
         $table->timestamps();
     });
         
