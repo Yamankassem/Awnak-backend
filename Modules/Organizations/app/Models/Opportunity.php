@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Organizations\Models\Organization;
 
+use Modules\Organizations\Database\Factories\OpportunityFactory;
+
+
 /**
  * Model: Opportunity
  *
@@ -16,6 +19,8 @@ use Modules\Organizations\Models\Organization;
 class Opportunity extends Model
 {
     use HasFactory;
+    protected static function newFactory()
+    { return OpportunityFactory::new(); }
 
     /**
      * The attributes that are mass assignable.

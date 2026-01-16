@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Modules\Organizations\Models\Organization;
 
 
 class OrganizationTest extends TestCase
@@ -34,15 +33,18 @@ class OrganizationTest extends TestCase
         ]);
 
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'id',
-                     'license_number',
-                     'type',
-                     'bio',
-                     'website',
-                     'created_at',
-                     'updated_at',
-                 ]);
+         ->assertJsonStructure([
+             'data' => [
+                 'id',
+                 'license_number',
+                 'type',
+                 'bio',
+                 'website',
+                 'created_at',
+                 'updated_at',
+             ]
+         ]);
+
 
         $this->assertDatabaseHas('organizations', [
             'license_number' => 'ABC123',

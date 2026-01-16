@@ -5,9 +5,13 @@ namespace Modules\Organizations\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use Modules\Organizations\Database\Factories\DocumentFactory;
 class Document extends Model
 {
     use HasFactory;
+
+    protected static function newFactory()
+    { return DocumentFactory::new(); }
 
     /**
      * The attributes that are mass assignable.

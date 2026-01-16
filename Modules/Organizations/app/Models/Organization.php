@@ -6,12 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Modules\Organizations\Database\Factories\OrganizationFactory;
 
+ use Modules\Organizations\Database\Factories\OrganizationFactory;
 class Organization extends Model
 {
+
     use HasFactory;
+
+    protected static function newFactory() { return OrganizationFactory::new(); }
     /** * The table associated with the model. * * This model represents the 'organizations' table in the database.
     */
     protected $table = 'organizations';
+
     /** * The attributes that are mass assignable.
      * * * These fields can be filled directly when creating or updating an organization.
      * * - license_number: Unique license number of the organization *

@@ -4,6 +4,7 @@ namespace Modules\Organizations\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Organizations\Http\Requests\DocumentRequest;
 use Modules\Organizations\Models\Document;
 use Modules\Organizations\Http\Resources\DocumentResource;
 
@@ -28,7 +29,7 @@ class DocumentController extends Controller
      * @param int $opportunityId
      * @return DocumentResource
      */
-    public function store(Request $request, $opportunityId)
+    public function store(DocumentRequest $request, $opportunityId)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',

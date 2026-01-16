@@ -40,6 +40,7 @@ class OpportunityController extends Controller
     {
         // Create opportunity using validated request data
         $opportunity = Opportunity::create($request->validated());
+        $opportunity->load('organization');
         // Return the newly created opportunity wrapped in a resource
         return new OpportunityResource($opportunity);
     }
