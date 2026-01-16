@@ -10,7 +10,7 @@ class OpportunitySkill extends Model
 
     protected $fillable = [
         'opportunity_id',
-        'skill_id',
+     //   'skill_id',
     ];
 
     public function opportunity()
