@@ -48,12 +48,12 @@ class OpportunityController extends Controller
      */
     public function store(OpportunityRequest $request)
     {
-         dd($request);
         // Create opportunity using validated request data via the service
         $opportunity = $this->opportunityService->create($request->validated());
 
         // Ensure organization relation is loaded
         $opportunity->load('organization');
+
         // Return the newly created opportunity wrapped in a resource
         return new OpportunityResource($opportunity);
     }

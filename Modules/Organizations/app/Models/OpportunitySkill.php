@@ -33,4 +33,5 @@ class OpportunitySkill extends Model
     // {
     //     return $this->belongsTo(Skill::class);
     // }
+
 }

@@ -22,8 +22,18 @@ class OpportunityService
      */
     public function create(array $data): Opportunity
     {
-        return Opportunity::create($data);
+        $opportunity = Opportunity::create($data);
+
+        // هون اذا مبعوتة المهارة ضيفها
+        if (!empty($data['skills'])) {
+            foreach ($data['skills'] as $skillData) {
+                $opportunity->skills()->create($skillData);
+            }
+        }
+
+        return $opportunity;
     }
+
 
 
     /**

@@ -36,9 +36,10 @@ class OpportunitySkillController extends Controller
      */
     public function index()
     {
-      $skills = OpportunitySkill::all();
-       return OpportunitySkillResource::collection($skills);
+        $skills = OpportunitySkill::with('opportunity.organization')->get();
+        return OpportunitySkillResource::collection($skills);
     }
+
 
     /**
      * Attach new skills to an opportunity using the service.

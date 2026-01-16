@@ -12,23 +12,17 @@ use Modules\Organizations\Transformers\OrganizationResource as ResourcesOrganiza
  */
 class OpportunityResource extends JsonResource
 {
-    public function toArray($request): array
+    public function toArray($request)
     {
         return [
-            'id'           => $this->id,
-            'title'        => $this->title,
-            'description'  => $this->description,
-            'type'         => $this->type,
-            'start_date'   => $this->start_date,
-            'end_date'     => $this->end_date,
-
-            'organization' => $this->when(
-                $this->relationLoaded('organization'),
-                fn () => new ResourcesOrganizationResource($this->organization)
-            ),
-
-            'created_at'   => optional($this->created_at)->toDateTimeString(),
-            'updated_at'   => optional($this->updated_at)->toDateTimeString(),
+            'id'            => $this->id,
+            'title'         => $this->title,
+            'description'   => $this->description,
+            'type'          => $this->type,
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,
+            'organization'  => new OrganizationResource($this->whenLoaded('organization')),
+            'skills'        => OpportunitySkillResource::collection($this->whenLoaded('skills')),
         ];
     }
 }

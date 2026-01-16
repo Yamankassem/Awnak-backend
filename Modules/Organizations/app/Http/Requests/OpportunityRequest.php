@@ -28,12 +28,14 @@ class OpportunityRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
             'title'          => 'required|string|max:255', // Opportunity title must be provided
             'description'    => 'nullable|string',         // Optional description
             'type'           => 'nullable|string|max:100', // Optional type (volunteering, training, job, etc.)
             'start_date'     => 'nullable|date',           // Optional start date
             'end_date'       => 'nullable|date|after_or_equal:start_date', // End date must be after start date
+            'skills'         => 'nullable|array', // Optional
             'organization_id'=> 'required|exists:organizations,id', // Must reference a valid organization
         ];
     }

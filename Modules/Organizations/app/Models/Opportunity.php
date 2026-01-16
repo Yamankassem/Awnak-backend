@@ -45,4 +45,12 @@ class Opportunity extends Model
     {
         return $this->belongsTo(Organization::class);
     }
+
+    /**
+     * Opportunity has many OppottunnitySkill
+     */
+    public function skills()
+     { return $this->hasMany(OpportunitySkill::class); }
+
+     
 }
