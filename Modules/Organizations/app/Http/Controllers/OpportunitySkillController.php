@@ -3,84 +3,91 @@
 namespace Modules\Organizations\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use Modules\Organizations\Models\OpportunitySkill;
+use Modules\Organizations\Models\Opportunity;
 use Modules\Organizations\Http\Requests\OpportunitySkillRequest;
+use Modules\Organizations\Models\OpportunitySkill;
 use Modules\Organizations\Transformers\OpportunitySkillResource;
+use Modules\Organizations\Services\OpportunitySkillService;
 
 /**
  * Controller: OpportunitySkillController
  *
- * Handles CRUD operations for the pivot table "opportunity_skill"
- * which links Opportunities with Skills in a many-to-many relationship.
+ * Handles operations for managing the relationship between Opportunities and Skills.
+ * Delegates business logic (attach, detach, sync) to OpportunitySkillService
+ * for cleaner code and better maintainability.
  */
 class OpportunitySkillController extends Controller
 {
+    protected OpportunitySkillService $opportunitySkillService;
+
     /**
-     * Display a listing of all opportunity-skill records.
+     * Inject the OpportunitySkillService into the controller.
+     */
+    public function __construct(OpportunitySkillService $opportunitySkillService)
+    {
+        $this->opportunitySkillService = $opportunitySkillService;
+    }
+
+    /**
+     * Display all skills linked to a specific opportunity.
      *
+     * @param int $opportunityId
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        // Return all records wrapped in the OpportunitySkillResource
-        return OpportunitySkillResource::collection(OpportunitySkill::all());
+      $skills = OpportunitySkill::all();
+       return OpportunitySkillResource::collection($skills);
     }
 
     /**
-     * Store a newly created opportunity-skill record in storage.
+     * Attach new skills to an opportunity using the service.
      *
-     * @param  OpportunitySkillRequest  $request
-     * @return OpportunitySkillResource
-     */
-    public function store(OpportunitySkillRequest $request)
-    {
-        // Create a new pivot record using validated request data
-        $pivot = OpportunitySkill::create($request->validated());
-
-        // Return the newly created record as a resource
-        return new OpportunitySkillResource($pivot);
-    }
-
-    /**
-     * Display the specified opportunity-skill record.
-     *
-     * @param  OpportunitySkill  $opportunitySkill
-     * @return OpportunitySkillResource
-     */
-    public function show(OpportunitySkill $opportunitySkill)
-    {
-        // Return a single record wrapped in the resource
-        return new OpportunitySkillResource($opportunitySkill);
-    }
-
-    /**
-     * Update the specified opportunity-skill record in storage.
-     *
-     * @param  OpportunitySkillRequest  $request
-     * @param  OpportunitySkill  $opportunitySkill
-     * @return OpportunitySkillResource
-     */
-    public function update(OpportunitySkillRequest $request, OpportunitySkill $opportunitySkill)
-    {
-        // Update the record with validated request data
-        $opportunitySkill->update($request->validated());
-
-        // Return the updated record as a resource
-        return new OpportunitySkillResource($opportunitySkill);
-    }
-
-    /**
-     * Remove the specified opportunity-skill record from storage.
-     *
-     * @param  OpportunitySkill  $opportunitySkill
+     * @param OpportunitySkillRequest $request
+     * @param int $opportunityId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(OpportunitySkill $opportunitySkill)
+    public function store(OpportunitySkillRequest $request, $opportunityId)
     {
-        // Delete the record from the database
-        $opportunitySkill->delete();
+        $opportunity = Opportunity::findOrFail($opportunityId);
 
-        // Return an empty response with 204 No Content status
-        return response()->json(null, 204);
+        // Attach skills to the opportunity
+        $this->opportunitySkillService->attachSkills($opportunity, $request->validated()['skill_ids']);
+
+        return response()->json(['message' => 'Skills attached successfully']);
+    }
+
+    /**
+     * Update skills for an opportunity (sync) using the service.
+     *
+     * @param OpportunitySkillRequest $request
+     * @param int $opportunityId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(OpportunitySkillRequest $request, $opportunityId)
+    {
+        $opportunity = Opportunity::findOrFail($opportunityId);
+
+        // Sync skills for the opportunity
+        $this->opportunitySkillService->syncSkills($opportunity, $request->validated()['skill_ids']);
+
+        return response()->json(['message' => 'Skills synced successfully']);
+    }
+
+    /**
+     * Detach specific skills from an opportunity using the service.
+     *
+     * @param OpportunitySkillRequest $request
+     * @param int $opportunityId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(OpportunitySkillRequest $request, $opportunityId)
+    {
+        $opportunity = Opportunity::findOrFail($opportunityId);
+
+        // Detach skills from the opportunity
+        $this->opportunitySkillService->detachSkills($opportunity, $request->validated()['skill_ids']);
+
+        return response()->json(['message' => 'Skills detached successfully']);
     }
 }

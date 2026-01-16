@@ -2,20 +2,30 @@
 
 namespace Modules\Organizations\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Organizations\Models\Opportunity;
 use Modules\Organizations\Http\Requests\OpportunityRequest;
 use Modules\Organizations\Transformers\OpportunityResource;
+use Modules\Organizations\Services\OpportunityService;
 
 /**
  * Controller: OpportunityController
  *
  * Handles CRUD operations for Opportunity entities.
- * Provides endpoints to list, create, view, update, and delete opportunities.
+ * Delegates business logic to OpportunityService for cleaner code and better maintainability.
  */
 class OpportunityController extends Controller
 {
+    protected OpportunityService $opportunityService;
+
+    /**
+     * Inject the OpportunityService into the controller.
+     */
+    public function __construct(OpportunityService $opportunityService)
+    {
+        $this->opportunityService = $opportunityService;
+    }
+
     /**
      * Display a paginated list of opportunities with their related organization.
      *
@@ -31,15 +41,18 @@ class OpportunityController extends Controller
     }
 
     /**
-     * Store a newly created opportunity in the database.
+     * Store a newly created opportunity using the service.
      *
      * @param OpportunityRequest $request
      * @return OpportunityResource
      */
     public function store(OpportunityRequest $request)
     {
-        // Create opportunity using validated request data
-        $opportunity = Opportunity::create($request->validated());
+         dd($request);
+        // Create opportunity using validated request data via the service
+        $opportunity = $this->opportunityService->create($request->validated());
+
+        // Ensure organization relation is loaded
         $opportunity->load('organization');
         // Return the newly created opportunity wrapped in a resource
         return new OpportunityResource($opportunity);
@@ -61,7 +74,7 @@ class OpportunityController extends Controller
     }
 
     /**
-     * Update an existing opportunity by ID.
+     * Update an existing opportunity using the service.
      *
      * @param OpportunityRequest $request
      * @param int $id
@@ -72,23 +85,29 @@ class OpportunityController extends Controller
         // Find opportunity by ID
         $opportunity = Opportunity::findOrFail($id);
 
-        // Update with validated request data
-        $opportunity->update($request->validated());
+        // Update opportunity using the service with validated request data
+        $opportunity = $this->opportunityService->update($opportunity, $request->validated());
 
-        // Return updated opportunity with its organization
-        return new OpportunityResource($opportunity->load('organization'));
+        // Ensure organization relation is loaded
+        $opportunity->load('organization');
+
+        // Return updated opportunity wrapped in a resource
+        return new OpportunityResource($opportunity);
     }
 
     /**
-     * Remove an opportunity from the database.
+     * Remove an opportunity using the service.
      *
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
-        // Find opportunity by ID and delete it
-        Opportunity::findOrFail($id)->delete();
+        // Find opportunity by ID
+        $opportunity = Opportunity::findOrFail($id);
+
+        // Delete opportunity using the service
+        $this->opportunityService->delete($opportunity);
 
         // Return success message as JSON
         return response()->json(['message' => 'Opportunity deleted successfully']);
