@@ -10,21 +10,18 @@ return new class extends Migration
     {
         Schema::create('volunteer_skills', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('volunteer_profile_id');
-            
-            $table->string('skill_name', 100);
-            $table->enum('level', ['beginner', 'intermediate', 'advanced', 'expert'])->default('intermediate');
-            
-            $table->timestamps();
-            
-            // Foreign key constraint (internal relationship - allowed)
-            $table->foreign('volunteer_profile_id')
-                  ->references('id')
-                  ->on('volunteer_profiles')
+            // الربط مع المتطوع
+            $table->foreignId('volunteer_profile_id')
+                  ->constrained('volunteer_profiles')
                   ->onDelete('cascade');
             
-            // Index for queries
-            $table->index('skill_name');
+            // الربط مع جدول المهارات المرجعي (الجديد)
+            $table->foreignId('skill_id')
+                  ->constrained('skills')
+                  ->onDelete('cascade');
+            
+            $table->enum('level', ['beginner', 'intermediate', 'advanced', 'expert'])->default('intermediate');
+            $table->timestamps();
         });
     }
 

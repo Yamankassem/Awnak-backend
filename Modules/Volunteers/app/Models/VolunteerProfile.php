@@ -2,8 +2,8 @@
 
 namespace Modules\Volunteers\app\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -65,17 +65,20 @@ class VolunteerProfile extends Model implements HasMedia
 
     public function skills()
     {
-        return $this->hasMany(VolunteerSkill::class);
+        return $this->belongsToMany(Skill::class, 'volunteer_skills', 'volunteer_profile_id', 'skill_id')
+            ->withPivot('level')
+            ->withTimestamps();
     }
 
     public function interests()
     {
-        return $this->hasMany(VolunteerInterest::class);
+        return $this->belongsToMany(Interest::class, 'volunteer_interests', 'volunteer_profile_id', 'interest_id')
+            ->withTimestamps();
     }
 
     public function availability()
     {
-        return $this->hasMany(Availability::class);
+        return $this->hasMany(related: VolunteerAvailability::class);
     }
 
     /*

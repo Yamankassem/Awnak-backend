@@ -10,20 +10,15 @@ return new class extends Migration
     {
         Schema::create('volunteer_interests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('volunteer_profile_id');
-            
-            $table->string('interest_name', 100);
-            
-            $table->timestamps();
-            
-            // Foreign key constraint (internal relationship - allowed)
-            $table->foreign('volunteer_profile_id')
-                  ->references('id')
-                  ->on('volunteer_profiles')
+            $table->foreignId('volunteer_profile_id')
+                  ->constrained('volunteer_profiles')
+                  ->onDelete('cascade');
+
+            $table->foreignId('interest_id')
+                  ->constrained('interests')
                   ->onDelete('cascade');
             
-            // Index for queries
-            $table->index('interest_name');
+            $table->timestamps();
         });
     }
 
