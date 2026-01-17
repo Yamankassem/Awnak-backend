@@ -3,7 +3,6 @@
 namespace Modules\Volunteers\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-
 class VolunteersDatabaseSeeder extends Seeder
 {
     /**
@@ -11,6 +10,8 @@ class VolunteersDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        $this->call([
+            VolunteerSeeder::class,
+        ]);
     }
 }
