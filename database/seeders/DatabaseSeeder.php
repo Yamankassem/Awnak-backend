@@ -5,11 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Modules\Evaluations\Database\Seeders\BadgesSeeder;
-use Modules\Evaluations\Database\Seeders\CertificatesSeeder;
-use Modules\Evaluations\Database\Seeders\EvaluationsSeeder;
-use Modules\Evaluations\Database\Seeders\ReportsSeeder;
-use Modules\Evaluations\Database\Seeders\VolunteerBadgesSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,7 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-     $this->call(\Modules\Evaluations\Database\Seeders\DatabaseSeeder::class);
+        // User::factory(10)->create();
 
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
     }
 }

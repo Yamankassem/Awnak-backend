@@ -10,12 +10,12 @@ use Modules\Evaluations\Database\Seeders\EvaluationsSeeder;
 use Modules\Evaluations\Database\Seeders\VolunteerBadgesSeeder;
 use Modules\Evaluations\Database\Seeders\ReportsSeeder;
 
-class DatabaseSeeder extends Seeder
+class EvaluationsDatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
-    public function run(): void
+     public function run(): void
     {
             $this->call([
             BadgesSeeder::class,
