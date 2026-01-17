@@ -11,6 +11,12 @@ class CoreDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        $this->call([
+            RolesAndPermissionsSeeder::class,
+            UsersSeeder::class,
+            LocationsSeeder::class,
+            TranslationLinesSeeder::class,
+            ActivityLogsSeeder::class,
+        ]);
     }
 }
