@@ -5,7 +5,7 @@ namespace Modules\Organizations\Http\Controllers;
 use Illuminate\Routing\Controller;
 use Modules\Organizations\Http\Requests\DocumentRequest;
 use Modules\Organizations\Models\Document;
-use Modules\Organizations\Http\Resources\DocumentResource;
+use Modules\Organizations\Transformers\DocumentResource;
 use Modules\Organizations\Services\DocumentService;
 
 /**
@@ -19,51 +19,57 @@ class DocumentController extends Controller
 {
     protected DocumentService $documentService;
 
-    /**
-     * Inject the DocumentService into the controller.
-     */
     public function __construct(DocumentService $documentService)
     {
         $this->documentService = $documentService;
     }
 
     /**
-     * Display a listing of documents for a specific opportunity.
+     * Display all documents (across all opportunities).
      *
-     * @param int $opportunityId
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index($opportunityId)
+    public function index()
     {
-        // Retrieve all documents for the given opportunity
-        $documents = Document::where('opportunity_id', $opportunityId)->get();
-
-        // Return as a collection of DocumentResource
+        $documents = Document::all();
         return DocumentResource::collection($documents);
     }
 
     /**
-     * Store a newly created document for an opportunity using the service.
+     * Store: Create a new document.
+     *
+     * Accepts `title`, `file_path`, `file_type`, `file_size`, and `opportunity_id`
+     * from the request body. Creates the document using the service and returns
+     * it wrapped in a resource.
      *
      * @param DocumentRequest $request
-     * @param int $opportunityId
      * @return DocumentResource
      */
-    public function store(DocumentRequest $request, $opportunityId)
+    public function store(DocumentRequest $request)
     {
-        // Merge opportunity_id into validated data
         $data = $request->validated();
-        $data['opportunity_id'] = $opportunityId;
-
-        // Create document using the service
         $document = $this->documentService->create($data);
 
-        // Return the newly created document wrapped in a resource
         return new DocumentResource($document);
     }
 
+
+
     /**
-     * Update an existing document using the service.
+     * Show a single document by ID.
+     *
+     * @param Document $document
+     * @return DocumentResource
+     */
+    public function show(Document $document)
+    {
+        return new DocumentResource($document);
+    }
+
+
+
+    /**
+     * Update an existing document.
      *
      * @param DocumentRequest $request
      * @param Document $document
@@ -71,25 +77,21 @@ class DocumentController extends Controller
      */
     public function update(DocumentRequest $request, Document $document)
     {
-        // Update document using the service with validated request data
         $document = $this->documentService->update($document, $request->validated());
-
-        // Return updated document wrapped in a resource
         return new DocumentResource($document);
     }
 
+    
+
     /**
-     * Remove the specified document using the service.
+     * Delete a document.
      *
      * @param Document $document
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Document $document)
     {
-        // Delete document using the service
         $this->documentService->delete($document);
-
-        // Return success message as JSON
         return response()->json(['message' => 'Document deleted successfully']);
     }
 }

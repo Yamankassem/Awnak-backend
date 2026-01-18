@@ -37,8 +37,8 @@ class OpportunitySkillRequest extends FormRequest
             // Ensure opportunity_id is provided and exists in the opportunities table
             'opportunity_id' => 'required|exists:opportunities,id',
 
-            // Ensure skill_id is provided and exists in the skills table
-            'skill_id'       => 'required|exists:skills,id',
+            // Ensure skill_id is provided and exists in the skills table But for now I will but it nullable then after merge I will change it inshallah
+            'skill_id'       => 'nullable|integer',
         ];
     }
 }

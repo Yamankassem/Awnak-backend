@@ -3,65 +3,89 @@
 namespace Modules\Organizations\Services;
 
 use Modules\Organizations\Models\Opportunity;
-use Modules\Organizations\Models\Skill;
+use Modules\Organizations\Models\OpportunitySkill;
 
 /**
  * Service: OpportunitySkillService
  *
- * This service class encapsulates the business logic related to
- * managing the relationship between opportunities and skills.
- * It provides methods to attach, detach, and sync skills for a given opportunity.
+ * This service class manages the link between opportunities and skill IDs.
+ * Since the `skills` table is not yet available, the service stores `skill_id`
+ * values directly in the `opportunity_skills` table without validating against
+ * a skills model. This allows the API to accept and persist skill IDs as plain
+ * integers until the skills module is integrated later.
+ *
+ * Methods:
+ * - attachSkills: Add new skill IDs to an opportunity.
+ * - detachSkills: Remove specific skill IDs from an opportunity.
+ * - syncSkills: Replace all existing skill IDs with a new set.
+ * - getSkills: Retrieve all skill IDs linked to an opportunity.
+ *
+ * This design keeps the API functional and avoids dependency errors,
+ * while leaving room to reintroduce proper relationships once the
+ * `skills` table is implemented.
  */
 class OpportunitySkillService
 {
     /**
-     * Attach one or more skills to an opportunity.
+     * Attach one or more skill IDs to an opportunity.
      *
-     * @param Opportunity $opportunity The opportunity instance
-     * @param array $skillIds Array of skill IDs to attach
+     * @param Opportunity $opportunity
+     * @param array $skillIds
      * @return void
      */
     public function attachSkills(Opportunity $opportunity, array $skillIds): void
     {
-        // Attach skills to the opportunity (avoid duplicates automatically)
-        $opportunity->skills()->attach($skillIds);
+        foreach ($skillIds as $id) {
+            OpportunitySkill::create([
+                'opportunity_id' => $opportunity->id,
+                'skill_id' => $id, // stored as plain integer
+            ]);
+        }
     }
 
     /**
-     * Detach one or more skills from an opportunity.
+     * Detach one or more skill IDs from an opportunity.
      *
-     * @param Opportunity $opportunity The opportunity instance
-     * @param array $skillIds Array of skill IDs to detach
+     * @param Opportunity $opportunity
+     * @param array $skillIds
      * @return void
      */
     public function detachSkills(Opportunity $opportunity, array $skillIds): void
     {
-        // Detach skills from the opportunity
-        $opportunity->skills()->detach($skillIds);
+        OpportunitySkill::where('opportunity_id', $opportunity->id)
+            ->whereIn('skill_id', $skillIds)
+            ->delete();
     }
 
     /**
-     * Sync skills for an opportunity (replace existing with new set).
+     * Sync skill IDs for an opportunity (replace existing with new set).
      *
-     * @param Opportunity $opportunity The opportunity instance
-     * @param array $skillIds Array of skill IDs to sync
+     * @param Opportunity $opportunity
+     * @param array $skillIds
      * @return void
      */
     public function syncSkills(Opportunity $opportunity, array $skillIds): void
     {
-        // Sync skills (remove old ones, add new ones)
-        $opportunity->skills()->sync($skillIds);
+        // Remove old ones
+        OpportunitySkill::where('opportunity_id', $opportunity->id)->delete();
+
+        // Add new ones
+        foreach ($skillIds as $id) {
+            OpportunitySkill::create([
+                'opportunity_id' => $opportunity->id,
+                'skill_id' => $id,
+            ]);
+        }
     }
 
     /**
-     * Get all skills for a given opportunity.
+     * Get all skill IDs for a given opportunity.
      *
-     * @param Opportunity $opportunity The opportunity instance
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param Opportunity $opportunity
+     * @return \Illuminate\Support\Collection
      */
     public function getSkills(Opportunity $opportunity)
     {
-        // Return all related skills
-        return $opportunity->skills;
+        return OpportunitySkill::where('opportunity_id', $opportunity->id)->pluck('skill_id');
     }
 }
