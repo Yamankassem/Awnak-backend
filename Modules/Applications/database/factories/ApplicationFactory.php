@@ -9,7 +9,7 @@ class ApplicationFactory extends Factory
     /**
      * The name of the factory's corresponding model.
      */
-    protected $model = \Modules\Applications\Models\ApplicationFactory::class;
+    protected $model = \Modules\Applications\Models\Application::class;
 
     /**
      * Define the model's default state.
@@ -17,11 +17,11 @@ class ApplicationFactory extends Factory
     public function definition(): array
     {
         return [
-            'opportunity_id' => $this->faker->Opportunity::factory(),
-            'volunteer_id' => $this->faker->Volunteer::factory(),
-            'coordinator_id' => $this->faker->Coordinator::factory(),
-            'assigned_at' => $this->faker->date('Y-m-d H:i:s'),
-            'description' => $this->faker->paragraph,
+            'opportunity_id' => $this->faker->numberBetween(1,10),
+            'volunteer_id'   => $this->faker->numberBetween(1,5),
+            'coordinator_id' => $this->faker->numberBetween(1,5),
+            'assigned_at'    => $this->faker->date('Y-m-d H:i:s'),
+            'description'    => $this->faker->paragraph,
         ];
     }
 }

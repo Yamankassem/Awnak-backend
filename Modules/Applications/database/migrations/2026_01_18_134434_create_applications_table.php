@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('opportunity_id')->constrained('opportunities')->onDelete('cascade');
-            $table->foreignId('volunteer_id')->constrained('volunteers')->onDelete('cascade');
-            $table->foreignId('coordinator_id')->constrained('coordinators')->onDelete('cascade');
+            $table->unsignedBigInteger('opportunity_id');
+            $table->unsignedBigInteger('volunteer_id');
+            $table->unsignedBigInteger('coordinator_id');
             $table->date('assigned_at')->nullable;
             $table->text('description');
             $table->softDeletes();

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description');
             $table->enum('status' ,[ 'active' ,'complete' ] )->default('active');
             $table->date('due_date');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

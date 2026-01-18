@@ -33,19 +33,4 @@ class Application extends Model
     {
         return $this->hasMany (Task::class);
     }
-
-    public function opportunity(): BelongsTo
-    {
-        return $this->belongsTo (Opportunity::class);
-    }
-
-    public function volunteer(): BelongsTo
-    {
-        return $this->belongsTo (Volunteer::class);
-    }
-
-    public function coordinator(): BelongsTo
-    {
-        return $this->belongsTo (Coordinator::class);
-    }
 }
