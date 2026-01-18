@@ -27,6 +27,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        \MatanYadaev\EloquentSpatial\EloquentSpatial::setDefaultSrid(4326);
     }
 
     /**
