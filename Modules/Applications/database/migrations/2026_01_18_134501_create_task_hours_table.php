@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('task_hours', function (Blueprint $table) {
             $table->id();
             $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
-            $table->int('hours');
+            $table->integer('hours');
             $table->date('started_date');
             $table->date('ended_date');
             $table->string('note');

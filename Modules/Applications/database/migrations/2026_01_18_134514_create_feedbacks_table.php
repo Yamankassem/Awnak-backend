@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
             $table->string('name_of_org'); // Name of the organization
             $table->string('name_of_vol'); // Volunteer Name
-            $table->int('rating')->nullable;
+            $table->integer('rating')->nullable;
             $table->string('comment');
             $table->softDeletes();
             $table->timestamps();

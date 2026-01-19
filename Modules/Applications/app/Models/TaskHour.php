@@ -6,11 +6,12 @@ use Modules\Applications\Models\Task;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Modules\Applications\Database\Factories\TaskHourFactory;
+use Modules\Applications\Database\Factories\TaskHourFactory;
 
-class Task_hour extends Model
+class TaskHour extends Model
 {
     use HasFactory;
+    protected $table = 'task_hours';
 
     /**
      * The attributes that are mass assignable.
@@ -23,10 +24,10 @@ class Task_hour extends Model
         'note',
     ];
 
-    // protected static function newFactory(): TaskHourFactory
-    // {
-    //     // return TaskHourFactory::new();
-    // }
+     protected static function newFactory(): TaskHourFactory
+     {
+          return TaskHourFactory::new();
+     }
 
     public function task(): BelongsTo
     {

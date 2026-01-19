@@ -6,11 +6,12 @@ use Modules\Applications\Models\Task;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Modules\Applications\Database\Factories\FeedbackFactory;
+use Modules\Applications\Database\Factories\FeedbackFactory;
 
 class Feedback extends Model
 {
     use HasFactory;
+    protected $table = 'feedbacks';
 
     /**
      * The attributes that are mass assignable.
@@ -23,10 +24,10 @@ class Feedback extends Model
         'comment',
     ];
 
-    // protected static function newFactory(): FeedbackFactory
-    // {
-    //     // return FeedbackFactory::new();
-    // }
+     protected static function newFactory(): FeedbackFactory
+     {
+          return FeedbackFactory::new();
+     }
 
     public function task(): BelongsTo
     {

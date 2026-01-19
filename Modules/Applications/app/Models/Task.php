@@ -9,11 +9,12 @@ use Modules\Applications\Models\Application;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Modules\Applications\Database\Factories\TaskFactory;
+use Modules\Applications\Database\Factories\TaskFactory;
 
 class Task extends Model
 {
     use HasFactory;
+    protected $table = 'tasks';
 
     /**
      * The attributes that are mass assignable.
@@ -26,10 +27,10 @@ class Task extends Model
         'due_date',
     ];
 
-    // protected static function newFactory(): TaskFactory
-    // {
-    //     // return TaskFactory::new();
-    // }
+     protected static function newFactory(): TaskFactory
+     {
+          return TaskFactory::new();
+     }
 
     public function application(): BelongsTo
     {
@@ -38,7 +39,7 @@ class Task extends Model
 
     public function task_hours(): HasMany
     {
-        return $this->hasMany (TaskHour::class);
+        return $this->hasMany (Taskhour::class);
     }
 
     public function feedback(): HasMany
