@@ -3,10 +3,12 @@
 
 namespace Modules\Organizations\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Applications\Models\Application;
 use Modules\Organizations\Models\Organization;
 
+use Modules\Organizations\Models\OpportunitySkill;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Organizations\Database\Factories\OpportunityFactory;
 
 
@@ -51,6 +53,5 @@ class Opportunity extends Model
      */
     public function skills()
      { return $this->hasMany(OpportunitySkill::class); }
-
      
 }

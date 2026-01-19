@@ -2,6 +2,8 @@
 
 namespace Modules\Organizations\Providers;
 
+use Modules\Applications\Events\ApplicationAssignedToOpportunity;
+use Modules\Organizations\Listeners\AttachApplicationToOportunity;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -11,7 +13,11 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array<string, array<int, string>>
      */
-    protected $listen = [];
+    protected $listen = [
+            ApplicationAssignedToOpportunity::class => [
+            AttachApplicationToOportunity::class,
+        ],
+    ];
 
     /**
      * Indicates if events should be discovered.

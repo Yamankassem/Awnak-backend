@@ -2,6 +2,8 @@
 
 namespace Modules\Core\Providers;
 
+use Modules\Core\Listeners\AttachApplicationToCoordinator;
+use Modules\Applications\Events\ApplicationAssignedToCoordinator;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -11,7 +13,11 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array<string, array<int, string>>
      */
-    protected $listen = [];
+    protected $listen = [
+        ApplicationAssignedToCoordinator::class => [
+            AttachApplicationToCoordinator::class,
+        ],
+    ];
 
     /**
      * Indicates if events should be discovered.
