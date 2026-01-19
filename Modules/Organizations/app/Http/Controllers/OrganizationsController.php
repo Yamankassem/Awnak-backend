@@ -2,55 +2,66 @@
 
 namespace Modules\Organizations\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Modules\Organizations\Http\Requests\OrganizationRequest;
+use Modules\Organizations\Transformers\OrganizationResource;
+use Modules\Organizations\Models\Organization;
+use Modules\Organizations\Services\OrganizationService;
 
 class OrganizationsController extends Controller
 {
+    protected OrganizationService $organizationService;
+
+    public function __construct(OrganizationService $organizationService)
+    {
+        $this->organizationService = $organizationService;
+    }
+
     /**
-     * Display a listing of the resource.
+     * Display a paginated list of organizations.
      */
     public function index()
     {
-        return view('organizations::index');
+        $organizations = Organization::paginate(10);
+        return OrganizationResource::collection($organizations);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created organization using the service.
      */
-    public function create()
+    public function store(OrganizationRequest $request)
     {
-        return view('organizations::create');
+        $organization = $this->organizationService->create($request->validated());
+        return new OrganizationResource($organization);
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
+     * Show a specific organization.
      */
     public function show($id)
     {
-        return view('organizations::show');
+        $organization = Organization::findOrFail($id);
+        return new OrganizationResource($organization);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update an existing organization using the service.
      */
-    public function edit($id)
+    public function update(OrganizationRequest $request, $id)
     {
-        return view('organizations::edit');
+        $organization = Organization::findOrFail($id);
+        $organization = $this->organizationService->update($organization, $request->validated());
+        return new OrganizationResource($organization);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Delete an organization using the service.
      */
-    public function update(Request $request, $id) {}
+    public function destroy($id)
+    {
+        $organization = Organization::findOrFail($id);
+        $this->organizationService->delete($organization);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
+        return response()->json(['message' => 'Organization deleted successfully']);
+    }
 }
