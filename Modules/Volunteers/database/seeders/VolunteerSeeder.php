@@ -33,6 +33,8 @@ class VolunteerSeeder extends Seeder
             'last_name' => 'محمد',
             'phone' => '+966501234567',
             'status' => 'active',
+            'experience_years' => 5,
+            'previous_experience_details' => 'Worked in various educational institutions.',
             'created_at' => now(),
         ]);
 
