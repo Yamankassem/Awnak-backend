@@ -23,14 +23,14 @@ class TaskHour extends Model
         'ended_date',
         'note',
     ];
-
-     protected static function newFactory(): TaskHourFactory
-     {
-          return TaskHourFactory::new();
-     }
-
+    
+    /**
+     * Get the task that owns the TaskHour
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function task(): BelongsTo
     {
-        return $this->belongsTo (Task::class);
+        return $this->belongsTo(Task::class, 'task_id');
     }
 }

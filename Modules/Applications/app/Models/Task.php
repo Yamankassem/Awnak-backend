@@ -26,24 +26,35 @@ class Task extends Model
         'status',
         'due_date',
     ];
+    
 
-     protected static function newFactory(): TaskFactory
-     {
-          return TaskFactory::new();
-     }
-
+    /**
+     * Get the application that owns the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function application(): BelongsTo
     {
-        return $this->belongsTo (Application::class);
+        return $this->belongsTo(Application::class,'application_id');
     }
 
-    public function task_hours(): HasMany
+    /**
+     * Get all of the taskHours for the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function taskHours(): HasMany
     {
-        return $this->hasMany (Taskhour::class);
+        return $this->hasMany(Task_hour::class);
     }
 
-    public function feedback(): HasMany
+    /**
+     * Get all of the feedbacks for the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function feedbacks(): HasMany
     {
-        return $this->hasMany (Feedback::class);
+        return $this->hasMany(Feedback::class);
     }
 }

@@ -23,14 +23,15 @@ class Feedback extends Model
         'rating',
         'comment',
     ];
+    
 
-     protected static function newFactory(): FeedbackFactory
-     {
-          return FeedbackFactory::new();
-     }
-
-    public function task(): BelongsTo
-    {
-        return $this->belongsTo (Task::class);
-    }
+   /**
+    * Get the task that owns the Feedback
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+    */
+   public function task(): BelongsTo
+   {
+       return $this->belongsTo(Task::class,'task_id');
+   }
 }
