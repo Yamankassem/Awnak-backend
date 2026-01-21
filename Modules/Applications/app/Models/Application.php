@@ -5,6 +5,7 @@ namespace Modules\Applications\Models;
 use Modules\Core\Models\User;
 use Modules\Applications\Models\Task;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Organizations\Models\Opportunity;
 use Modules\Volunteers\Models\VolunteerProfile;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
