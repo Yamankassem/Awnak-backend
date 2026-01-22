@@ -22,6 +22,8 @@ class VolunteerProfile extends Model implements HasMedia
         'gender',
         'birth_date',
         'bio',
+        'experience_years',
+        'previous_experience_details',
         'status',
         'is_verified',
         'verified_at',
