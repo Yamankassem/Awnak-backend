@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('coordinator_id')->constrained('users')->onDelete('cascade');
             $table->date('assigned_at')->nullable;
             $table->text('description');
+            $table->enum('status', ['pending','approved','rejected'])->default('pending');
             $table->softDeletes();
             $table->timestamps();
         });

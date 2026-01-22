@@ -18,11 +18,11 @@ class FeedbackFactory extends Factory
     public function definition(): array
     {
         return [
-           'task_id'      => Task::factory(), 
-            'name_of_org' => $this->faker->company,
-            'name_of_vol' => $this->faker->company,
-            'rating'      => $this->faker->numberBetween(1,5),
-            'comment'     => $this->faker->sentence,
+            'task_id'      => Task::factory(), 
+            'name_of_org'  => $this->faker->company,
+            'name_of_vol'  => $this->faker->company,
+            'rating'       => $this->faker->numberBetween(1,5),
+            'comment'      => $this->faker->sentence,
 
         ];
     }
