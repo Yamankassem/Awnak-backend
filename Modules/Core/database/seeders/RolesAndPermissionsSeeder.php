@@ -14,42 +14,124 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
         app(PermissionRegistrar::class)->forgetCachedPermissions();
-        $guard = config('auth.defaults.guard', 'web');
 
-        // Roles 
-        $roles = [
-            'super-admin',
-            'volunteer',
-            'opportunity-manager',
-            'organization-partner',
-            'volunteer-coordinator',
-            'auditor',
-        ];
+        $guard = 'sanctum';
 
-        foreach ($roles as $r) {
-            Role::findOrCreate($r, $guard);
-        }
-
-        // Permissions (مثال عملي قابل للتوسع)
         $permissions = [
-            'core.users.view',
-            'core.users.manage',
-            'core.roles.manage',
-            'core.locations.manage',
-            'core.translations.manage',
-            'reports.view',
+            // Users & Roles (System Admin)
+            'users.create',
+            'users.read',
+            'users.update',
+            'users.delete',
+            'roles.create',
+            'roles.read',
+            'roles.update',
+            'roles.delete',
+
+            // Volunteer
+            'profile.read.own',
+            'profile.update.own',
+            'opportunities.search',
+            'opportunities.apply',
+            'tasks.read.assigned',
+            'tasks.update.assigned',
+            'evaluations.read.own',
+            'notes.create.assigned_tasks',
+
+            // Opportunity Manager
+            'opportunities.create',
+            'opportunities.read.own',
+            'opportunities.update.own',
+            'opportunities.delete.own',
+            'applications.read',
+            'applications.review',
+            'volunteers.read.applicants',
+            'volunteers.assign',
+
+            // Organization
+            'organization.volunteers.read',
+            'organization.volunteers.evaluate',
+            'organization.opportunities.create',
+            'organization.opportunities.publish',
+
+            // Volunteer Coordinator
+            'volunteers.read.assigned',
+            'tasks.read.managed',
+            'evaluations.create',
+            'notifications.send',
+
+            // Auditor
+            'reports.performance.read',
         ];
 
-        foreach ($permissions as $p) {
-            Permission::findOrCreate($p, $guard);
+        foreach ($permissions as $name) {
+            Permission::firstOrCreate([
+                'name' => $name,
+                'guard_name' => $guard,
+            ]);
         }
 
-        // super-admin كل الصلاحيات
-        $super = Role::findByName('super-admin', $guard);
-        $super->syncPermissions(Permission::where('guard_name', $guard)->pluck('name')->toArray());
+        $roles = [
+            'system-admin' => [
+                'users.create',
+                'users.read',
+                'users.update',
+                'users.delete',
+                'roles.create',
+                'roles.read',
+                'roles.update',
+                'roles.delete',
+            ],
 
-        app(PermissionRegistrar::class)->forgetCachedPermissions();
+            'volunteer' => [
+                'profile.read.own',
+                'profile.update.own',
+                'opportunities.search',
+                'opportunities.apply',
+                'tasks.read.assigned',
+                'tasks.update.assigned',
+                'evaluations.read.own',
+                'notes.create.assigned_tasks',
+            ],
+
+            'opportunity-manager' => [
+                'opportunities.create',
+                'opportunities.read.own',
+                'opportunities.update.own',
+                'opportunities.delete.own',
+                'applications.read',
+                'applications.review',
+                'volunteers.read.applicants',
+                'volunteers.assign',
+            ],
+
+            'organization-admin' => [
+                'organization.volunteers.read',
+                'organization.volunteers.evaluate',
+                'organization.opportunities.create',
+                'organization.opportunities.publish',
+            ],
+
+            'volunteer-coordinator' => [
+                'volunteers.read.assigned',
+                'tasks.read.managed',
+                'evaluations.create',
+                'notifications.send',
+            ],
+
+            'performance-auditor' => [
+                'reports.performance.read',
+            ],
+        ];
+
+        foreach ($roles as $roleName => $perms) {
+            $role = Role::firstOrCreate([
+                'name' => $roleName,
+                'guard_name' => $guard,
+            ]);
+
+            $role->syncPermissions($perms);
+        }
     }
 }

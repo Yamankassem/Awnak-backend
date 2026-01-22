@@ -23,7 +23,7 @@ class UsersSeeder extends Seeder
             ]
         );
 
-        $admin->syncRoles(['super-admin']);
+        $admin->syncRoles(['system-admin']);
 
         $volunteer = User::updateOrCreate(
             ['email' => 'volunteer@awnak.test'],

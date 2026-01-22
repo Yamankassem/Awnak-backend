@@ -3,6 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Auth\Http\Controllers\AuthController;
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('auths', AuthController::class)->names('auth');
+Route::prefix('v1/auth')->group(function () {
+    Route::post('register', [AuthController::class, 'register'])->name('auth.register');
+    Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('me', [AuthController::class, 'me'])->name('auth.me');
+        Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
+    });
 });
