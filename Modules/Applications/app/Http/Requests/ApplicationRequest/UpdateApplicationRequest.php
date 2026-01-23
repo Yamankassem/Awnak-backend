@@ -14,7 +14,7 @@ class UpdateApplicationRequest extends FormRequest
         return [
             'opportunity_id'  => 'sometimes|exists:opportunities,id',
             'volunteer_id'    => 'sometimes|exists:volunteers,id',
-            'coordinator_id'  => 'sometimes|exists:coordinators,id',
+            'coordinator_id'  => 'sometimes|exists:users,id',
             'assigned_at'     => 'nullable|date',
             'description'     => 'sometimes|string|min:10|max:2000',
             'status'          => 'sometimes|in:pending,approved,rejected',

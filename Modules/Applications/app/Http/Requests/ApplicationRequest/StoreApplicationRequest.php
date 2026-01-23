@@ -14,7 +14,7 @@ class StoreApplicationRequest extends FormRequest
         return [
             'opportunity_id'    => 'required|exists:opportunities,id',
             'volunteer_id'      => 'required|exists:volunteers,id',
-            'coordinator_id'    => 'required|exists:coordinators,id',
+            'coordinator_id'    => 'required|exists:users,id',
             'assigned_at'       => 'nullable|date',
             'description'       => 'required|string|min:10|max:2000',
             'status'            => 'required|in:pending,approved,rejected',
