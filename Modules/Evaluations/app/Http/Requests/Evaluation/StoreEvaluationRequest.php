@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Evaluations\Http\Requests;
+namespace Modules\Evaluations\Http\Requests\Evaluation;
 
 use Illuminate\Foundation\Http\FormRequest;
 

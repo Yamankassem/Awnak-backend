@@ -5,7 +5,7 @@ namespace Modules\Evaluations\Services;
 use Modules\Evaluations\Models\Evaluation;
 use Illuminate\Support\Facades\Auth;
 
-class EvaluationService
+class EvaluationServices
 {
     /**
      * create new evaluation

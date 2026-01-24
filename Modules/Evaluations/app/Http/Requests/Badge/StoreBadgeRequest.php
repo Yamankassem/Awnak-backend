@@ -1,14 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Comment;
+namespace Modules\Evaluations\Http\Requests\Badge;
 
-use App\Enum\CommentStatus;
 use Illuminate\Foundation\Http\FormRequest;
 
-
-
-
-class UpdateCommentRequest extends FormRequest
+class StoreBadgeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,9 +12,6 @@ class UpdateCommentRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
-
-       
-
     }
 
     /**
@@ -29,9 +22,9 @@ class UpdateCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => 'sometimes|string',
-            'post_id' => 'sometimes|exists:posts,id',
-            // 'user_id'  => 'sometimes|exists:users,id',
+            'name' => 'nullable|string|max:255',
+            'criteria' => 'nullable|string|max:500',
+            'description' => 'nullable|string|max:1000',
         ];
     }
 }
