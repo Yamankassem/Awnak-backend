@@ -3,8 +3,7 @@
 namespace Modules\Evaluations\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\EvaluationResource;
-use Illuminate\Http\Request;
+use Modules\Evaluations\Http\Resources\EvaluationResource;
 use Modules\Evaluations\Services\EvaluationService;
 use App\Http\Traits\ApiResponse;
 use Modules\Evaluations\Http\Requests\StoreEvaluationRequest;
@@ -15,86 +14,68 @@ class EvaluationController extends Controller
 {
     use ApiResponse;
 
-    protected $evaluationService;
+    protected EvaluationService $evaluationService;
 
     public function __construct(EvaluationService $evaluationService)
     {
         $this->evaluationService = $evaluationService;
     }
 
-    // Display all volunteer's evaluations
+    // Display all volunteer evaluations
     public function index($volunteerId)
     {
         $evaluations = $this->evaluationService->getByVolunteer($volunteerId);
+
         return $this->successResponse(
             EvaluationResource::collection($evaluations),
-            'Evaluations retrieved successfully',
-            200
+            'Evaluations retrieved successfully'
         );
     }
-    
-    // Show evaluation
+
+    // Show single evaluation
     public function show($id)
     {
-        try {
-            $evaluation = $this->evaluationService->getCategoryById($id);
-            return $this->successResponse(
-                new EvaluationResource($evaluation),
-                'Evaluation retrieved successfully',
-                200
-            );
-        } catch (\Exception $e) {
-            return $this->errorResponse('Evaluation not found', 404);
-        }
+        $evaluation = $this->evaluationService->find($id);
+
+        return $this->successResponse(
+            new EvaluationResource($evaluation),
+            'Evaluation retrieved successfully'
+        );
     }
 
-     // create new evaluation
+    // Create evaluation
     public function store(StoreEvaluationRequest $request)
     {
-        try {
-            $evaluation = $this->evaluationService->createEvaluation($request->validated());
-            return $this->successResponse(
-                new EvaluationResource($evaluation),
-                'Evaluation created successfully',
-                201
-            );
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode() ?: 500);
-        }
+        $data = $request->validated();
+        $data['evaluator_id'] = auth()->id();
+
+        $evaluation = $this->evaluationService->createEvaluation($data);
+
+        return $this->successResponse(
+            new EvaluationResource($evaluation),
+            'Evaluation created successfully',
+            201
+        );
     }
 
-     // Update  new evaluation
+    // Update evaluation
     public function update(UpdateEvaluationRequest $request, Evaluation $evaluation)
     {
-        try {
-            $updated = $this->evaluationService->updateEvaluation($request->validated(), $evaluation);
-            return $this->successResponse(
-                new EvaluationResource($updated),
-                'Evaluation updated successfully',
-                200
-            );
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode() ?: 500);
-        }
+        $updated = $this->evaluationService->updateEvaluation( $evaluation,$request->validated());
+        return $this->successResponse(
+            new EvaluationResource($updated),
+            'Evaluation updated successfully'
+        );
     }
 
-    // Delete evaluation 
-   public function destroy(Evaluation $evaluation)
+    // Delete evaluation
+    public function destroy(Evaluation $evaluation)
     {
-        try {
-            $this->evaluationService->deleteEvaluation($evaluation);
+        $this->evaluationService->deleteEvaluation($evaluation);
 
-            return $this->successResponse(
-                null,
-                'Evaluation deleted successfully',
-                200
-            );
-        } catch (\Exception $e) {
-
-            return $this->errorResponse(
-                $e->getMessage(),
-                $e->getCode() ?: 500
-            );
-        }
+        return $this->successResponse(
+            null,
+            'Evaluation deleted successfully'
+        );
     }
 }
