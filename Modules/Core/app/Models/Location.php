@@ -2,9 +2,7 @@
 
 namespace Modules\Core\Models;
 
-use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Location extends Model
 {
-    use HasFactory, HasSpatial, LogsActivity;
+    use HasFactory, HasSpatial;
 
     /**
      * The attributes that are mass assignable.
@@ -27,11 +25,4 @@ class Location extends Model
     //     // return LocationFactory::new();
     // }
 
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->useLogName('audit')
-            ->logOnlyDirty()
-            ->logFillable();
-    }
 }
