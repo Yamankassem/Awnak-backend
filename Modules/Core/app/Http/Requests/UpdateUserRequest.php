@@ -4,10 +4,26 @@ namespace Modules\Core\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class UpdateUserRequest
+ *
+ * Validates user update data.
+ *
+ * Expected payload (all optional):
+ * - name: string
+ * - email: string (unique)
+ * - password: string (min 8 characters)
+ * - status: string (active|inactive)
+ *
+ * Authorization:
+ * - Requires `users.update` permission.
+ */
 class UpdateUserRequest extends FormRequest
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Define validation rules for updating a user.
+     *
+     * @return array<string, array<int, string>>
      */
     public function rules(): array
     {
@@ -20,7 +36,10 @@ class UpdateUserRequest extends FormRequest
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Determine if the authenticated user is authorized
+     * to update users.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
