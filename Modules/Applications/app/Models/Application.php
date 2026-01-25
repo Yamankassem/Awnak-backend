@@ -5,6 +5,9 @@ namespace Modules\Applications\Models;
 use Modules\Core\Models\User;
 use Modules\Applications\Models\Task;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Applications\Traits\Auditable;
+use Modules\Applications\Traits\HasStatus;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Organizations\Models\Opportunity;
 use Modules\Volunteers\Models\VolunteerProfile;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,6 +18,7 @@ use Modules\Applications\Database\Factories\ApplicationFactory;
 
 class Application extends Model
 {
+    use SoftDeletes, Auditable, HasStatus;
     use HasFactory;
     protected $table = 'applications';
     
@@ -27,9 +31,19 @@ class Application extends Model
        'coordinator_id',
        'assigned_at',
        'description',
+       'status',
     ];
      
+    protected $casts = [
+        'assigned_at' => 'date',
+    ];
 
+    public function getAllowedStatus()
+    {
+        return ['pending', 'approved', 'rejected'];
+    }
+
+    
    /**
     * Get all of the tasks for the Application
     *

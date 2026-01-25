@@ -2,11 +2,21 @@
 
 namespace Modules\Applications\Providers;
 
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Blade;
+use Modules\Applications\Models\Task;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
+use Modules\Applications\Models\Application;
+use Modules\Applications\Policies\TasksPolicy\TaskPolicy;
+use Modules\Applications\Services\TasksService\TaskService;
+use Modules\Applications\Interfaces\ModuleApplicationsInterface;
+use Modules\Applications\Services\FeedbacksService\FeedbackService;
+use Modules\Applications\Services\TaskHoursService\TaskHourService;
+use Modules\Applications\Policies\ApplicationsPolicy\ApplicationPolicy;
+use Modules\Applications\Services\ApplicationsService\ApplicationService;
 
 class ApplicationsServiceProvider extends ServiceProvider
 {
@@ -27,6 +37,15 @@ class ApplicationsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+
+        Gate::policy(
+            Application::class,
+            ApplicationPolicy::class
+            );
+        Gate::policy(
+            Task::class,
+            TaskPolicy::class,
+        );
     }
 
     /**
@@ -36,6 +55,11 @@ class ApplicationsServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+        
+        $this->app->singleton(ApplicationService::class);
+        $this->app->singleton(TaskService::class);
+        $this->app->singleton(TaskHourService::class);
+        $this->app->singleton(FeedbackService::class);
     }
 
     /**
