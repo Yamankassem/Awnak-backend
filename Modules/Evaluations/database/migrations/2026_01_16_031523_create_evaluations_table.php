@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('task_id');
             $table->unsignedBigInteger('volunteer_id');
             $table->unsignedBigInteger('evaluator_id'); 
-            $table->date('evaluated_at');
+            $table->timestamp('evaluated_at');
             $table->string('improvement')->nullable();
             $table->string('strengths')->nullable();
             $table->float('score');
