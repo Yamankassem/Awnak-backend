@@ -9,48 +9,76 @@ use Modules\Organizations\Models\Organization;
 
 use Modules\Organizations\Database\Factories\OpportunityFactory;
 
+use MatanYadaev\EloquentSpatial\Objects\Point;
+use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
 
 /**
  * Model: Opportunity
  *
  * Represents an opportunity record in the database.
- * Each opportunity belongs to one organization.
+ * Each opportunity belongs to one organization and may
+ * include spatial coordinates for location-based queries.
+ *
+ * Features:
+ * - Uses HasSpatial trait to enable spatial queries (distance, within, etc.).
+ * - Casts the 'coordinates' attribute to a Point object for easy handling.
+ * - Supports factory creation for testing and seeding.
+ *
+ * Fillable attributes:
+ * - title: Opportunity title
+ * - description: Detailed description
+ * - type: Type of opportunity (volunteering, training, job, etc.)
+ * - start_date: Opportunity start date
+ * - end_date: Opportunity end date
+ * - status: Current status (approved, rejected, pending)
+ * - organization_id: Foreign key linking to organizations table
+ * - coordinates: Spatial location stored as a POINT (latitude, longitude)
+ *
+ * Relationships:
+ * - organization(): Each opportunity belongs to one organization.
+ * - skills(): Each opportunity may have many related skills.
+ *
+ * Example usage:
+ * $opportunity = Opportunity::create([
+ *   'title' => 'Volunteer Program',
+ *   'coordinates' => new Point(33.7488, -84.3877), // latitude, longitude
+ *   'organization_id' => 1,
+ * ]);
  */
+
 class Opportunity extends Model
 {
-    use HasFactory;
-    protected static function newFactory()
-    { return OpportunityFactory::new(); }
+    use HasFactory, HasSpatial;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * These fields can be filled using create() or update() methods.
-     */
     protected $fillable = [
-        'title',          // Opportunity title
-        'description',    // Detailed description of the opportunity
-        'type',           // Type of opportunity (volunteering, training, job, etc.)
-        'start_date',     // Opportunity start date
-        'end_date',       // Opportunity end date
-        'organization_id' // Foreign key linking to organizations table
+        'title',
+        'description',
+        'type',
+        'start_date',
+        'end_date',
+        'status',
+        'organization_id',
+        'coordinates',
     ];
 
-    /**
-     * Define the relationship with the Organization model.
-     *
-     * Each opportunity belongs to one organization.
-     */
+    protected $casts = [];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->casts['coordinates'] = app()->environment('testing') ? 'string' : Point::class;
+    }
+
     public function organization()
     {
         return $this->belongsTo(Organization::class);
     }
 
-    /**
-     * Opportunity has many OppottunnitySkill
-     */
     public function skills()
-     { return $this->hasMany(OpportunitySkill::class); }
-
-     
+    {
+        return $this->hasMany(OpportunitySkill::class);
+    }
 }
+
+

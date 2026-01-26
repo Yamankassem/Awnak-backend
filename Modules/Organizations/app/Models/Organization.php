@@ -23,26 +23,35 @@ class Organization extends Model
      *  - type: Type of organization (e.g., NGO, school, charity) *
      *  - bio: Short description or background * - website: Official website (optional) */
 
-    protected $fillable = ['license_number', 'type', 'bio', 'website',];
+    protected $fillable = [
+        'license_number',
+        'type',
+        'bio',
+        'website',
+        'user_id'];
 
     /** * Define relationships here. *
      *  * Example: *
      *  An organization may have many volunteers, applications, documents, and evaluations. */
-    // public function volunteers()
-    // {
-    //     return $this->hasMany(\Modules\Volunteers\Entities\Volunteer::class);
-    // }
 
-    // public function applications()
-    // {
-    //     return $this->hasMany(\Modules\Applications\Entities\Application::class);
-    // }
+    public function volunteers()
+    {
+        return $this->hasMany(\Modules\Volunteers\Models\VolunteerProfile::class);
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(\Modules\Applications\Models\Application::class);
+    }
+
     // public function documents()
     // {
     //     return $this->hasMany(\Modules\Documents\Entities\Document::class);
     // }
-    // public function evaluations()
-    // {
-    //     return $this->hasMany(\Modules\Evaluations\Entities\Evaluation::class);
-    // }
+
+    public function evaluations()
+    {
+        return $this->hasMany(\Modules\Evaluations\Models\Evaluation::class);
+    }
+
 }

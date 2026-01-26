@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Organizations\Database\Factories\OpportunitySkillFactory;
+use Modules\Volunteers\Models\Skill;
 
 /**
  * Model: OpportunitySkill
@@ -46,9 +47,9 @@ class OpportunitySkill extends Model
         return $this->belongsTo(Opportunity::class);
     }
 
-    // public function skill()
-    // {
-    //     return $this->belongsTo(Skill::class);
-    // }
+    public function skill()
+    {
+        return $this->belongsTo(Skill::class);
+    }
 
 }

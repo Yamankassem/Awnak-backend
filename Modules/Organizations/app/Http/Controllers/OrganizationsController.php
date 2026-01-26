@@ -8,17 +8,32 @@ use Modules\Organizations\Transformers\OrganizationResource;
 use Modules\Organizations\Models\Organization;
 use Modules\Organizations\Services\OrganizationService;
 
+/**
+ * Controller: OrganizationsController
+ *
+ * Manages CRUD operations for Organization entities.
+ * Delegates business logic to OrganizationService for cleaner code,
+ * improved testability, and easier maintenance. Uses OrganizationResource
+ * to format API responses consistently.
+ */
 class OrganizationsController extends Controller
 {
     protected OrganizationService $organizationService;
 
+    /**
+     * Inject the OrganizationService into the controller.
+     *
+     * @param OrganizationService $organizationService
+     */
     public function __construct(OrganizationService $organizationService)
     {
         $this->organizationService = $organizationService;
     }
 
     /**
-     * Display a paginated list of organizations.
+     * Retrieve a paginated list of organizations.
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
@@ -27,7 +42,14 @@ class OrganizationsController extends Controller
     }
 
     /**
-     * Store a newly created organization using the service.
+     * Store a newly created organization.
+     *
+     * Accepts validated request data and creates an organization
+     * using the OrganizationService. Returns the created organization
+     * wrapped in a resource.
+     *
+     * @param OrganizationRequest $request
+     * @return OrganizationResource
      */
     public function store(OrganizationRequest $request)
     {
@@ -36,7 +58,10 @@ class OrganizationsController extends Controller
     }
 
     /**
-     * Show a specific organization.
+     * Display a specific organization by ID.
+     *
+     * @param int $id
+     * @return OrganizationResource
      */
     public function show($id)
     {
@@ -45,7 +70,14 @@ class OrganizationsController extends Controller
     }
 
     /**
-     * Update an existing organization using the service.
+     * Update an existing organization.
+     *
+     * Finds the organization by ID, applies updates using the service,
+     * and returns the updated organization wrapped in a resource.
+     *
+     * @param OrganizationRequest $request
+     * @param int $id
+     * @return OrganizationResource
      */
     public function update(OrganizationRequest $request, $id)
     {
@@ -55,7 +87,13 @@ class OrganizationsController extends Controller
     }
 
     /**
-     * Delete an organization using the service.
+     * Delete an organization.
+     *
+     * Removes the organization record from the database using the service.
+     * Returns a success message as JSON.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
@@ -63,5 +101,25 @@ class OrganizationsController extends Controller
         $this->organizationService->delete($organization);
 
         return response()->json(['message' => 'Organization deleted successfully']);
+    }
+
+    /**
+     * Display volunteers related to a specific organization.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function volunteers($id)
+    {
+        // Load organization with only the needed volunteer fields
+        $organization = Organization::with('volunteers:id,name,email,phone')
+            ->findOrFail($id);
+
+        // Return volunteers as JSON
+        return response()->json([
+            'organization_id' => $organization->id,
+            'organization_name' => $organization->license_number,
+            'volunteers' => $organization->volunteers,
+        ]);
     }
 }
