@@ -4,17 +4,15 @@ namespace Modules\Core\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Activitylog\LogOptions;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasApiTokens, HasRoles, Notifiable, LogsActivity;
+    use HasFactory, HasApiTokens, HasRoles, Notifiable;
 
     protected string $guard_name = 'sanctum';
 
@@ -54,11 +52,4 @@ class User extends Authenticatable
         ];
     }
 
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->useLogName('audit')
-            ->logOnlyDirty()
-            ->logFillable();
-    }
 }
