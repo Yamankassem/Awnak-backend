@@ -4,6 +4,7 @@ namespace Modules\Core\Database\Seeders;
 
 use Modules\Core\Models\User;
 use Illuminate\Database\Seeder;
+use Modules\Core\Database\Factories\ActivityLogFactory;
 
 class ActivityLogsSeeder extends Seeder
 {
@@ -19,9 +20,11 @@ class ActivityLogsSeeder extends Seeder
             return;
         }
 
-        activity('core')
-            ->causedBy($admin)
-            ->withProperties(['source' => 'seeder'])
-            ->log('Seeded core initial data');
+        ActivityLogFactory::create(
+            causer: $admin,
+            logName: 'core',
+            description: 'Seeded core initial data',
+            properties: ['source' => 'seeder']
+        );
     }
 }
