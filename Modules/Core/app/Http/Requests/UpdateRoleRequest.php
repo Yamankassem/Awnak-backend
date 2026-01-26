@@ -4,10 +4,24 @@ namespace Modules\Core\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class UpdateRoleRequest
+ *
+ * Validates role update data.
+ *
+ * Expected payload (all optional):
+ * - name: string (unique)
+ * - permissions: array<string>
+ *
+ * Authorization:
+ * - Requires `roles.update` permission.
+ */
 class UpdateRoleRequest extends FormRequest
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Define validation rules for updating a role.
+     *
+     * @return array<string, array<int, string>>
      */
     public function rules(): array
     {
@@ -19,7 +33,10 @@ class UpdateRoleRequest extends FormRequest
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Determine if the authenticated user is authorized
+     * to update roles.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {

@@ -4,10 +4,24 @@ namespace Modules\Core\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class StoreRoleRequest
+ *
+ * Validates role creation data.
+ *
+ * Expected payload:
+ * - name: string (required, unique)
+ * - permissions: array<string> (optional)
+ *
+ * Authorization:
+ * - Requires `roles.create` permission.
+ */
 class StoreRoleRequest extends FormRequest
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Define validation rules for creating a role.
+     *
+     * @return array<string, array<int, string>>
      */
     public function rules(): array
     {
@@ -19,7 +33,10 @@ class StoreRoleRequest extends FormRequest
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Determine if the authenticated user is authorized
+     * to create roles.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
