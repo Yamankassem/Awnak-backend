@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Evaluations\Http\Controllers\BadgeController;
+use Modules\Evaluations\Http\Controllers\CertificateController;
 use Modules\Evaluations\Http\Controllers\EvaluationController;
 use Modules\Evaluations\Http\Controllers\VolunteerBadgeController;
 
@@ -11,7 +12,6 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::apiResource('volunteerBadges', VolunteerBadgeController::class)->names('volunteerBadges');
     Route::apiResource('certificates', CertificateController::class)->names('certificates');
 });
-
 
 
 
