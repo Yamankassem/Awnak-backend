@@ -4,10 +4,23 @@ namespace Modules\Core\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class AssignUserRolesRequest
+ *
+ * Validates and authorizes assigning roles to a user.
+ *
+ * Expected payload:
+ * - roles: array<string> (required, at least one role)
+ *
+ * Authorization:
+ * - Requires `roles.update` permission.
+ */
 class AssignUserRolesRequest extends FormRequest
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Define validation rules for assigning roles.
+     *
+     * @return array<string, array<int, string>>
      */
     public function rules(): array
     {
@@ -18,7 +31,10 @@ class AssignUserRolesRequest extends FormRequest
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Determine if the authenticated user is authorized
+     * to assign roles.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {

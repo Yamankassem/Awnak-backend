@@ -5,16 +5,27 @@ namespace Modules\Organizations\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Modules\Volunteers\Models\Skill;
+use Modules\Organizations\Models\Opportunity;
 
 
 class OpportunitySkillSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('opportunity_skill')->insert([
-            ['opportunity_id' => 1, 'skill_id' => 3], // Volunteer Teacher needs Teaching
-            ['opportunity_id' => 1, 'skill_id' => 1], // Volunteer Teacher needs Communication
-            ['opportunity_id' => 2, 'skill_id' => 2], // Medical Aid Volunteer needs First Aid
-        ]);
+        //  Guard clauses (إجباري)
+        if (!Skill::exists() || !Opportunity::exists()) {
+            $this->command?->warn('Skipping OpportunitySkillSeeder: missing skills or opportunities');
+            return;
+        }
+
+        $opportunities = Opportunity::all();
+        $skills = Skill::pluck('id');
+
+        foreach ($opportunities as $opportunity) {
+            $opportunity->skills()->syncWithoutDetaching(
+                $skills->random(2)->toArray()
+            );
+        }
     }
 }

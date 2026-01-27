@@ -10,22 +10,25 @@ return new class extends Migration
     {
         Schema::create('volunteer_availability', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('volunteer_profile_id');
-            
+            $table->foreignId('volunteer_profile_id')
+                ->constrained('volunteer_profiles')
+                ->cascadeOnDelete();
+
             $table->enum('day', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
             $table->time('start_time');
             $table->time('end_time');
-            
+
             $table->timestamps();
-            
-            // Foreign key constraint (internal relationship - allowed)
-            $table->foreign('volunteer_profile_id')
-                  ->references('id')
-                  ->on('volunteer_profiles')
-                  ->onDelete('cascade');
-            
+
             // Index for queries
             $table->index('day');
+            $table->index('volunteer_profile_id');
+
+            // Prevent duplicate identical availability slots
+            $table->unique(
+                ['volunteer_profile_id', 'day', 'start_time', 'end_time'],
+                'volunteer_availability_unique'
+            );
         });
     }
 

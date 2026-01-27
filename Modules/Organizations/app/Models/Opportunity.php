@@ -3,10 +3,11 @@
 
 namespace Modules\Organizations\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Volunteers\Models\Skill;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Organizations\Models\Organization;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Organizations\Database\Factories\OpportunityFactory;
 
 use MatanYadaev\EloquentSpatial\Objects\Point;
@@ -51,6 +52,7 @@ class Opportunity extends Model
 {
     use HasFactory, HasSpatial, LogsActivity;
 
+
     protected $fillable = [
         'title',
         'description',
@@ -84,5 +86,6 @@ class Opportunity extends Model
     public function skills()
     {
         return $this->hasMany(OpportunitySkill::class);
+
     }
 }

@@ -2,16 +2,24 @@
 
 namespace Modules\Volunteers\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Core\Models\User;
+use Modules\Core\Models\Location;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Modules\Volunteers\Database\Factories\VolunteerProfileFactory;
 
 class VolunteerProfile extends Model implements HasMedia
 {
     use HasFactory, SoftDeletes, InteractsWithMedia;
+
+    protected static function newFactory()
+    {
+        return VolunteerProfileFactory::new();
+    }
 
     protected $fillable = [
         'user_id',
@@ -61,7 +69,7 @@ class VolunteerProfile extends Model implements HasMedia
 
     /*
     |--------------------------------------------------------------------------
-    | Internal Relationships (داخل الموديول فقط)
+    | Internal & External Relationships
     |--------------------------------------------------------------------------
     */
 
@@ -81,6 +89,16 @@ class VolunteerProfile extends Model implements HasMedia
     public function availability()
     {
         return $this->hasMany(related: VolunteerAvailability::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
     }
 
     /*
@@ -110,20 +128,4 @@ class VolunteerProfile extends Model implements HasMedia
         return $query->where('is_verified', true);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Helper Methods
-    |--------------------------------------------------------------------------
-    | User أو Location Models - فقط IDs
-    */
-
-    public function getUserId(): int
-    {
-        return $this->user_id;
-    }
-
-    public function getLocationId(): ?int
-    {
-        return $this->location_id;
-    }
 }
