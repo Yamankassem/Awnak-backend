@@ -34,5 +34,7 @@ class UsersSeeder extends Seeder
             ]
         );
         $volunteer->syncRoles(['volunteer']);
+
+        User::factory()->count(10)->create();
     }
 }

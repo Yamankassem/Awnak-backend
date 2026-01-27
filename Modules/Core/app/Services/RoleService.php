@@ -15,7 +15,7 @@ class RoleService
         return Role::query()
             ->with('permissions')
             ->where('guard_name', 'sanctum')
-            ->get();
+            ->paginate(10);
     }
 
     public function create(array $data, int $actorId): Role
