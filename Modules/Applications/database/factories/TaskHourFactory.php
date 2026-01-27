@@ -10,7 +10,7 @@ class TaskHourFactory extends Factory
     /**
      * The name of the factory's corresponding model.
      */
-    protected $model = \Modules\Applications\Models\TaskHour::class;
+    protected $model = \Modules\Applications\Models\TaskHourFactory::class;
 
     /**
      * Define the model's default state.
@@ -19,10 +19,10 @@ class TaskHourFactory extends Factory
     {
         return [
             'task_id'      => Task::factory(),
-            'hours'        => $this->faker->numberBetween(1,8) ,
-            'started_date' => $this->faker->date('Y-m-d H:i:s') ,
-            'ended_date'   => $this->faker->date('Y-m-d H:i:s') ,
-            'note'         => $this->faker->sentence ,
+            'hours'        =>$this->faker->numberBetween(1,8) ,
+            'started_date' =>$this->faker->date('Y-m-d H:i:s') ,
+            'ended_date'   =>$this->faker->date('Y-m-d H:i:s') ,
+            'note'         =>$this->faker->sentence ,
         ];
     }
 }

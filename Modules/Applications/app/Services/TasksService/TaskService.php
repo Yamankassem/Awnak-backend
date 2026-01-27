@@ -2,9 +2,10 @@
 
 namespace Models\Applications\Services\TasksService; 
 
+use Illuminate\Support\Facades\Cache;
 use Modules\Applications\Models\Task;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Applications\Transformers\TaskResource;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TaskService 
@@ -13,7 +14,7 @@ class TaskService
 
     public function getAllTasks(array $filters = []): AnonymousResourceCollection
     {
-        $query = Task::with(['application.opprtunity', 'application.volunteer', 'application.coordinator']);
+        $query = Task::with(['application.opportunity', 'application.volunteer', 'application.coordinator']);
 
         $this->applyFilters($query, $filters);
         
@@ -24,9 +25,9 @@ class TaskService
         return TaskResource::collection($tasks);
     }
 
-    public function getTask(int $id): ApplicationResource
+    public function getTask(int $id): TaskResource
     {
-        $task = Task::with(['application', 'taskHours', 'feedbacks'])->find($id);
+        $task = Task::with(['applications', 'taskHours', 'feedbacks'])->find($id);
 
         if (!$task)
         {   
@@ -113,5 +114,20 @@ class TaskService
         $sortBy = $filters['sort_by'] ?? 'due_date';
         $sortOrder = $filters['sort_order'] ?? 'asc';
         $query->orderBy($sortBy, $sortOrder);
+    }
+
+
+    public function getVolunteerTasks($volunteerId)
+    {
+        $cacheKey = "volunteer_tasks_{$volunteerId}_" . date('Y-m-d-H');
+        
+        return Cache::remember($cacheKey, 300, function () use ($volunteerId) {
+            return Task::whereHas('application', function ($query) use ($volunteerId) {
+                $query->where('volunteer_id', $volunteerId);
+            })
+            ->with(['application.opportunity'])
+            ->orderBy('due_date')
+            ->get();
+        });
     }
 }

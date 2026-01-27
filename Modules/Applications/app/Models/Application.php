@@ -5,22 +5,15 @@ namespace Modules\Applications\Models;
 use Modules\Core\Models\User;
 use Modules\Applications\Models\Task;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Applications\Traits\Auditable;
-use Modules\Applications\Traits\HasStatus;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Organizations\Models\Opportunity;
 use Modules\Volunteers\Models\VolunteerProfile;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Applications\Database\Factories\ApplicationFactory;
-// use Modules\Applications\Database\Factories\ApplicationFactory;
 
 class Application extends Model
 {
-    use SoftDeletes, Auditable, HasStatus;
     use HasFactory;
-    protected $table = 'applications';
     
     /**
      * The attributes that are mass assignable.
@@ -31,60 +24,26 @@ class Application extends Model
        'coordinator_id',
        'assigned_at',
        'description',
-       'status',
     ];
-     
-    protected $casts = [
-        'assigned_at' => 'date',
-    ];
+    
 
-    public function getAllowedStatus()
+    public function tasks(): HasMany
     {
-        return ['pending', 'approved', 'rejected'];
+        return $this->hasMany (Task::class);
     }
 
-    
-   /**
-    * Get all of the tasks for the Application
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    */
-   public function tasks(): HasMany
-   {
-       return $this->hasMany(Task::class);
-   }
-
-        
-    /**
-     * Get the opportunity that owns the Application
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function opportunity(): BelongsTo
     {
-        return $this->belongsTo(Opportunity::class, 'opportunity_id');
+        return $this->belongsTo (Opportunity::class);
     }
 
-
-    /**
-     * Get the volunteer that owns the Application
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function volunteerProfile(): BelongsTo
+    public function volunteer(): BelongsTo
     {
-        return $this->belongsTo(VolunteerProfile::class, 'volunteer_id');
+        return $this->belongsTo (VolunteerProfile::class, 'volunteer_id');
     }
 
-    
-
-     /**
-     * Get the user that owns the Application
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user(): BelongsTo
+    public function coordinator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'coordinator_id');
+        return $this->belongsTo (User::class, 'coordinator_id');
     }
 }
