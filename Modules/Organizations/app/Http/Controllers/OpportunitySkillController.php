@@ -12,9 +12,10 @@ use Modules\Organizations\Services\OpportunitySkillService;
 /**
  * Controller: OpportunitySkillController
  *
- * Handles operations for managing the relationship between Opportunities and Skills.
- * Delegates business logic (attach, detach, sync) to OpportunitySkillService
- * for cleaner code and better maintainability.
+ * Manages the relationship between Opportunities and Skills.
+ * Provides endpoints to attach, detach, and sync skills for a given opportunity.
+ * Delegates business logic to OpportunitySkillService for cleaner code and better maintainability.
+ * All responses are returned as JSON for consistency.
  */
 class OpportunitySkillController extends Controller
 {
@@ -22,6 +23,8 @@ class OpportunitySkillController extends Controller
 
     /**
      * Inject the OpportunitySkillService into the controller.
+     *
+     * @param OpportunitySkillService $opportunitySkillService
      */
     public function __construct(OpportunitySkillService $opportunitySkillService)
     {
@@ -29,23 +32,27 @@ class OpportunitySkillController extends Controller
     }
 
     /**
-     * Display all skills linked to a specific opportunity.
+     * Index: Retrieve all skills linked to opportunities.
      *
-     * @param int $opportunityId
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * Loads all records from the opportunity_skills table with related opportunity and organization.
+     * Returns the data wrapped in OpportunitySkillResource collection.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
         $skills = OpportunitySkill::with('opportunity.organization')->get();
-        return OpportunitySkillResource::collection($skills);
-    }
 
+        return response()->json([
+            'data' => OpportunitySkillResource::collection($skills)
+        ]);
+    }
 
     /**
      * Show: Display a single opportunity skill by ID.
      *
-     * This method retrieves one record from the opportunity_skills table
-     * using its primary key. It returns the skill data as JSON.
+     * Finds a specific record in opportunity_skills by its primary key.
+     * Returns the skill-opportunity relationship details as JSON.
      *
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
@@ -63,16 +70,12 @@ class OpportunitySkillController extends Controller
         ]);
     }
 
-
-
     /**
-     * Store: Attach a skill (or multiple skills) to an opportunity.
+     * Store: Attach skills to an opportunity.
      *
-     * This method accepts the validated request payload containing
-     * `opportunity_id` and either a single `skill_id` or an array of `skill_ids`.
-     * Instead of expecting the opportunity ID from the route, it reads it directly
-     * from the request body. The service then handles attaching the provided
-     * skill IDs to the given opportunity.
+     * Accepts validated request data containing opportunity_id and skill_id(s).
+     * Normalizes input to always be an array of skill IDs.
+     * Uses the service to attach skills to the given opportunity.
      *
      * @param OpportunitySkillRequest $request
      * @return \Illuminate\Http\JsonResponse
@@ -80,29 +83,23 @@ class OpportunitySkillController extends Controller
     public function store(OpportunitySkillRequest $request)
     {
         $data = $request->validated();
-
         $opportunity = Opportunity::findOrFail($data['opportunity_id']);
 
-        // Normalize skill IDs: wrap single value into an array if needed
         $skillIds = isset($data['skill_ids'])
-            ? $data['skill_ids']                // case: array of skill IDs
-            : [$data['skill_id']];              // case: single skill ID
+            ? $data['skill_ids']
+            : [$data['skill_id']];
 
-        // Attach skills to the opportunity using the service
         $this->opportunitySkillService->attachSkills($opportunity, $skillIds);
 
-        return response()->json(['message' => 'Skills attached successfully']);
+        return response()->json(['message' => __('skills.attached')], 201);
     }
-
 
     /**
      * Update: Sync skills for an opportunity.
      *
-     * This method accepts the validated request payload containing
-     * `opportunity_id` and either a single `skill_id` or an array of `skill_ids`.
-     * Since the service method signature requires an array, the code normalizes
-     * the input: if only one `skill_id` is provided, it is wrapped into an array.
-     * This ensures compatibility and prevents type errors.
+     * Accepts validated request data containing opportunity_id and skill_id(s).
+     * Normalizes input to always be an array of skill IDs.
+     * Uses the service to sync skills for the given opportunity.
      *
      * @param OpportunitySkillRequest $request
      * @return \Illuminate\Http\JsonResponse
@@ -110,23 +107,22 @@ class OpportunitySkillController extends Controller
     public function update(OpportunitySkillRequest $request)
     {
         $data = $request->validated();
-
         $opportunity = Opportunity::findOrFail($data['opportunity_id']);
 
-        // Normalize skill IDs: wrap single value into an array if needed
         $skillIds = isset($data['skill_ids'])
-            ? $data['skill_ids']          // case: array of skill IDs
-            : [$data['skill_id']];        // case: single skill ID
+            ? $data['skill_ids']
+            : [$data['skill_id']];
 
-        // Sync skills for the opportunity
         $this->opportunitySkillService->syncSkills($opportunity, $skillIds);
 
-        return response()->json(['message' => 'Skills synced successfully']);
+        return response()->json(['message' => __('skills.attached')]);
     }
 
-
     /**
-     * Detach specific skills from an opportunity using the service.
+     * Destroy: Detach skills from an opportunity.
+     *
+     * Accepts validated request data containing skill_ids.
+     * Uses the service to detach the provided skills from the given opportunity.
      *
      * @param OpportunitySkillRequest $request
      * @param int $opportunityId
@@ -136,9 +132,8 @@ class OpportunitySkillController extends Controller
     {
         $opportunity = Opportunity::findOrFail($opportunityId);
 
-        // Detach skills from the opportunity
         $this->opportunitySkillService->detachSkills($opportunity, $request->validated()['skill_ids']);
 
-        return response()->json(['message' => 'Skills detached successfully']);
+        return response()->json(['message' => __('skills.detached')]);
     }
 }

@@ -2,11 +2,30 @@
 
 namespace Modules\Applications\Providers;
 
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\ServiceProvider;
-use Nwidart\Modules\Traits\PathNamespace;
-use RecursiveDirectoryIterator;
+use Illuminate\Http\Request;
 use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Blade;
+use Modules\Applications\Models\Task;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Cache\RateLimiting\Limit;
+use Modules\Applications\Models\Feedback;
+use Modules\Applications\Models\TaskHour;
+use Nwidart\Modules\Traits\PathNamespace;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\RateLimiter;
+use Modules\Applications\Models\Application;
+use Modules\Applications\App\Helpers\ApiResponse;
+use Modules\Applications\Policies\TasksPolicy\TaskPolicy;
+use Modules\Applications\Services\TasksService\TaskService;
+use Modules\Applications\Interfaces\ModuleApplicationsInterface;
+use Modules\Applications\Policies\FeedbacksPolicy\FeedbackPolicy;
+use Modules\Applications\Policies\TaskHoursPolicy\TaskHourPolicy;
+use Modules\Applications\Services\FeedbacksService\FeedbackService;
+use Modules\Applications\Services\TaskHoursService\TaskHourService;
+use Modules\Applications\Policies\ApplicationsPolicy\ApplicationPolicy;
+use Modules\Applications\Services\ApplicationsService\ApplicationService;
 
 class ApplicationsServiceProvider extends ServiceProvider
 {
@@ -15,7 +34,7 @@ class ApplicationsServiceProvider extends ServiceProvider
     protected string $name = 'Applications';
 
     protected string $nameLower = 'applications';
-
+    
     /**
      * Boot the application events.
      */
@@ -26,7 +45,9 @@ class ApplicationsServiceProvider extends ServiceProvider
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
+        $this->registerPolicies();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        
     }
 
     /**
@@ -36,14 +57,43 @@ class ApplicationsServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+        
+        $this->app->singleton(ApplicationService::class);
+        $this->app->singleton(TaskService::class);
+        $this->app->singleton(TaskHourService::class);
+        $this->app->singleton(FeedbackService::class);
+
+         $this->app->bind('ApiResponse', function(){
+            return new ApiResponse();
+         });
     }
 
+
+    protected function registerPolicies(): void
+    {
+        Gate::policy(
+            Application::class,
+            ApplicationPolicy::class
+            );
+        Gate::policy(
+            Task::class,
+            TaskPolicy::class
+        );
+        Gate::policy(
+            TaskHour::class,
+            TaskHourPolicy::class
+        );
+        Gate::policy(
+            Feedback::class,
+            FeedbackPolicy::class
+        );
+    }
     /**
      * Register commands in the format of Command::class
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+         $this->commands([]);
     }
 
     /**
@@ -51,10 +101,10 @@ class ApplicationsServiceProvider extends ServiceProvider
      */
     protected function registerCommandSchedules(): void
     {
-        // $this->app->booted(function () {
-        //     $schedule = $this->app->make(Schedule::class);
-        //     $schedule->command('inspire')->hourly();
-        // });
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+            $schedule->command('inspire')->hourly();
+        });
     }
 
     /**
@@ -150,5 +200,12 @@ class ApplicationsServiceProvider extends ServiceProvider
         }
 
         return $paths;
+    }
+
+    protected function configureRateLimiting()
+    {
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
     }
 }

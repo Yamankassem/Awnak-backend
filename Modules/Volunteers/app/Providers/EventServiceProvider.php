@@ -13,6 +13,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [];
 
+
     /**
      * Indicates if events should be discovered.
      *

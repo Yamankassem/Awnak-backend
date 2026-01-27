@@ -4,12 +4,15 @@ namespace Modules\Applications\Models;
 
 use Modules\Applications\Models\Task;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Applications\Traits\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Applications\Database\Factories\TaskHourFactory;
 
 class TaskHour extends Model
 {
+    use SoftDeletes, Auditable;
     use HasFactory;
     protected $table = 'task_hours';
 
@@ -23,14 +26,19 @@ class TaskHour extends Model
         'ended_date',
         'note',
     ];
-
-     protected static function newFactory(): TaskHourFactory
-     {
-          return TaskHourFactory::new();
-     }
-
+    
+    protected $casts = [
+        'started_date' => 'date',
+        'ended_date' => 'date',
+    ];
+    
+    /**
+     * Get the task that owns the TaskHour
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function task(): BelongsTo
     {
-        return $this->belongsTo (Task::class);
+        return $this->belongsTo(Task::class, 'task_id');
     }
 }
