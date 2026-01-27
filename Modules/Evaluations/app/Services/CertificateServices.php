@@ -5,7 +5,7 @@ namespace Modules\Evaluations\Services;
 use Modules\Evaluations\Models\Certificate;
 use Illuminate\Support\Facades\Auth;
 
-class CertificateService
+class CertificateServices
 {
     /**
      * Create certificate

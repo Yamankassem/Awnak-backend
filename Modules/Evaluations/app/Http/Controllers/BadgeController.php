@@ -5,7 +5,7 @@ namespace Modules\Evaluations\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Modules\Evaluations\Http\Requests\Badge\StoreBadgeRequest;
 use Modules\Evaluations\Http\Requests\Badge\UpdateBadgeRequest;
-use Modules\Evaluations\Services\BadgeService;
+use Modules\Evaluations\Services\BadgeServices;
 use Modules\Evaluations\Models\Badge;
 use Modules\Evaluations\Http\Resources\BadgeResource;
 use Modules\Evaluations\Http\Traits\ApiResponse;
@@ -16,7 +16,7 @@ class BadgeController extends Controller
 
     protected $badgeService;
 
-    public function __construct(BadgeService $badgeService)
+    public function __construct(BadgeServices $badgeService)
     {
         $this->badgeService = $badgeService;
     }
