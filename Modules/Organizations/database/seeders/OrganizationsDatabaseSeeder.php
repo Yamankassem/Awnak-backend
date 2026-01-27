@@ -18,9 +18,9 @@ class OrganizationsDatabaseSeeder extends Seeder
         $this->call([
             OrganizationSeeder::class,
             OpportunitySeeder::class,
-            SkillsSeeder::class,
-            OpportunitySkillSeeder::class,
-            DocumentSeeder::class,
+        //    OpportunitySkillSeeder::class,
+        //    DocumentSeeder::class,
+
         ]);
     }
 }

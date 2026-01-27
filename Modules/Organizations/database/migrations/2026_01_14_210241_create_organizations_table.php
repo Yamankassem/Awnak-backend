@@ -4,33 +4,51 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Migration: Create Organizations Table
+ *
+ * Defines the schema for the organizations table, which stores
+ * information about registered organizations. Each organization
+ * is linked to a user account from the Core module.
+ */
 return new class extends Migration
 {
     /**
      * Run the migrations.
-     * * This table stores information about organizations.
-     * Fields:
-     * - id: Primary key
-     * - license_number: Unique license number of the organization
-     * - type: Type of organization (e.g., NGO, school, charity)
-     * - bio: Short description or background
-     * - website: Official website (optional)
-     * - created_at / updated_at: Timestamps
+     *
+     * Creates the organizations table with attributes such as license number,
+     * type, bio, website, and a foreign key linking to the users table.
+     *
+     * @return void
      */
     public function up(): void
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
-            $table->string('license_number')->unique();
-            $table->string('type');
-            $table->text('bio')->nullable();
-            $table->string('website')->nullable();
+
+            // Foreign key linking to the users table (Core module)
+            $table->unsignedBigInteger('user_id');
+
+            $table->string('license_number')->unique(); // Unique license number
+            $table->string('type'); // Type of organization (NGO, school, charity, etc.)
+            $table->text('bio')->nullable(); // Short description or background
+            $table->string('website')->nullable(); // Official website (optional)
             $table->timestamps();
+
+            // Foreign key relationship: each organization belongs to one user
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade'); // Cascade delete: remove organization if user is deleted
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * Drops the organizations table.
+     *
+     * @return void
      */
     public function down(): void
     {
