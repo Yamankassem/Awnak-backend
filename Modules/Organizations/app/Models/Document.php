@@ -4,35 +4,43 @@ namespace Modules\Organizations\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use Modules\Organizations\Database\Factories\DocumentFactory;
-class Document extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+
+class Document extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, LogsActivity, InteractsWithMedia;
 
-    protected static function newFactory()
-    { return DocumentFactory::new(); }
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * These fields can be filled when creating or updating a document.
-     */
     protected $fillable = [
         'opportunity_id',
         'title',
-        'file_path',
-        'file_type',
-        'file_size',
+        'description',
     ];
 
-    /**
-     * Relationship: Document belongs to an Opportunity.
-     *
-     * Each document is linked to a single opportunity.
-     */
+    protected static function newFactory()
+    {
+        return DocumentFactory::new();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('document')
+            ->logOnly(['title', 'description'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => "Document has been {$eventName}");
+    }
+
     public function opportunity()
     {
         return $this->belongsTo(Opportunity::class);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('documents');
     }
 }

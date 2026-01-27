@@ -1,8 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Core\Http\Controllers\CoreController;
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('cores', CoreController::class)->names('core');
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('v1')->group(function () {
+
+    require __DIR__ . '/api/v1/users.php';
+    require __DIR__ . '/api/v1/roles.php';
+
 });

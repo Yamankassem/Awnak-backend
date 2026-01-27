@@ -19,8 +19,8 @@ class VolunteerAvailability extends Model
     ];
 
     protected $casts = [
-        'start_time' => 'datetime:H:i',
-        'end_time' => 'datetime:H:i',
+        'start_time' => 'string',
+        'end_time' => 'string',
     ];
 
     /*

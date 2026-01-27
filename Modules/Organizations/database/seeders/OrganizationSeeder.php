@@ -14,6 +14,7 @@ class OrganizationSeeder extends Seeder
             'type' => 'NGO',
             'bio' => 'Humanitarian organization providing aid and relief.',
             'website' => 'https://redcrescent.org',
+            'user_id' => 1, // لازم يكون فيه مستخدم بالجدول users عنده هذا الـ id
         ]);
     }
 }

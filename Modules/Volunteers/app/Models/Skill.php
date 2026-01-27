@@ -3,9 +3,18 @@
 namespace Modules\Volunteers\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Volunteers\Database\Factories\SkillFactory;
 
 class Skill extends Model
 {
+    use HasFactory;
+
+    protected static function newFactory()
+    {
+        return SkillFactory::new();
+    }
+    
     protected $fillable = ['name', 'slug'];
 
     public function volunteers()
