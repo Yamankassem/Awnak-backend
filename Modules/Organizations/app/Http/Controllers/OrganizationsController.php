@@ -2,6 +2,7 @@
 
 namespace Modules\Organizations\Http\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 use Modules\Organizations\Http\Requests\OrganizationRequest;
 use Modules\Organizations\Transformers\OrganizationResource;
@@ -11,15 +12,17 @@ use Modules\Organizations\Services\OrganizationService;
 /**
  * Controller: OrganizationsController
  *
- * Manages CRUD operations for Organization entities.
+ * Handles CRUD operations for Organization entities.
  * Delegates business logic to OrganizationService for cleaner code,
- * improved testability, and easier maintenance. Uses OrganizationResource
- * to format API responses consistently.
+ * improved testability, and easier maintenance.
+ * All responses are returned as JSON for consistency.
  */
 class OrganizationsController extends Controller
 {
-    protected OrganizationService $organizationService;
 
+      use AuthorizesRequests;
+
+    protected OrganizationService $organizationService;
     /**
      * Inject the OrganizationService into the controller.
      *
@@ -33,12 +36,19 @@ class OrganizationsController extends Controller
     /**
      * Retrieve a paginated list of organizations.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
         $organizations = Organization::paginate(10);
-        return OrganizationResource::collection($organizations);
+
+        return response()->json([
+            'data' => OrganizationResource::collection($organizations),
+            'meta' => [
+                'current_page' => $organizations->currentPage(),
+                'total' => $organizations->total(),
+            ]
+        ]);
     }
 
     /**
@@ -46,44 +56,62 @@ class OrganizationsController extends Controller
      *
      * Accepts validated request data and creates an organization
      * using the OrganizationService. Returns the created organization
-     * wrapped in a resource.
+     * wrapped in a resource with a success message.
      *
      * @param OrganizationRequest $request
-     * @return OrganizationResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(OrganizationRequest $request)
     {
+      //  $this->authorize('create', Organization::class);
+
         $organization = $this->organizationService->create($request->validated());
-        return new OrganizationResource($organization);
+
+        return response()->json([
+            'message' => __('organizations.created'),
+            'data' => new OrganizationResource($organization)
+        ], 201);
     }
 
     /**
      * Display a specific organization by ID.
      *
      * @param int $id
-     * @return OrganizationResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
         $organization = Organization::findOrFail($id);
-        return new OrganizationResource($organization);
+
+        return response()->json([
+            'data' => new OrganizationResource($organization)
+        ]);
     }
 
     /**
      * Update an existing organization.
      *
      * Finds the organization by ID, applies updates using the service,
-     * and returns the updated organization wrapped in a resource.
+     * and returns the updated organization wrapped in a resource
+     * with a success message.
      *
      * @param OrganizationRequest $request
      * @param int $id
-     * @return OrganizationResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(OrganizationRequest $request, $id)
     {
+
         $organization = Organization::findOrFail($id);
+
+        $this->authorize('update', $organization);
+
         $organization = $this->organizationService->update($organization, $request->validated());
-        return new OrganizationResource($organization);
+
+        return response()->json([
+            'message' => __('organizations.updated'),
+            'data' => new OrganizationResource($organization)
+        ]);
     }
 
     /**
@@ -98,24 +126,30 @@ class OrganizationsController extends Controller
     public function destroy($id)
     {
         $organization = Organization::findOrFail($id);
+
+        $this->authorize('delete', $organization);
+
         $this->organizationService->delete($organization);
 
-        return response()->json(['message' => 'Organization deleted successfully']);
+        return response()->json([
+            'message' => __('organizations.deleted')
+        ]);
     }
 
     /**
      * Display volunteers related to a specific organization.
+     *
+     * Loads the organization with related volunteers and returns
+     * their basic information as JSON.
      *
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function volunteers($id)
     {
-        // Load organization with only the needed volunteer fields
         $organization = Organization::with('volunteers:id,name,email,phone')
             ->findOrFail($id);
 
-        // Return volunteers as JSON
         return response()->json([
             'organization_id' => $organization->id,
             'organization_name' => $organization->license_number,

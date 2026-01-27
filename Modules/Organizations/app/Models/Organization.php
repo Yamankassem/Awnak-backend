@@ -5,16 +5,21 @@ namespace Modules\Organizations\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Modules\Organizations\Database\Factories\OrganizationFactory;
+use Modules\Organizations\Database\Factories\OrganizationFactory;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
- use Modules\Organizations\Database\Factories\OrganizationFactory;
 class Organization extends Model
 {
+    use LogsActivity, HasFactory;
 
-    use HasFactory;
 
-    protected static function newFactory() { return OrganizationFactory::new(); }
+    protected static function newFactory()
+    {
+        return OrganizationFactory::new();
+    }
     /** * The table associated with the model. * * This model represents the 'organizations' table in the database.
-    */
+     */
     protected $table = 'organizations';
 
     /** * The attributes that are mass assignable.
@@ -28,8 +33,13 @@ class Organization extends Model
         'type',
         'bio',
         'website',
-        'user_id'];
-
+        'user_id'
+    ];
+    // Function of logactivity
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->useLogName('organization')->logOnly(['license_number', 'type', 'bio', 'website'])->logOnlyDirty()->setDescriptionForEvent(fn(string $eventName) => "Organization has been {$eventName}");
+    }
     /** * Define relationships here. *
      *  * Example: *
      *  An organization may have many volunteers, applications, documents, and evaluations. */
@@ -53,5 +63,4 @@ class Organization extends Model
     {
         return $this->hasMany(\Modules\Evaluations\Models\Evaluation::class);
     }
-
 }

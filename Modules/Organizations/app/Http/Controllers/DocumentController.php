@@ -2,100 +2,89 @@
 
 namespace Modules\Organizations\Http\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 use Modules\Organizations\Http\Requests\DocumentRequest;
 use Modules\Organizations\Models\Document;
-use Modules\Organizations\Services\DocumentService;
+use Modules\Organizations\Models\Opportunity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-/**
- * Controller: DocumentController
- *
- * Handles CRUD operations for Document entities.
- * Delegates business logic (file storage, update, deletion) to DocumentService
- * for cleaner code, better testability, and maintainability.
- */
 class DocumentController extends Controller
 {
-    protected DocumentService $documentService;
-
-    public function __construct(DocumentService $documentService)
-    {
-        $this->documentService = $documentService;
-    }
+    use AuthorizesRequests;
 
     /**
-     * Retrieve all documents with their associated media.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * Index: Retrieve all documents with their associated media.
      */
     public function index(): JsonResponse
     {
-        $documents = $this->documentService->getAllDocuments();
-        return response()->json($documents);
+        $documents = Document::with('media')->get();
+
+        return response()->json([
+            'data' => $documents
+        ]);
     }
 
     /**
-     * Store a new document.
-     *
-     * Accepts `title`, `description`, and `file` from the request body.
-     * Creates the document using the service and returns it with its media.
-     *
-     * @param DocumentRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * Store: Upload a new document with file.
      */
     public function store(DocumentRequest $request): JsonResponse
     {
         $data = $request->validated();
-        $document = $this->documentService->create($data);
+
+        $opportunity = Opportunity::findOrFail($data['opportunity_id']);
+
+        $document = Document::create([
+            'opportunity_id' => $opportunity->id,
+            'title'          => $data['title'],
+            'description'    => $data['description'] ?? null,
+        ]);
+
+        // رفع الملف عبر Media Library
+        if ($request->hasFile('file')) {
+            $document->addMedia($request->file('file'))
+                ->toMediaCollection('documents');
+        }
 
         return response()->json([
-            'message'  => 'Document uploaded successfully',
-            'document' => $document->load('media')
+            'message' => 'Document uploaded successfully',
+            'data'    => $document->load('media')
         ], 201);
     }
 
     /**
-     * Display a single document file by ID.
-     *
-     * @param Document $document
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * Show: Display a single document file by ID.
      */
     public function show(Document $document)
     {
         $media = $document->getFirstMedia('documents');
-        return response()->file($media->getPath());
 
-        // Use response()->download($media->getPath()) if download is preferred
+        if (! $media) {
+            return response()->json(['message' => 'No file attached'], 404);
+        }
+
+        return response()->file($media->getPath());
     }
 
     /**
-     * Update an existing document and replace its file if provided.
-     *
-     * @param DocumentRequest $request
-     * @param Document $document
-     * @return \Illuminate\Http\JsonResponse
+     * Update: Modify an existing document and replace its file if provided.
      */
     public function update(DocumentRequest $request, Document $document): JsonResponse
     {
-        $document = $this->documentService->update($document, $request->validated());
-        return response()->json([
-            'message' => 'Document updated successfully',
-            'document' => $document->load('media')
-        ]);
+        $data = $request->validated();
+        $document->update(['title' => $data['title'], 'description' => $data['description'] ?? $document->description,]);
+        if ($request->hasFile('file')) {
+            $document->clearMediaCollection('documents');
+            $document->addMedia($request->file('file'))->toMediaCollection('documents');
+        }
+        return response()->json(['message' => 'Document updated successfully', 'data' => $document->load('media')], 200);
     }
 
-    /**
-     * Delete a document and its associated media.
-     *
-     * @param Document $document
-     * @return \Illuminate\Http\JsonResponse
-     */
+    
     public function destroy(Document $document): JsonResponse
     {
-        $this->documentService->delete($document);
-        return response()->json([
-            'message' => 'Document deleted successfully'
-        ]);
+        $document->clearMediaCollection('documents');
+        $document->delete();
+        return response()->json(['message' => 'Document deleted successfully'], 200);
     }
 }

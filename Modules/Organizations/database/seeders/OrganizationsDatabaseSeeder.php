@@ -18,7 +18,7 @@ class OrganizationsDatabaseSeeder extends Seeder
             OrganizationSeeder::class,
             OpportunitySeeder::class,
         //    OpportunitySkillSeeder::class,
-            DocumentSeeder::class,
+        //    DocumentSeeder::class,
         ]);
     }
 }

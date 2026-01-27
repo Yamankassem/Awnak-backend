@@ -2,6 +2,7 @@
 
 namespace Modules\Organizations\Http\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 use Modules\Organizations\Models\Opportunity;
 use Modules\Organizations\Http\Requests\OpportunityRequest;
@@ -13,11 +14,13 @@ use Modules\Organizations\Services\OpportunityService;
  *
  * Manages CRUD operations for Opportunity entities.
  * Delegates business logic to OpportunityService for cleaner code,
- * improved testability, and easier maintenance. Uses OpportunityResource
- * to format API responses consistently.
+ * improved testability, and easier maintenance.
+ * All responses are returned as JSON for consistency.
  */
 class OpportunityController extends Controller
 {
+    use AuthorizesRequests;
+
     protected OpportunityService $opportunityService;
 
     /**
@@ -31,67 +34,87 @@ class OpportunityController extends Controller
     }
 
     /**
-     * Retrieve a paginated list of opportunities with their related organization.
+     * Index: Retrieve a paginated list of opportunities with their related organization.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
         $opportunities = Opportunity::with('organization')->paginate(10);
-        return OpportunityResource::collection($opportunities);
+
+        return response()->json([
+            'data' => OpportunityResource::collection($opportunities),
+            'meta' => [
+                'current_page' => $opportunities->currentPage(),
+                'total' => $opportunities->total(),
+            ]
+        ]);
     }
 
     /**
-     * Store a newly created opportunity.
+     * Store: Create a new opportunity.
      *
      * Accepts validated request data and creates an opportunity
      * using the OpportunityService. Returns the created opportunity
-     * wrapped in a resource.
+     * wrapped in a resource with a success message.
      *
      * @param OpportunityRequest $request
-     * @return OpportunityResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(OpportunityRequest $request)
     {
         $opportunity = $this->opportunityService->create($request->validated());
         $opportunity->load('organization');
 
-        return new OpportunityResource($opportunity);
+        return response()->json([
+            'message' => __('opportunities.created'),
+            'data' => new OpportunityResource($opportunity)
+        ], 201);
     }
 
     /**
-     * Display a specific opportunity by ID.
+     * Show: Display a specific opportunity by ID.
      *
      * @param int $id
-     * @return OpportunityResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
         $opportunity = Opportunity::with('organization')->findOrFail($id);
-        return new OpportunityResource($opportunity);
+
+        return response()->json([
+            'data' => new OpportunityResource($opportunity)
+        ]);
     }
 
     /**
-     * Update an existing opportunity.
+     * Update: Modify an existing opportunity.
      *
      * Finds the opportunity by ID, applies updates using the service,
-     * and returns the updated opportunity wrapped in a resource.
+     * and returns the updated opportunity wrapped in a resource
+     * with a success message.
      *
      * @param OpportunityRequest $request
      * @param int $id
-     * @return OpportunityResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(OpportunityRequest $request, $id)
     {
         $opportunity = Opportunity::findOrFail($id);
+
+        $this->authorize('update', $opportunity);
+
         $opportunity = $this->opportunityService->update($opportunity, $request->validated());
         $opportunity->load('organization');
 
-        return new OpportunityResource($opportunity);
+        return response()->json([
+            'message' => __('opportunities.updated'),
+            'data' => new OpportunityResource($opportunity)
+        ]);
     }
 
     /**
-     * Delete an opportunity.
+     * Destroy: Delete an opportunity.
      *
      * Removes the opportunity record from the database using the service.
      * Returns a success message as JSON.
@@ -102,8 +125,13 @@ class OpportunityController extends Controller
     public function destroy($id)
     {
         $opportunity = Opportunity::findOrFail($id);
+
+        $this->authorize('delete', $opportunity);
+
         $this->opportunityService->delete($opportunity);
 
-        return response()->json(['message' => 'Opportunity deleted successfully']);
+        return response()->json([
+            'message' => __('opportunities.deleted')
+        ]);
     }
 }

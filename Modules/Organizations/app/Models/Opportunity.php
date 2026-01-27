@@ -11,7 +11,8 @@ use Modules\Organizations\Database\Factories\OpportunityFactory;
 
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
-
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 /**
  * Model: Opportunity
  *
@@ -48,7 +49,7 @@ use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
 
 class Opportunity extends Model
 {
-    use HasFactory, HasSpatial;
+    use HasFactory, HasSpatial, LogsActivity;
 
     protected $fillable = [
         'title',
@@ -60,6 +61,11 @@ class Opportunity extends Model
         'organization_id',
         'coordinates',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->useLogName('opportunity')->logOnly(['title', 'description', 'status', 'start_date'])->logOnlyDirty()->setDescriptionForEvent(fn(string $eventName) => "Opportunity has been {$eventName}");
+    }
 
     protected $casts = [];
 
@@ -80,5 +86,3 @@ class Opportunity extends Model
         return $this->hasMany(OpportunitySkill::class);
     }
 }
-
-
