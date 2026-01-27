@@ -3,10 +3,11 @@
 
 namespace Modules\Organizations\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Volunteers\Models\Skill;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Organizations\Models\Organization;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Organizations\Database\Factories\OpportunityFactory;
 
 
@@ -20,7 +21,9 @@ class Opportunity extends Model
 {
     use HasFactory;
     protected static function newFactory()
-    { return OpportunityFactory::new(); }
+    {
+        return OpportunityFactory::new();
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -50,7 +53,7 @@ class Opportunity extends Model
      * Opportunity has many OppottunnitySkill
      */
     public function skills()
-     { return $this->hasMany(OpportunitySkill::class); }
-
-     
+    {
+        return $this->belongsToMany(Skill::class, 'opportunity_skill' );
+    }
 }

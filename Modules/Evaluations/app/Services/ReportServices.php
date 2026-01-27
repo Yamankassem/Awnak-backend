@@ -5,7 +5,7 @@ namespace Modules\Evaluations\Services;
 use Modules\Evaluations\Models\Report;
 use Illuminate\Support\Facades\Auth;
 
-class ReportService
+class ReportServices
 {
     /**
      * Create report

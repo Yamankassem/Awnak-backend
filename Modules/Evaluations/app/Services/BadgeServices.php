@@ -6,7 +6,7 @@ use Modules\Evaluations\Models\Badge;
 use Illuminate\Support\Facades\Auth;
 
 
-class BadgeService
+class BadgeServices
 {
     /**
      * Get all badges

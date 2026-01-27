@@ -4,11 +4,12 @@ namespace Modules\Organizations\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use Modules\Organizations\Database\Seeders\OrganizationSeeder;
+use Modules\Volunteers\Database\Seeders\SkillsSeeder;
 
-use Modules\Organizations\Database\Seeders\OpportunitySeeder;
-use Modules\Organizations\Database\Seeders\OpportunitySkillSeeder;
 use Modules\Organizations\Database\Seeders\DocumentSeeder;
+use Modules\Organizations\Database\Seeders\OpportunitySeeder;
+use Modules\Organizations\Database\Seeders\OrganizationSeeder;
+use Modules\Organizations\Database\Seeders\OpportunitySkillSeeder;
 
 class OrganizationsDatabaseSeeder extends Seeder
 {
@@ -17,7 +18,8 @@ class OrganizationsDatabaseSeeder extends Seeder
         $this->call([
             OrganizationSeeder::class,
             OpportunitySeeder::class,
-        //    OpportunitySkillSeeder::class,
+            SkillsSeeder::class,
+            OpportunitySkillSeeder::class,
             DocumentSeeder::class,
         ]);
     }

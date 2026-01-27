@@ -7,7 +7,7 @@ use Modules\Evaluations\Http\Requests\Report\StoreReportRequest;
 use Modules\Evaluations\Http\Resources\ReportResource;
 use Modules\Evaluations\Http\Traits\ApiResponse;
 use Modules\Evaluations\Models\Report;
-use Modules\Evaluations\Services\ReportService;
+use Modules\Evaluations\Services\ReportServices;
 
 class ReportController extends Controller
 {
@@ -15,7 +15,7 @@ class ReportController extends Controller
 
     protected $reportService;
 
-    public function __construct(ReportService $reportService)
+    public function __construct(ReportServices $reportService)
     {
         $this->reportService = $reportService;
     }

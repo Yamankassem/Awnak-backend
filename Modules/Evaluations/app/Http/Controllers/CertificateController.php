@@ -8,7 +8,7 @@ use Modules\Evaluations\Http\Requests\Certificate\UpdateCertificateRequest;
 use Modules\Evaluations\Http\Resources\CertificateResource;
 use Modules\Evaluations\Http\Traits\ApiResponse;
 use Modules\Evaluations\Models\Certificate;
-use Modules\Evaluations\Services\CertificateService;
+use Modules\Evaluations\Services\CertificateServices;
 
 class CertificateController extends Controller
 {
@@ -16,7 +16,7 @@ class CertificateController extends Controller
 
     protected $certificateService;
 
-    public function __construct(CertificateService $certificateService)
+    public function __construct(CertificateServices $certificateService)
     {
         $this->certificateService = $certificateService;
     }
