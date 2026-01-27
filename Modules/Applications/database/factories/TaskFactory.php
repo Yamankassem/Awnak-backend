@@ -10,7 +10,7 @@ class TaskFactory extends Factory
     /**
      * The name of the factory's corresponding model.
      */
-    protected $model = \Modules\Applications\Models\Task::class;
+    protected $model = \Modules\Applications\Models\TaskFactory::class;
 
     /**
      * Define the model's default state.
@@ -19,10 +19,10 @@ class TaskFactory extends Factory
     {
         return [
             'application_id' => Application::factory() ,
-            'title'          => $this->faker->sentence ,
-            'description'    => $this->faker->paragraph ,
-            'status'         => $this->faker->randomElement(['active','complete']) ,
-            'due_date'       => $this->faker->dateTimeBetween('now','+1 month') ,
+            'title'          =>$this->faker->sentence ,
+            'description'    =>$this->faker->paragraph ,
+            'status'         =>$this->faker->randomElement(['active','complete']) ,
+            'due_date'   =>$this->faker->dateTimeBetween('now','+1 month') ,
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace Modules\Organizations\Models;
 
 use Modules\Volunteers\Models\Skill;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Applications\Models\Application;
 use Modules\Organizations\Models\Organization;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
