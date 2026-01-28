@@ -28,6 +28,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'roles.read',
             'roles.update',
             'roles.delete',
+            'badges.create',
+            'badges.update',
+            'badges.delete',
 
             // Volunteer
             'profile.read.own',
@@ -82,6 +85,10 @@ class RolesAndPermissionsSeeder extends Seeder
                 'roles.read',
                 'roles.update',
                 'roles.delete',
+                'badges.create',
+                'badges.update',
+                'badges.delete',
+
             ],
 
             'volunteer' => [

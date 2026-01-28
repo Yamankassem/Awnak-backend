@@ -25,7 +25,7 @@ class UpdateBadgeRequest extends FormRequest
     public function rules(): array
     {
           return [
-            'name' => 'required|string|max:255',
+            'name' => "sometimes|string|max:255|unique:badges,name,{$this->badge->id}",
             'criteria' => 'nullable|string|max:500',
             'description' => 'nullable|string|max:1000',
         ];
