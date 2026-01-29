@@ -6,42 +6,31 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class DocumentRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     * You can add authorization logic here if needed.
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     * These rules ensure that the incoming data is valid.
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             'title'          => 'required|string|max:255',
-            'file_path'      => 'required|string|max:500',
-            'file_type'      => 'required|string|max:50',
-            'file_size'      => 'required|integer|min:1',
+            'description'    => 'nullable|string|max:1000',
+            'file'           => 'required|file|mimes:pdf,docx,txt|max:10240',
             'opportunity_id' => 'required|exists:opportunities,id',
         ];
     }
 
-    /**
-     * Custom error messages for validation rules.
-     * This helps make validation feedback more user-friendly.
-     */
-    public function messages()
+    public function messages(): array
     {
         return [
-            'title.required'        => 'The document title is required.',
-            'file_path.required'    => 'The file path is required.',
-            'file_type.required'    => 'The file type is required.',
-            'file_size.required'    => 'The file size is required.',
-            'opportunity_id.exists' => 'The selected opportunity does not exist.',
+            'title.required'          => 'The document title is required.',
+            'file.required'           => 'A file must be uploaded.',
+            'file.file'               => 'The uploaded input must be a valid file.',
+            'file.mimes'              => 'The file must be a PDF, DOCX, or TXT.',
+            'file.max'                => 'The file size may not exceed 10 MB.',
+            'opportunity_id.required' => 'An opportunity ID is required.',
+            'opportunity_id.exists'   => 'The selected opportunity does not exist.',
         ];
     }
 }

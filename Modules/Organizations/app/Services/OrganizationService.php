@@ -7,10 +7,14 @@ use Modules\Organizations\Models\Organization;
 /**
  * Service: OrganizationService
  *
- * This service class encapsulates the business logic related to
- * creating and managing organizations. By separating this logic
- * from the controller, we achieve cleaner code, better testability,
- * and easier maintenance.
+ * Encapsulates the business logic for managing organizations,
+ * including creation, updating, and deletion. By separating this
+ * logic from the controller, we achieve cleaner code, improved
+ * testability, and easier maintenance.
+ *
+ * Features:
+ * - Automatically generates a license number if not provided.
+ * - Normalizes website URLs to ensure they start with http/https.
  */
 class OrganizationService
 {
@@ -22,18 +26,14 @@ class OrganizationService
      */
     public function create(array $data): Organization
     {
-        // Example of additional business logic:
-        // Automatically generate a license number if not provided
         if (empty($data['license_number'])) {
             $data['license_number'] = strtoupper(uniqid('ORG-'));
         }
 
-        // Normalize website URL (ensure it starts with http/https)
         if (!empty($data['website']) && !preg_match('/^https?:\/\//', $data['website'])) {
             $data['website'] = 'https://' . $data['website'];
         }
 
-        // Create and return the organization
         return Organization::create($data);
     }
 
@@ -46,12 +46,10 @@ class OrganizationService
      */
     public function update(Organization $organization, array $data): Organization
     {
-        // Normalize website URL if provided
         if (!empty($data['website']) && !preg_match('/^https?:\/\//', $data['website'])) {
             $data['website'] = 'https://' . $data['website'];
         }
 
-        // Apply updates to the organization model
         $organization->update($data);
 
         return $organization;
@@ -65,7 +63,6 @@ class OrganizationService
      */
     public function delete(Organization $organization): bool
     {
-        // Perform deletion and return the result
         return $organization->delete();
     }
 }

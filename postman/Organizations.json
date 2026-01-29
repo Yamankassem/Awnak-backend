@@ -326,7 +326,7 @@
           "response": []
         },
         {
-          "name": "Show a Specific Opportunity-skill",
+          "name": "Show one Relationship",
           "request": {
             "method": "GET",
             "header": []

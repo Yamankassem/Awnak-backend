@@ -8,6 +8,9 @@ use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
+
+use Illuminate\Routing\Router;
+
 class OrganizationsServiceProvider extends ServiceProvider
 {
     use PathNamespace;
@@ -27,6 +30,14 @@ class OrganizationsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+
+      // Get router instance
+       $router = $this->app->make(Router::class);
+
+        // Register custom middleware for this module
+          $router->aliasMiddleware( 'org.access', \Modules\Organizations\Http\Middleware\OrganizationAccessMiddleware::class );
+          $router->aliasMiddleware( 'opportunity.access', \Modules\Organizations\Http\Middleware\OpportunityAccessMiddleware::class );
+          $router->aliasMiddleware( 'document.access', \Modules\Organizations\Http\Middleware\DocumentAccessMiddleware::class );
     }
 
     /**
@@ -34,8 +45,10 @@ class OrganizationsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->register(EventServiceProvider::class);
+       $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+         $this->app->register(AuthServiceProvider::class);
+
     }
 
     /**
