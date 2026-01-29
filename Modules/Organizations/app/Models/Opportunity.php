@@ -89,4 +89,7 @@ class Opportunity extends Model
         return $this->hasMany(OpportunitySkill::class);
 
     }
+
+    public function documents()
+     { return $this->hasMany(\Modules\Organizations\Models\Document::class, 'opportunity_id'); }
 }

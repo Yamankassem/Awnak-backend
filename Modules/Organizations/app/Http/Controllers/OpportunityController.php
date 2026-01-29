@@ -8,6 +8,7 @@ use Modules\Organizations\Models\Opportunity;
 use Modules\Organizations\Http\Requests\OpportunityRequest;
 use Modules\Organizations\Transformers\OpportunityResource;
 use Modules\Organizations\Services\OpportunityService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Controller: OpportunityController
@@ -34,42 +35,101 @@ class OpportunityController extends Controller
     }
 
     /**
-     * Index: Retrieve a paginated list of opportunities with their related organization.
+     * Retrieve a paginated list of opportunities with their organizations.
      *
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @apiResponse 200 {
+     *   "status": "success",
+     *   "message": "Opportunity retrieved successfully.",
+     *   "data": [
+     *     {
+     *       "id": 1,
+     *       "title": "Volunteer Program",
+     *       "description": "Community volunteering opportunity",
+     *       "organization": {
+     *         "id": 2,
+     *         "name": "Helping Hands"
+     *       }
+     *     },
+     *     {
+     *       "id": 2,
+     *       "title": "Internship",
+     *       "description": "Summer internship program",
+     *       "organization": {
+     *         "id": 3,
+     *         "name": "Tech Corp"
+     *       }
+     *     }
+     *   ],
+     *   "meta": {
+     *     "current_page": 1,
+     *     "total": 25
+     *   }
+     * }
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $opportunities = Opportunity::with('organization')->paginate(10);
-
         return response()->json([
+            'status' => 'success',
+            'message' => __('opportunities.retrieved'),
             'data' => OpportunityResource::collection($opportunities),
             'meta' => [
                 'current_page' => $opportunities->currentPage(),
                 'total' => $opportunities->total(),
             ]
-        ]);
+        ], 200);
     }
 
     /**
-     * Store: Create a new opportunity.
+     * Create a new opportunity.
      *
-     * Accepts validated request data and creates an opportunity
-     * using the OpportunityService. Returns the created opportunity
-     * wrapped in a resource with a success message.
-     *
-     * @param OpportunityRequest $request
+     * @param OpportunityRequest $request Validated request containing opportunity data
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @apiResponse 201 {
+     *   "status": "success",
+     *   "message": "Opportunity created successfully.",
+     *   "data": {
+     *     "id": 1,
+     *     "title": "Volunteer Program",
+     *     "description": "Community volunteering opportunity",
+     *     "organization": {
+     *       "id": 2,
+     *       "name": "Helping Hands"
+     *     }
+     *   }
+     * }
+     *
+     * @apiResponse 400 {
+     *   "status": "error",
+     *   "message": "Invalid opportunity data provided."
+     * }
+     *
+     * @apiResponse 500 {
+     *   "status": "error",
+     *   "message": "Failed to create opportunity",
+     *   "error": "Exception message"
+     * }
      */
-    public function store(OpportunityRequest $request)
+    public function store(OpportunityRequest $request): JsonResponse
     {
-        $opportunity = $this->opportunityService->create($request->validated());
-        $opportunity->load('organization');
-
-        return response()->json([
-            'message' => __('opportunities.created'),
-            'data' => new OpportunityResource($opportunity)
-        ], 201);
+        try {
+            $opportunity = $this->opportunityService->create($request->validated());
+            $opportunity->load('organization');
+            return response()->json([
+                'status' => 'success',
+                'message' => __('opportunities.created'),
+                'data' => new OpportunityResource($opportunity)
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to create opportunity',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -88,31 +148,55 @@ class OpportunityController extends Controller
     }
 
     /**
-     * Update: Modify an existing opportunity.
+     * Update an existing opportunity.
      *
-     * Finds the opportunity by ID, applies updates using the service,
-     * and returns the updated opportunity wrapped in a resource
-     * with a success message.
-     *
-     * @param OpportunityRequest $request
-     * @param int $id
+     * @param OpportunityRequest $request Validated request containing opportunity data
+     * @param int $id The ID of the opportunity to update
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @apiResponse 200 {
+     *   "status": "success",
+     *   "message": "Opportunity updated successfully.",
+     *   "data": {
+     *     "id": 1,
+     *     "title": "Updated Volunteer Program",
+     *     "description": "New description",
+     *     "organization": {
+     *       "id": 2,
+     *       "name": "Helping Hands"
+     *     }
+     *   }
+     * }
+     *
+     * @apiResponse 404 {
+     *   "status": "error",
+     *   "message": "Opportunity not found."
+     * }
+     *
+     * @apiResponse 500 {
+     *   "status": "error",
+     *   "message": "Failed to update opportunity",
+     *   "error": "Exception message"
+     * }
      */
-    public function update(OpportunityRequest $request, $id)
+    public function update(OpportunityRequest $request, $id): JsonResponse
     {
-        $opportunity = Opportunity::findOrFail($id);
-
-        $this->authorize('update', $opportunity);
-
-        $opportunity = $this->opportunityService->update($opportunity, $request->validated());
-        $opportunity->load('organization');
-
-        return response()->json([
-            'message' => __('opportunities.updated'),
-            'data' => new OpportunityResource($opportunity)
-        ]);
+        try {
+            $opportunity = Opportunity::findOrFail($id);
+            $this->authorize('update', $opportunity);
+            $opportunity = $this->opportunityService->update($opportunity, $request->validated());
+            $opportunity->load('organization');
+            return response()->json([
+                'status' => 'success',
+                'message' => __('opportunities.updated'),
+                'data' => new OpportunityResource($opportunity)
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['status' => 'error', 'message' => __('opportunities.not_found'),], 404);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Failed to update opportunity', 'error' => $e->getMessage(),], 500);
+        }
     }
-
     /**
      * Destroy: Delete an opportunity.
      *
