@@ -4,6 +4,7 @@
 namespace Modules\Organizations\Services;
 
 use Modules\Organizations\Models\Document;
+
 /**
  * Service: DocumentService
  *
@@ -23,16 +24,18 @@ class DocumentService
     public function create(array $data): Document
     {
         $document = Document::create([
-            'title' => $data['title'],
-            'description' => $data['description'] ?? null,
+            'opportunity_id' => $data['opportunity_id'],
+            'title'          => $data['title'],
+            'description'    => $data['description'] ?? null,
         ]);
 
         if (!empty($data['file'])) {
-            $document->addMedia($data['file'])->toMediaCollection('documents');
+            $document->addMediaFromRequest('file')->toMediaCollection('documents');
         }
 
         return $document;
     }
+
 
     /**
      * Update an existing document and replace its file if a new one is provided.
@@ -43,13 +46,16 @@ class DocumentService
      */
     public function update(Document $document, array $data): Document
     {
-        $document->update($data);
+        $document->update([
+            'title' => $data['title'],
+             'description' => $data['description'] ?? $document->description,
 
+             ]);
+             
         if (!empty($data['file'])) {
             $document->clearMediaCollection('documents');
-            $document->addMedia($data['file'])->toMediaCollection('documents');
+            $document->addMediaFromRequest('file')->toMediaCollection('documents');
         }
-
         return $document;
     }
 
@@ -72,6 +78,6 @@ class DocumentService
      */
     public function getAllDocuments()
     {
-        return Document::with('media')->latest()->get();
+        return Document::with(['media', 'opportunity'])->latest()->get();
     }
 }

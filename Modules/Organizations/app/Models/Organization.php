@@ -46,12 +46,12 @@ class Organization extends Model
 
     public function volunteers()
     {
-        return $this->hasMany(\Modules\Volunteers\Models\VolunteerProfile::class);
+        return $this->hasMany(\Modules\Volunteers\Models\VolunteerProfile::class , 'user_id');
     }
 
     public function applications()
     {
-        return $this->hasMany(\Modules\Applications\Models\Application::class);
+        return $this->hasMany(\Modules\Applications\Models\Application::class );
     }
 
     // public function documents()
