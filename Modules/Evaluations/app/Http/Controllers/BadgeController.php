@@ -9,10 +9,13 @@ use Modules\Evaluations\Services\BadgeServices;
 use Modules\Evaluations\Models\Badge;
 use Modules\Evaluations\Http\Resources\BadgeResource;
 use Modules\Evaluations\Http\Traits\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 class BadgeController extends Controller
 {
-    use ApiResponse;
+   use ApiResponse;
+    use AuthorizesRequests;
 
     protected $badgeService;
 
@@ -26,13 +29,12 @@ class BadgeController extends Controller
     {
         try {
             $badges = $this->badgeService->getAllBadges();
-            return $this->successResponse(
-                BadgeResource::collection($badges),
-                'Badges retrieved successfully',
-                200
-            );
+           return static::paginated(
+            paginator: $badges,
+            message: 'badges.listed'
+        );
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode() ?: 500);
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
@@ -41,13 +43,13 @@ class BadgeController extends Controller
     {
         try {
             $badge = $this->badgeService->getBadgeById($id);
-            return $this->successResponse(
-                new BadgeResource($badge),
-                'Badge retrieved successfully',
-                200
-            );
+             return static::success(
+                data: $badge,
+                message: 'badges.retrieved',
+                status: 201
+        );
         } catch (\Exception $e) {
-            return $this->errorResponse('Badge not found', 404);
+            return $this->error('Badge not found', 404);
         }
     }
 
@@ -55,46 +57,51 @@ class BadgeController extends Controller
     public function store(StoreBadgeRequest  $request)
     {
         try {
-            $data = $request->validated();
-            $badge = $this->badgeService->createBadge($data);
-            return $this->successResponse(
-                new BadgeResource($badge),
-                'Badge created successfully',
-                201
-            );
+            
+             $this->authorize('create', Badge::class);
+             $badge = $this->badgeService->createBadge($request->validated());
+              return static::success(
+                                        data:  $badge,
+                                        message: 'badges.created',
+                                        status: 201
+                                    );
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode() ?: 500);
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
-    // Update badge
+    //  only super admin can update badge
     public function update(UpdateBadgeRequest $request, Badge $badge)
     {
         try {
             $data = $request->validated();
+            $this->authorize('update', $badge);
             $updated = $this->badgeService->updateBadge($badge, $data);
-            return $this->successResponse(
-                new BadgeResource($updated),
-                'Badge updated successfully',
-                200
-            );
+            return static::success(
+            data: $updated,
+            message: 'badges.updated',
+            status: 200
+        );
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode() ?: 500);
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
-    // Delete badge
+    // only super admin can delete badge 
     public function destroy(Badge $badge)
     {
-        try {
+         try {
+           $this->authorize('delete', $badge);
+
             $this->badgeService->deleteBadge($badge);
-            return $this->successResponse(
-                null,
-                'Badge deleted successfully',
-                200
+
+            return static::success(
+                data: null,
+                message: 'badges.deleted',
+                status: 200
             );
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode() ?: 500);
+                return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
-    }
+}
 }

@@ -7,6 +7,8 @@ use Modules\Evaluations\Http\Controllers\EvaluationController;
 use Modules\Evaluations\Http\Controllers\ReportController;
 use Modules\Evaluations\Http\Controllers\VolunteerBadgeController;
 
+   // Route::apiResource('badges', BadgeController::class)->names('badges');
+
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::apiResource('evaluations', EvaluationController::class)->names('evaluations');
     Route::apiResource('badges', BadgeController::class)->names('badges');

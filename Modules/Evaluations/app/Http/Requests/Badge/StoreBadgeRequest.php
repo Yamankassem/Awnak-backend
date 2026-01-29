@@ -22,7 +22,7 @@ class StoreBadgeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable|string|max:255',
+            'name' => 'required|string|max:255|unique:badges,name',
             'criteria' => 'nullable|string|max:500',
             'description' => 'nullable|string|max:1000',
         ];
