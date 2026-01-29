@@ -7,19 +7,13 @@ use Modules\Organizations\Http\Controllers\OpportunitySkillController;
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
-    // هذول بدون org.access
-     Route::get('/organizations', [OrganizationsController::class, 'index']);
-     Route::post('/organizations', [OrganizationsController::class, 'store']);
 
-     Route::get('/opportunities', [OpportunityController::class, 'index']);
-     Route::post('/opportunities', [OpportunityController::class, 'store']);
-
-     Route::get('/opportunity-documents', [DocumentController::class, 'index']);
-     Route::post('/opportunity-documents', [DocumentController::class, 'store']);
 
     /** * Organizations APIs */
     Route::middleware(['org.access'])->group(function () {
+         Route::get('/organizations', [OrganizationsController::class, 'index']);
         Route::get('/organizations/{organization}', [OrganizationsController::class, 'show']);
+         Route::post('/organizations', [OrganizationsController::class, 'store']);
         Route::put('/organizations/{organization}', [OrganizationsController::class, 'update']);
         Route::patch('/organizations/{organization}', [OrganizationsController::class, 'update']);
         Route::delete('/organizations/{organization}', [OrganizationsController::class, 'destroy']);
@@ -27,10 +21,13 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
     /** * Opportunities APIs */
     Route::middleware(['opportunity.access'])->group(function () {
+        Route::get('/opportunities', [OpportunityController::class, 'index']);
         Route::get('/opportunities/{opportunity}', [OpportunityController::class, 'show']);
-        Route::put('/opportunities/{opportunity}', [OpportunityController::class, 'update']);
-        Route::patch('/opportunities/{opportunity}', [OpportunityController::class, 'update']);
+        Route::post('/opportunities', [OpportunityController::class, 'store']);
+        Route::put('/opportunities/{id}', [OpportunityController::class, 'update']);
         Route::delete('/opportunities/{opportunity}', [OpportunityController::class, 'destroy']);
+        // Volunteers of specific Organization
+        Route::get('/organizations/{id}/volunteers', [OrganizationsController::class, 'volunteers']);
     });
 
     /** * Opportunity Skills APIs */
@@ -44,12 +41,12 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
     /** * Opportunity Documents APIs */
     Route::middleware(['document.access'])->group(function () {
-        Route::get('/opportunity-documents/{document}', [DocumentController::class, 'show']);
-        Route::put('/opportunity-documents/{document}', [DocumentController::class, 'update']);
-        Route::patch('/opportunity-documents/{document}', [DocumentController::class, 'update']);
-        Route::delete('/opportunity-documents/{document}', [DocumentController::class, 'destroy']);
+         Route::get('/opportunities/{opportunity}/documents', [DocumentController::class, 'index']);
+        Route::post('/opportunity-documents', [DocumentController::class, 'store']);
+       Route::get('/opportunity-documents/{id}', [DocumentController::class, 'show']);
+      Route::put('/opportunity-documents/{id}', [DocumentController::class, 'update']);
+      Route::delete('/opportunity-documents/{id}', [DocumentController::class, 'destroy']);
     });
 });
 
-// Volunteers by organization
-Route::get('/organizations/{organization}/volunteers', [OrganizationsController::class, 'volunteers']);
+

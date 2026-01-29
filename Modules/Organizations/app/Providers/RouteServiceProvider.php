@@ -12,6 +12,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         parent::boot();
+        Route::model('document', \Modules\Organizations\Models\Document::class);
     }
 
     public function map(): void

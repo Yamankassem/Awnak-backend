@@ -2,33 +2,36 @@
 
 namespace Modules\Organizations\Policies;
 
-use App\Models\User;
+use Modules\Core\Models\User;
 use Modules\Organizations\Models\Document;
 use Modules\Organizations\Models\Opportunity;
 
 class DocumentPolicy
 {
-    
-
-    public function create(User $user, Opportunity $opportunity): bool
-    {
-        return $user->role === 'admin'
-            || $opportunity->organization->user_id === $user->id
-            || $user->role === 'opportunity-manager';
+    public function viewAny(User $user)
+    { // أي مستخدم مسجل دخول بيقدر يشوف
+        return $user->exists;
     }
 
 
-    public function update(User $user, Document $document): bool
-    {
-        return $user->role === 'admin'
-            || $document->opportunity->organization->user_id === $user->id
-            || $user->role === 'opportunity-manager';
+    public function view(User $user, Document $document)
+    { // الكل بيقدر يشوف وثيقة محددة
+        return true;
     }
 
-    public function delete(User $user, Document $document): bool
+    public function create(User $user)
+    { // بس أدوار معينة بيقدروا ينشئوا
+        return $user->hasRole(['system-admin', 'opportunity-manager', 'organization-admin']);
+    }
+
+    public function update(User $user, Document $document)
+    { // نفس المنطق: أدوار معينة أو صاحب المنظمة
+        return $user->hasRole(['system-admin', 'opportunity-manager', 'organization-admin']) || $document->opportunity->organization->user_id === $user->id;
+    }
+
+    public function delete(User $user, Document $document)
     {
-        return $user->role === 'admin'
-            || $document->opportunity->organization->user_id === $user->id
-            || $user->role === 'opportunity-manager';
+        // نفس منطق التعديل
+        return $user->hasRole(['system-admin', 'opportunity-manager', 'organization-admin']) || $document->opportunity->organization->user_id === $user->id;
     }
 }

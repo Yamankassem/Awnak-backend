@@ -15,6 +15,7 @@ use Illuminate\Foundation\Http\FormRequest;
  * - type: Required string indicating the type of organization (e.g., NGO, school, charity).
  * - bio: Optional string providing background or description.
  * - website: Optional, must be a valid URL if provided.
+ * - user_id: Required only when creating a new organization.
  */
 class OrganizationRequest extends FormRequest
 {
@@ -36,13 +37,28 @@ class OrganizationRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'license_number' => 'required|string|max:255|unique:organizations,license_number',
-            'type'           => 'required|string|max:100',
-            'bio'            => 'nullable|string',
-            'website'        => 'nullable|url|max:255',
-            'user_id'        => 'required|exists:users,id',
-        ];
+        if ($this->isMethod('post')) {
+            // قواعد الإنشاء
+            return [
+                'license_number' => 'required|string|max:255|unique:organizations,license_number',
+                'type'           => 'required|string|max:100',
+                'bio'            => 'nullable|string',
+                'website'        => 'nullable|url|max:255',
+                'user_id'        => 'required|exists:users,id', // مطلوب فقط وقت الإنشاء
+            ];
+        }
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            // قواعد التعديل
+            return [
+                'license_number' => 'required|string|max:255|unique:organizations,license_number,' . $this->route('organization'),
+                'type'           => 'required|string|max:100',
+                'bio'            => 'nullable|string',
+                'website'        => 'nullable|url|max:255',
+                // user_id غير مطلوب هون
+            ];
+        }
+
+        return [];
     }
 }
-
