@@ -6,7 +6,11 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Modules\Evaluations\Models\Badge;
+use Modules\Evaluations\Models\Certificate;
+use Modules\Evaluations\Models\Evaluation;
 use Modules\Evaluations\Policies\BadgePolicy;
+use Modules\Evaluations\Policies\CertificatePolicy;
+use Modules\Evaluations\Policies\EvaluationPolicy;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -25,6 +29,8 @@ class EvaluationsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(Badge::class, BadgePolicy::class);
+        Gate::policy(Certificate::class, CertificatePolicy::class);
+        Gate::policy(Evaluation::class, EvaluationPolicy::class);
         $this->registerCommands();
         $this->registerCommandSchedules();
         $this->registerTranslations();

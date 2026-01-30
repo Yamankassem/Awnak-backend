@@ -31,6 +31,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'badges.create',
             'badges.update',
             'badges.delete',
+            'certificates.create',
+            'certificates.update',
+            'certificates.delete',
+            'certificate.view',
+            'certificate.viewAny',
 
             // Volunteer
             'profile.read.own',
@@ -41,6 +46,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'tasks.update.assigned',
             'evaluations.read.own',
             'notes.create.assigned_tasks',
+            'certificate.view',
+            'certificate.viewAny',
 
             // Opportunity Manager
             'opportunities.create',
@@ -57,12 +64,18 @@ class RolesAndPermissionsSeeder extends Seeder
             'organization.volunteers.evaluate',
             'organization.opportunities.create',
             'organization.opportunities.publish',
+            'evaluations.create',
+            'evaluations.update',
+            'evaluations.delete',
+            'evaluations.view',
+            'evaluations.viewAny',
 
             // Volunteer Coordinator
             'volunteers.read.assigned',
             'tasks.read.managed',
             'evaluations.create',
             'notifications.send',
+            
 
             // Auditor
             'reports.performance.read',
@@ -88,6 +101,16 @@ class RolesAndPermissionsSeeder extends Seeder
                 'badges.create',
                 'badges.update',
                 'badges.delete',
+                'certificates.create',
+                'certificates.update',
+                'certificates.delete',
+                'certificate.view',
+                'certificate.viewAny',
+                'evaluations.create',
+                'evaluations.update',
+                'evaluations.delete',
+                'evaluations.view',
+                'evaluations.viewAny',
 
             ],
 
@@ -118,6 +141,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'organization.volunteers.evaluate',
                 'organization.opportunities.create',
                 'organization.opportunities.publish',
+                
             ],
 
             'volunteer-coordinator' => [
@@ -125,10 +149,20 @@ class RolesAndPermissionsSeeder extends Seeder
                 'tasks.read.managed',
                 'evaluations.create',
                 'notifications.send',
+                'evaluations.create',
+                'evaluations.update',
+                'evaluations.delete',
+                'evaluations.view',
+                'evaluations.viewAny',
             ],
 
             'performance-auditor' => [
                 'reports.performance.read',
+                'certificates.create',
+                'certificates.update',
+                'certificates.delete',
+                'certificate.view',
+                'certificate.viewAny',
             ],
         ];
 

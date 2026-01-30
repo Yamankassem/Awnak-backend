@@ -44,11 +44,11 @@ class EvaluationServices
             return Evaluation::findOrFail($id);
     }
     /**
-     * get all evaluation's volunteer
+     * get all evaluations
      */
-    public function getByVolunteer(int $volunteerId)
+    public function getAllEvaluations(int $perPage = 4)
     {
-            return Evaluation::where('volunteer_id', $volunteerId)->latest()->get();
+        return Evaluation::query()->paginate($perPage);
     }
     /**
      * delete evaluation 

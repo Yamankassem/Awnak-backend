@@ -14,7 +14,6 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BadgeController extends Controller
 {
-   use ApiResponse;
     use AuthorizesRequests;
 
     protected $badgeService;

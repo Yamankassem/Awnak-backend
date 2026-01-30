@@ -35,9 +35,12 @@ class Task extends Model
         'due_date' => 'date',
     ];
 
-    public function getAllowedStatus()
+   
+    public function getAllowedStatuses(): array
     {
-        return ['active', 'complete'];
+        return [
+         'active', 'complete'
+        ];
     }
 
     /**
