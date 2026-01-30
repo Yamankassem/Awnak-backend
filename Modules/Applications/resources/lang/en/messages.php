@@ -49,24 +49,7 @@ return [
     'all_notifications_deleted'        => 'All notifications deleted',
     'unread_count_retrieved'           => 'Unread notifications count fetched',
     'test_notification_sent'           => 'Test notification sent',
-
-    // Trash
-    'trashed_applications_retrieved'   => 'Deleted apps have been fetched',
-    'application_restored'             => 'App has been restored',
-    'application_permanently_deleted'  => 'App has been permanently deleted',
-
-    // Calendar messages
-    'event_created' => 'The event was created successfully',
-    'event_updated' => 'The event was updated successfully',
-    'event_deleted' => 'The event was deleted successfully',
-    'event_retrieved' => 'The event was fetched successfully',
-    'event_status_updated' => 'The event status was updated successfully',
-    'events_retrieved' => 'The events were fetched successfully',
-    'upcoming_events_retrieved' => 'The upcoming events were fetched successfully',
-    'reminders_retrieved' => 'The reminders were fetched successfully',
-    'events_search_results' => 'The search results were obtained',
-    'calendar_statistics_retrieved' => 'The calendar statistics were fetched successfully',
-
+    
     // Task Status Changed
     'task_status_changed' => 'The task status was changed',
     'task_completed' => 'The task was completed successfully',

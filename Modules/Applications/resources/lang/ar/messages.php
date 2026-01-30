@@ -49,25 +49,7 @@ return [
     'all_notifications_deleted'        => 'تم حذف جميع الإشعارات',
     'unread_count_retrieved'           => 'تم جلب عدد الإشعارات غير المقروءة',
     'test_notification_sent'           => 'تم إرسال إشعار تجريبي',
-
-    // Trash
-    'trashed_applications_retrieved'   => 'تم جلب التطبيقات المحذوفة',
-    'application_restored'             => 'تم استعادة التطبيق',
-    'application_permanently_deleted'  => 'تم حذف التطبيق نهائياً',
-
-
-    // Calendar messages
-    'event_created' => 'تم إنشاء الحدث بنجاح',
-    'event_updated' => 'تم تحديث الحدث بنجاح',
-    'event_deleted' => 'تم حذف الحدث بنجاح',
-    'event_retrieved' => 'تم جلب الحدث بنجاح',
-    'event_status_updated' => 'تم تحديث حالة الحدث بنجاح',
-    'events_retrieved' => 'تم جلب الأحداث بنجاح',
-    'upcoming_events_retrieved' => 'تم جلب الأحداث القادمة بنجاح',
-    'reminders_retrieved' => 'تم جلب التذكيرات بنجاح',
-    'events_search_results' => 'تم الحصول على نتائج البحث',
-    'calendar_statistics_retrieved' => 'تم جلب إحصائيات التقويم بنجاح',
-
+    
     // Task Status Changed
     'task_status_changed' => 'تم تغيير حالة المهمة',
     'task_completed' => 'تم إكمال المهمة بنجاح',

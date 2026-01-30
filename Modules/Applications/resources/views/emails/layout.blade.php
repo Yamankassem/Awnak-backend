@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - منصة تطوع</title>
+    <title>@yield('title') - "Volunteering Platform</title>
     <style>
         * {
             margin: 0;
@@ -180,7 +180,6 @@
             font-size: 18px;
         }
         
-        /* Responsive */
         @media (max-width: 600px) {
             .email-body {
                 padding: 20px;
@@ -199,36 +198,33 @@
 </head>
 <body>
     <div class="email-container">
-        <!-- Header -->
         <div class="email-header">
             @if(isset($logo))
-                <img src="{{ $logo }}" alt="منصة تطوع" class="email-logo">
+                <img src="{{ $logo }}" alt='Volunteering Platform' class="email-logo">
             @else
-                <h1> منصة تطوع</h1>
+                <h1>Volunteering Platform</h1>
             @endif
-            <p>نحو مجتمع متطوع وفعال</p>
+            <p>Towards a community of active volunteers</p>
         </div>
         
-        <!-- Body -->
         <div class="email-body">
             @yield('content')
         </div>
         
-        <!-- Footer -->
         <div class="email-footer">
-            <p>© {{ date('Y') }} منصة تطوع. جميع الحقوق محفوظة.</p>
+            <p>© {{ date('Y') }}Volunteering Platform. All rights reserved.</p>
             
             <div class="footer-links">
-                <a href="{{ url('/') }}">الرئيسية</a> |
-                <a href="{{ url('/about') }}">عن المنصة</a> |
-                <a href="{{ url('/contact') }}">اتصل بنا</a> |
-                <a href="{{ url('/privacy') }}">الخصوصية</a>
+                <a href="{{ url('/') }}">Home</a> |
+                <a href="{{ url('/about') }}">About the Platform</a> |
+                <a href="{{ url('/contact') }}">Contact Us</a> |
+                <a href="{{ url('/privacy') }}">Privacy</a>
             </div>
             
             
             
             <p style="margin-top: 15px; font-size: 12px; color: #888;">
-                هذا البريد الإلكتروني أرسل تلقائياً من النظام، يرجى عدم الرد عليه.
+                This email was sent automatically by the system, please do not reply to it.
             </p>
         </div>
     </div>

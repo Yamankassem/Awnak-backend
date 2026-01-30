@@ -8,6 +8,14 @@ use Modules\Applications\Database\Seeders\FeedbackSeeder;
 use Modules\Applications\Database\Seeders\TaskHourSeeder;
 use Modules\Applications\Database\Seeders\ApplicationSeeder;
 
+/**
+ * Applications Database Seeder
+ * 
+ * Main seeder that calls all module seeders.
+ * 
+ * @package Modules\Applications\Database\Seeders
+ * @author Your Name
+ */
 class ApplicationsDatabaseSeeder extends Seeder
 {
     /**

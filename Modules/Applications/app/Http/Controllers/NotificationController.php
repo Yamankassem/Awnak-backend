@@ -5,11 +5,33 @@ namespace Modules\Applications\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Modules\Applications\Notifications\TestNotification;
 use Modules\Applications\Http\Requests\NotificationRequest\IndexNotificationRequest;
 use Modules\Applications\Http\Requests\NotificationRequest\SendTestNotificationRequest;
 
+/**
+ * Notification Controller
+ * 
+ * Handles user notification operations including listing,
+ * marking as read, deletion, and test notifications.
+ * 
+ * @package Modules\Applications\Http\Controllers
+ * @author Your Name
+ */
 class NotificationController extends Controller
 {
+    /**
+     * Display a listing of notifications.
+     * 
+     * @param IndexNotificationRequest $request
+     * @return JsonResponse
+     * 
+     * @api GET /api/notifications
+     * 
+     * @example
+     * GET /api/notifications?type=new_application&unread_only=true&per_page=20
+     */
     public function index(IndexNotificationRequest $request): JsonResponse
     {
         $validated = $request->validated();
@@ -36,6 +58,15 @@ class NotificationController extends Controller
         ]);
     }
     
+    /**
+     * Display the specified notification.
+     * 
+     * @param string $id Notification ID
+     * @return JsonResponse
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * 
+     * @api GET /api/notifications/{id}
+     */
     public function show(string $id): JsonResponse
     {
         $notification = Auth::user()->notifications()->findOrFail($id);
@@ -50,6 +81,15 @@ class NotificationController extends Controller
         ], 'messages.notification_retrieved');
     }
     
+    /**
+     * Mark a notification as read.
+     * 
+     * @param string $id Notification ID
+     * @return JsonResponse
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * 
+     * @api POST /api/notifications/{id}/read
+     */
     public function markAsRead(string $id): JsonResponse
     {
         $notification = Auth::user()->notifications()->findOrFail($id);
@@ -58,6 +98,13 @@ class NotificationController extends Controller
         return $this->success(null, 'messages.notification_marked_as_read');
     }
     
+    /**
+     * Mark all notifications as read.
+     * 
+     * @return JsonResponse
+     * 
+     * @api POST /api/notifications/read-all
+     */
     public function markAllAsRead(): JsonResponse
     {
         Auth::user()->unreadNotifications()->update(['read_at' => now()]);
@@ -68,6 +115,15 @@ class NotificationController extends Controller
         ], 'messages.all_notifications_marked_as_read');
     }
     
+    /**
+     * Delete a specific notification.
+     * 
+     * @param string $id Notification ID
+     * @return JsonResponse
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * 
+     * @api DELETE /api/notifications/{id}
+     */
     public function destroy(string $id): JsonResponse
     {
         $notification = Auth::user()->notifications()->findOrFail($id);
@@ -76,18 +132,41 @@ class NotificationController extends Controller
         return $this->success(null, 'messages.notification_deleted');
     }
     
+    /**
+     * Delete all notifications for the current user.
+     * 
+     * @return JsonResponse
+     * 
+     * @api DELETE /api/notifications
+     */
     public function destroyAll(): JsonResponse
     {
         Auth::user()->notifications()->delete();
         return $this->success(null, 'messages.all_notifications_deleted');
     }
     
+    /**
+     * Get count of unread notifications.
+     * 
+     * @return JsonResponse
+     * 
+     * @api GET /api/notifications/unread-count
+     */
     public function unreadCount(): JsonResponse
     {
         $count = Auth::user()->unreadNotifications()->count();
         return $this->success(['unread_count' => $count], 'messages.unread_count_retrieved');
     }
     
+    /**
+     * Send a test notification to the current user.
+     * 
+     * @param SendTestNotificationRequest $request
+     * @return JsonResponse
+     * 
+     * @api POST /api/notifications/send-test
+     * @permission admin
+     */
     public function sendTestNotification(SendTestNotificationRequest $request): JsonResponse
     {
         $user = Auth::user();
@@ -95,7 +174,7 @@ class NotificationController extends Controller
         $type = $validated['type'] ?? 'new_application';
         
         $notificationData = $this->getTestNotificationData($type);
-        $user->notify(new \Modules\Applications\Notifications\TestNotification($notificationData));
+        $user->notify(new TestNotification($notificationData));
         
         return $this->success([
             'type' => $type,
@@ -103,21 +182,32 @@ class NotificationController extends Controller
         ], 'messages.test_notification_sent');
     }
     
+    /**
+     * Get available notification types with translations.
+     * 
+     * @return array<string, string>
+     */
     private function getNotificationTypes(): array
     {
         return [
-            'new_application' => 'طلب جديد',
-            'application_status_changed' => 'تغيير حالة الطلب',
-            'new_task' => 'مهمة جديدة',
-            'task_status_changed' => 'تغيير حالة المهمة',
-            'hours_logged' => 'تسجيل ساعات',
-            'new_feedback' => 'تقييم جديد',
-            'system' => 'إشعارات النظام',
-            'reminder' => 'تذكير',
-            'report' => 'تقرير',
+            'new_application' => 'New Request',
+            'application_status_changed' => 'Change Request Status',
+            'new_task' => 'New Task',
+            'task_status_changed' => 'Change Task Status',
+            'hours_logged' => 'Log Hours',
+            'new_feedback' => 'New Review',
+            'system' => 'System Notifications',
+            'reminder' => 'Reminder',
+            'report' => 'Report',
         ];
     }
     
+    /**
+     * Generate test notification data based on type.
+     * 
+     * @param string $type Notification type
+     * @return array<string, mixed>
+     */
     private function getTestNotificationData(string $type): array
     {
         $data = [
@@ -131,29 +221,29 @@ class NotificationController extends Controller
         
         switch ($type) {
             case 'new_application':
-                $data['title'] = 'طلب تطوع جديد تجريبي';
-                $data['message'] = 'قدم متطوع جديد طلباً للفرصة: فرصة تجريبية';
+                $data['title'] = 'New Experimental Volunteer Request';
+                $data['message'] = 'A new volunteer submitted a request for the opportunity: Experimental Opportunity';
                 $data['icon'] = 'fa-user-plus';
                 $data['color'] = 'primary';
                 break;
                 
             case 'application_status_changed':
-                $data['title'] = 'تغيير حالة الطلب تجريبي';
-                $data['message'] = 'تم تغيير حالة طلبك إلى: مقبول';
+                $data['title'] = 'Change Request Status - Experimental';
+                $data['message'] = 'Your request status has been changed to: Accepted';
                 $data['icon'] = 'fa-sync-alt';
                 $data['color'] = 'success';
                 break;
                 
             case 'new_task':
-                $data['title'] = 'مهمة جديدة تجريبية';
-                $data['message'] = 'تم تعيين مهمة جديدة لك: المهمة التجريبية';
+                $data['title'] = 'New Experimental Task';
+                $data['message'] = 'A new task has been assigned to you: Experimental Task';
                 $data['icon'] = 'fa-tasks';
                 $data['color'] = 'warning';
                 break;
                 
             case 'hours_logged':
-                $data['title'] = 'تسجيل ساعات تجريبي';
-                $data['message'] = 'تم تسجيل 5 ساعات للمهمة: المهمة التجريبية';
+                $data['title'] = 'Hours Logging - Experimental';
+                $data['message'] = '5 hours have been logged for the task: Experimental Task';
                 $data['icon'] = 'fa-clock';
                 $data['color'] = 'info';
                 break;
@@ -162,7 +252,16 @@ class NotificationController extends Controller
         return $data;
     }
     
-    private function paginated(\Illuminate\Pagination\LengthAwarePaginator $paginator, string $message, int $status = 200, array $extraData = []): JsonResponse
+    /**
+     * Return paginated JSON response with additional data.
+     * 
+     * @param LengthAwarePaginator $paginator
+     * @param string $message Translation key
+     * @param int $status HTTP status code
+     * @param array $extraData Additional data to include
+     * @return JsonResponse
+     */
+    private function paginated(LengthAwarePaginator $paginator, string $message, int $status = 200, array $extraData = []): JsonResponse
     {
         $responseData = [
             'status' => 'success',

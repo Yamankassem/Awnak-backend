@@ -4,10 +4,20 @@ namespace Modules\Applications\Http\Requests\NotificationRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Send Test Notification Request
+ * 
+ * Validates parameters for sending test notifications.
+ * 
+ * @package Modules\Applications\Http\Requests\NotificationRequest
+ * @author Your Name
+ */
 class SendTestNotificationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * 
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -16,7 +26,7 @@ class SendTestNotificationRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
+     * 
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -28,11 +38,13 @@ class SendTestNotificationRequest extends FormRequest
 
     /**
      * Get custom messages for validator errors.
+     * 
+     * @return array<string, string>
      */
     public function messages(): array
     {
         return [
-            'type.in' => 'نوع الإشعار غير صالح',
+            'type.in' => 'The notification type is invalid',
         ];
     }
 }

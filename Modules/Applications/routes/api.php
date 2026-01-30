@@ -13,6 +13,11 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->prefix('v1')->group(functio
     // Application
     Route::apiResource('applications', ApplicationController::class)->names('applications');
     Route::patch('/applications/{id}/status', [ApplicationController::class, 'updateStatus']);
+    Route::get('/pending', [ApplicationController::class, 'pending']);
+    Route::get('/waiting-list', [ApplicationController::class, 'waitingList']);
+    Route::get('/approved', [ApplicationController::class, 'approved']);
+    Route::get('/search', [ApplicationController::class, 'search']);
+
 
     //  Task
     Route::apiResource('tasks', TaskController::class)->names('tasks');
@@ -35,29 +40,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->prefix('v1')->group(functio
         Route::post('/read-all', [NotificationController::class, 'markAllAsRead']);
         Route::delete('/{id}', [NotificationController::class, 'destroy']);
         Route::delete('/', [NotificationController::class, 'destroyAll']);
-       
         Route::post('/send-test', [NotificationController::class, 'sendTestNotification'])->middleware('can:admin');
     });
 
-    // Application Trash 
-    Route::prefix('applications')->group(function () {
-        Route::get('/trashed', [ApplicationController::class, 'trashed'])->middleware('can:viewTrashed,App\Models\Application');
-        Route::post('/{id}/restore', [ApplicationController::class, 'restore'])->middleware('can:restore,App\Models\Application');
-        Route::delete('/{id}/force', [ApplicationController::class, 'forceDelete'])->middleware('can:forceDelete,App\Models\Application');
-    });
-
-    // Calendar
-
-    Route::prefix('calendar')->group(function () {
-    Route::get('/', [CalendarController::class, 'index']);
-    Route::get('/upcoming', [CalendarController::class, 'upcoming']);
-    Route::get('/reminders', [CalendarController::class, 'reminders']);
-    Route::get('/search', [CalendarController::class, 'search']);
-    Route::get('/statistics', [CalendarController::class, 'statistics']);
-    Route::post('/', [CalendarController::class, 'store']);
-    Route::get('/{id}', [CalendarController::class, 'show']);
-    Route::put('/{id}', [CalendarController::class, 'update']);
-    Route::delete('/{id}', [CalendarController::class, 'destroy']);
-    Route::patch('/{id}/status', [CalendarController::class, 'updateStatus']);
-});
 });

@@ -16,27 +16,40 @@ use Nwidart\Modules\Traits\PathNamespace;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\RateLimiter;
 use Modules\Applications\Models\Application;
-use Modules\Applications\App\Helpers\ApiResponse;
-use Modules\Applications\Policies\TasksPolicy\TaskPolicy;
-use Modules\Applications\Services\TasksService\TaskService;
+use Modules\Applications\Policies\TaskPolicy;
+use Modules\Applications\Services\TaskService;
+use Modules\Applications\Services\AuditService;
+use Modules\Applications\Services\CacheService;
+use Modules\Applications\Policies\FeedbackPolicy;
+use Modules\Applications\Policies\TaskHourPolicy;
+use Modules\Applications\Services\FeedbackService;
+use Modules\Applications\Services\TaskHourService;
+use Modules\Applications\Policies\ApplicationPolicy;
+use Modules\Applications\Services\ApplicationService;
 use Modules\Applications\Interfaces\ModuleApplicationsInterface;
-use Modules\Applications\Policies\FeedbacksPolicy\FeedbackPolicy;
-use Modules\Applications\Policies\TaskHoursPolicy\TaskHourPolicy;
-use Modules\Applications\Services\FeedbacksService\FeedbackService;
-use Modules\Applications\Services\TaskHoursService\TaskHourService;
-use Modules\Applications\Policies\ApplicationsPolicy\ApplicationPolicy;
-use Modules\Applications\Services\ApplicationsService\ApplicationService;
-
+/**
+ * Applications Service Provider
+ * 
+ * Bootstraps the Applications module services,
+ * policies, routes, and configurations.
+ * 
+ * @package Modules\Applications\Providers
+ * @author Your Name
+ */
 class ApplicationsServiceProvider extends ServiceProvider
 {
     use PathNamespace;
 
+    /** @var string Module name */
     protected string $name = 'Applications';
 
+    /** @var string Module name lowercase */
     protected string $nameLower = 'applications';
     
     /**
      * Boot the application events.
+     * 
+     * @return void
      */
     public function boot(): void
     {
@@ -52,6 +65,8 @@ class ApplicationsServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
+     * 
+     * @return void
      */
     public function register(): void
     {
@@ -62,13 +77,18 @@ class ApplicationsServiceProvider extends ServiceProvider
         $this->app->singleton(TaskService::class);
         $this->app->singleton(TaskHourService::class);
         $this->app->singleton(FeedbackService::class);
-
-         $this->app->bind('ApiResponse', function(){
-            return new ApiResponse();
-         });
+        $this->app->singleton(AuditService::class);
+        
+        $this->app->singleton(CacheService::class, function ($app) {
+            return new CacheService();
+        });
     }
 
-
+    /**
+     * Register model policies.
+     * 
+     * @return void
+     */
     protected function registerPolicies(): void
     {
         Gate::policy(
@@ -88,6 +108,7 @@ class ApplicationsServiceProvider extends ServiceProvider
             FeedbackPolicy::class
         );
     }
+
     /**
      * Register commands in the format of Command::class
      */
