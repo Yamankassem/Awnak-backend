@@ -31,6 +31,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'badges.create',
             'badges.update',
             'badges.delete',
+            'certificates.create',
+            'certificates.update',
+            'certificates.delete',
+            'certificate.view',
+            'certificate.viewAny',
 
             // Volunteer
             'profile.read.own',
@@ -41,6 +46,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'tasks.update.assigned',
             'evaluations.read.own',
             'notes.create.assigned_tasks',
+            'certificate.view',
+            'certificate.viewAny',
 
             // Opportunity Manager
             'opportunities.create',
@@ -88,6 +95,11 @@ class RolesAndPermissionsSeeder extends Seeder
                 'badges.create',
                 'badges.update',
                 'badges.delete',
+                'certificates.create',
+                'certificates.update',
+                'certificates.delete',
+                'certificate.view',
+                'certificate.viewAny',
 
             ],
 
@@ -129,6 +141,11 @@ class RolesAndPermissionsSeeder extends Seeder
 
             'performance-auditor' => [
                 'reports.performance.read',
+                'certificates.create',
+                'certificates.update',
+                'certificates.delete',
+                'certificate.view',
+                'certificate.viewAny',
             ],
         ];
 

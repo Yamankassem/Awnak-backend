@@ -5,7 +5,10 @@ namespace Modules\Applications\Models;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Applications\Models\Feedback;
 use Modules\Applications\Models\TaskHour;
+use Modules\Applications\Traits\Auditable;
+use Modules\Applications\Traits\HasStatus;
 use Modules\Applications\Models\Application;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,6 +16,7 @@ use Modules\Applications\Database\Factories\TaskFactory;
 
 class Task extends Model
 {
+    use SoftDeletes, Auditable, HasStatus;
     use HasFactory;
     protected $table = 'tasks';
 
@@ -26,24 +30,46 @@ class Task extends Model
         'status',
         'due_date',
     ];
+    
+    protected $casts = [
+        'due_date' => 'date',
+    ];
 
-     protected static function newFactory(): TaskFactory
-     {
-          return TaskFactory::new();
-     }
+   
+    public function getAllowedStatuses(): array
+    {
+        return [
+         'active', 'complete'
+        ];
+    }
 
+    /**
+     * Get the application that owns the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function application(): BelongsTo
     {
-        return $this->belongsTo (Application::class);
+        return $this->belongsTo(Application::class,'application_id');
     }
 
-    public function task_hours(): HasMany
+    /**
+     * Get all of the taskHours for the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function taskHours(): HasMany
     {
-        return $this->hasMany (Taskhour::class);
+        return $this->hasMany(TaskHour::class);
     }
 
-    public function feedback(): HasMany
+    /**
+     * Get all of the feedbacks for the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function feedbacks(): HasMany
     {
-        return $this->hasMany (Feedback::class);
+        return $this->hasMany(Feedback::class);
     }
 }

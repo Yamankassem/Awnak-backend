@@ -10,7 +10,7 @@ class FeedbackFactory extends Factory
     /**
      * The name of the factory's corresponding model.
      */
-    protected $model = \Modules\Applications\Models\Feedback::class;
+    protected $model = \Modules\Applications\Models\FeedbackFactory::class;
 
     /**
      * Define the model's default state.
@@ -19,10 +19,10 @@ class FeedbackFactory extends Factory
     {
         return [
            'task_id'      => Task::factory(), 
-            'name_of_org' => $this->faker->company,
-            'name_of_vol' => $this->faker->company,
-            'rating'      => $this->faker->numberBetween(1,5),
-            'comment'     => $this->faker->sentence,
+            'name_of_org' =>$this->faker->company,
+            'name_of_vol' =>$this->faker->company,
+            'rating'      =>$this->faker->numberBetween(1,5),
+            'comment'     =>$this->faker->sentence,
 
         ];
     }

@@ -19,7 +19,7 @@ class EvaluationsDatabaseSeeder extends Seeder
     {
             $this->call([
             BadgesSeeder::class,
-            // CertificatesSeeder::class,
+            CertificatesSeeder::class,
             // EvaluationsSeeder::class,
             // ReportsSeeder::class,
             // VolunteerBadgesSeeder::class,
