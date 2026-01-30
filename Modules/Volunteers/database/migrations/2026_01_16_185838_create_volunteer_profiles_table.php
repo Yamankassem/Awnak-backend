@@ -10,9 +10,11 @@ return new class extends Migration {
         Schema::create('volunteer_profiles', function (Blueprint $table) {
             $table->id();
 
-            // Foreign IDs (stored as integers only - NO foreign key constraints)
-            $table->unsignedBigInteger('user_id')->unique();
-            $table->unsignedBigInteger('location_id')->nullable();
+            // foreign key constraints
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->unique();
+
+            $table->foreignId('location_id')->nullable()->constrained('locations')->nullOnDelete();
+
 
             // Personal Information
             $table->string('first_name', 100);
@@ -34,8 +36,6 @@ return new class extends Migration {
             $table->softDeletes();
 
             // Indexes for performance (since we can't use foreign keys)
-            $table->index('user_id');
-            $table->index('location_id');
             $table->index('status');
             $table->index('is_verified');
         });

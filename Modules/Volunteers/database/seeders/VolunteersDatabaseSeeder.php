@@ -3,6 +3,7 @@
 namespace Modules\Volunteers\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+
 class VolunteersDatabaseSeeder extends Seeder
 {
     /**
@@ -10,8 +11,14 @@ class VolunteersDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->command->info('🌱 Seeding Volunteers Module...');
+
         $this->call([
-            VolunteerSeeder::class,
+            SkillsSeeder::class,
+            InterestsSeeder::class,
+            VolunteerProfilesSeeder::class,
         ]);
+
+        $this->command->info('✅ Volunteers Module Seeded Successfully');
     }
 }

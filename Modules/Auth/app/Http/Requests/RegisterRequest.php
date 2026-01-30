@@ -4,6 +4,20 @@ namespace Modules\Auth\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class RegisterRequest
+ *
+ * Validates user registration data.
+ *
+ * Expected payload:
+ * - name: string (required, max 255 characters)
+ * - email: string (required, valid email, unique)
+ * - password: string (required, min 8 characters, must be confirmed)
+ *
+ * Notes:
+ * - The `password_confirmation` field is required implicitly
+ *   by the `confirmed` validation rule.
+ */
 class RegisterRequest extends FormRequest
 {
     /**
