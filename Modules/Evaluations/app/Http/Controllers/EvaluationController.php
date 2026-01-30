@@ -22,22 +22,17 @@ class EvaluationController extends Controller
         $this->evaluationService = $evaluationService;
     }
 
-    // Display all volunteer evaluations
-    public function index($volunteerId)
+    // Display all evaluations
+    public function index()
     {
         try {
-            $evaluations = $this->evaluationService->getByVolunteer($volunteerId);
-
-            return $this->successResponse(
-                EvaluationResource::collection($evaluations),
-                'Evaluations retrieved successfully',
-                200
+            $evaluations = $this->evaluationService->getAllEvaluations();
+            return static::paginated(
+            paginator: $evaluations,
+            message: 'evaluations.listed'
             );
         } catch (\Exception $e) {
-            return $this->errorResponse(
-                $e->getMessage(),
-                $e->getCode() ?: 500
-            );
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 

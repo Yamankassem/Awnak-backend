@@ -4,8 +4,8 @@ namespace Modules\Evaluations\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Core\Models\User as ModelsUser;
-use Modules\Applications\Models\Task as ModelsTask;
+use Modules\Core\Models\User ;
+use Modules\Applications\Models\Task ;
 
 
 class Evaluation extends Model
@@ -17,7 +17,7 @@ class Evaluation extends Model
     protected $table = 'evaluations';
     protected $fillable = [
         'task_id',
-        'volunteer_id',
+        //'volunteer_id',
         'evaluator_id',
         'evaluated_at',
         'improvement',
@@ -34,19 +34,19 @@ class Evaluation extends Model
       *  Relationships
     */
     
-    // public function task()
-    // {
-    //     return $this->belongsTo(Task::class);
-    // }
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
+    
+    public function volunteer()
+    {
+        return $this->task->application->volunteer();
+    }
 
-    // public function volunteer()
-    // {
-    //     return $this->belongsTo(User::class, 'volunteer_id');
-    // }
-
-    // public function evaluator()
-    // {
-    //     return $this->belongsTo(User::class, 'evaluator_id');
-    // }
+    public function evaluator()
+    {
+        return $this->belongsTo(User::class, 'evaluator_id');
+    }
 
 }

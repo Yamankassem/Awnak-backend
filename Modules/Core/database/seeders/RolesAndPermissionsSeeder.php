@@ -64,12 +64,18 @@ class RolesAndPermissionsSeeder extends Seeder
             'organization.volunteers.evaluate',
             'organization.opportunities.create',
             'organization.opportunities.publish',
+            'evaluations.create',
+            'evaluations.update',
+            'evaluations.delete',
+            'evaluations.view',
+            'evaluations.viewAny',
 
             // Volunteer Coordinator
             'volunteers.read.assigned',
             'tasks.read.managed',
             'evaluations.create',
             'notifications.send',
+            
 
             // Auditor
             'reports.performance.read',
@@ -100,6 +106,11 @@ class RolesAndPermissionsSeeder extends Seeder
                 'certificates.delete',
                 'certificate.view',
                 'certificate.viewAny',
+                'evaluations.create',
+                'evaluations.update',
+                'evaluations.delete',
+                'evaluations.view',
+                'evaluations.viewAny',
 
             ],
 
@@ -130,6 +141,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'organization.volunteers.evaluate',
                 'organization.opportunities.create',
                 'organization.opportunities.publish',
+                
             ],
 
             'volunteer-coordinator' => [
@@ -137,6 +149,11 @@ class RolesAndPermissionsSeeder extends Seeder
                 'tasks.read.managed',
                 'evaluations.create',
                 'notifications.send',
+                'evaluations.create',
+                'evaluations.update',
+                'evaluations.delete',
+                'evaluations.view',
+                'evaluations.viewAny',
             ],
 
             'performance-auditor' => [

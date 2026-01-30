@@ -16,22 +16,19 @@ class EvaluationsSeeder extends Seeder
          $faker = Faker::create();
         DB::table('evaluations')->insert([
             [
-                'task_id' => 1,           
-                'volunteer_id' => 1,       
+                'task_id' => 1,                
                 'evaluator_id' => 1,      
                 'evaluated_at' => $faker->dateTimeBetween('-1 year', 'now'),
                 'score' => 4, 
             ],
              [
-                'task_id' => 2,           
-                'volunteer_id' => 1,       
+                'task_id' => 2,                  
                 'evaluator_id' => 1,      
                 'evaluated_at' => $faker->dateTimeBetween('-1 year', 'now'),
                 'score' => 2.5, 
             ],
              [
-                'task_id' => 3,           
-                'volunteer_id' => 2,       
+                'task_id' => 3,                
                 'evaluator_id' => 1,      
                 'evaluated_at' => $faker->dateTimeBetween('-1 year', 'now'),
                 'score' => 3, 
