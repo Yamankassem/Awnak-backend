@@ -10,6 +10,33 @@ use Modules\Volunteers\Models\VolunteerProfile;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Applications\App\QueryBuilders\ApplicationQueryBuilder;
+
+/**
+ * Application Model
+ * 
+ * Represents a volunteer application for an opportunity
+ * 
+ * @package Modules\Applications\Models
+ * @author Your Name
+ * @since 1.0.0
+ * 
+ * @property int $id
+ * @property int $opportunity_id
+ * @property int $volunteer_id
+ * @property int $coordinator_id
+ * @property \Carbon\Carbon|null $assigned_at
+ * @property string $description
+ * @property string $status pending|approved|rejected|waiting_list
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon|null $deleted_at
+ * 
+ * @property-read Opportunity $opportunity
+ * @property-read VolunteerProfile $volunteer
+ * @property-read User $coordinator
+ * @property-read \Illuminate\Database\Eloquent\Collection|Task[] $tasks
+ */
 
 class Application extends Model
 {
@@ -17,6 +44,8 @@ class Application extends Model
     
     /**
      * The attributes that are mass assignable.
+     * 
+     * @var array<string>
      */
     protected $fillable = [
        'opportunity_id',
@@ -24,24 +53,58 @@ class Application extends Model
        'coordinator_id',
        'assigned_at',
        'description',
+       'status',
     ];
-    
+     /**
+     * Create a new Eloquent query builder for the model.
+     * 
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return ApplicationQueryBuilder
+     */
+    public function newEloquentBuilder($query): ApplicationQueryBuilder
+    {
+        return new ApplicationQueryBuilder($query);
+    }
 
+    
+    /**
+    * Get all of the tasks for the application
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    */
     public function tasks(): HasMany
     {
         return $this->hasMany (Task::class);
     }
 
+
+    /**
+    * Get the opportunity that owns the application
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+    */
     public function opportunity(): BelongsTo
     {
         return $this->belongsTo (Opportunity::class);
     }
 
+
+    /**
+    * Get the volunteer that owns the application
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+    */
     public function volunteer(): BelongsTo
     {
         return $this->belongsTo (VolunteerProfile::class, 'volunteer_id');
     }
 
+    
+    /**
+    * Get the coordinator that owns the application
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+    */
     public function coordinator(): BelongsTo
     {
         return $this->belongsTo (User::class, 'coordinator_id');

@@ -4,10 +4,20 @@ namespace Modules\Applications\Http\Requests\TaskHoursRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Store TaskHour Request
+ * 
+ * Validates taskHour creation requests.
+ * 
+ * @package Modules\Applications\Http\Requests\TaskHoursRequest
+ * @author Your Name
+ */
 class StoreTaskHourRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
+     * 
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -22,6 +32,8 @@ class StoreTaskHourRequest extends FormRequest
 
     /**
      * Determine if the user is authorized to make this request.
+     * 
+     * @return bool
      */
     public function authorize(): bool
     {
