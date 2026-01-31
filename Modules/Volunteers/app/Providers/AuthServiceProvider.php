@@ -2,6 +2,10 @@
 
 namespace Modules\Volunteers\Providers;
 
+
+
+use Modules\Core\Models\Media;
+use Modules\Volunteers\Policies\MediaPolicy;
 use Modules\Volunteers\Models\VolunteerSkill;
 use Modules\Volunteers\Models\VolunteerProfile;
 use Modules\Volunteers\Models\VolunteerInterest;
@@ -19,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         VolunteerAvailability::class => VolunteerAvailabilityPolicy::class,
         VolunteerSkill::class => VolunteerSkillPolicy::class,
         VolunteerInterest::class => VolunteerInterestPolicy::class,
+        Media::class => MediaPolicy::class,
     ];
 
     public function boot(): void
