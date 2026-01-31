@@ -18,7 +18,6 @@ return new class extends Migration
             $table->tinyInteger('score'); //  1 - 5
             $table->string('strengths')->nullable();
             $table->string('improvement')->nullable();
-            $table->timestamp('evaluated_at')->nullable();
             $table->timestamps();
         });
     }

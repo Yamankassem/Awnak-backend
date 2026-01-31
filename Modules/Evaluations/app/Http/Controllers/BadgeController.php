@@ -102,5 +102,5 @@ class BadgeController extends Controller
         } catch (\Exception $e) {
                 return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
-}
+    }
 }

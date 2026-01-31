@@ -19,14 +19,12 @@ class Evaluation extends Model
         'task_id',
         //'volunteer_id',
         'evaluator_id',
-        'evaluated_at',
         'improvement',
         'strengths',
         'score',
     ];
 
     protected $casts = [
-        'evaluated_at' => 'datetime',
         'score' => 'float',
     ];
 

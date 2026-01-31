@@ -15,7 +15,6 @@ class StoreEvaluationRequest extends FormRequest
     {
         return [
             'task_id' => 'required|integer',
-            'volunteer_id' => 'required|integer',
             'score' => 'required|numeric|min:0|max:100',
             'improvement' => 'nullable|string|max:1000',
             'strengths' => 'nullable|string|max:1000',
