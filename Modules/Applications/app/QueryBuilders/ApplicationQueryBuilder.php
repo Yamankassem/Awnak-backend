@@ -74,7 +74,7 @@ class ApplicationQueryBuilder extends Builder
      */
     public function forVolunteer(int $volunteerId): self
     {
-        return $this->where('volunteer_id', $volunteerId);
+        return $this->where('volunteer_profile_id', $volunteerId);
     }
 
     /**

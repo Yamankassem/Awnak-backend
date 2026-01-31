@@ -23,7 +23,7 @@ class UpdateApplicationRequest extends FormRequest
     {
         return [
             'opportunity_id'  => 'sometimes|exists:opportunities,id',
-            'volunteer_id'    => 'sometimes|exists:volunteerProfiles,id',
+            'volunteer_profile_id'    => 'sometimes|exists:volunteerProfiles,id',
             'coordinator_id'  => 'sometimes|exists:users,id',
             'assigned_at'     => 'nullable|date',
             'description'     => 'sometimes|string|min:10|max:2000',

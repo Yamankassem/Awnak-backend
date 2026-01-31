@@ -134,9 +134,9 @@ class TaskService
             $query->where('application_id', $filters['application_id']);
         }
         
-        if (isset($filters['volunteer_id'])) {
+        if (isset($filters['volunteer_profile_id'])) {
             $query->whereHas('application', function($q) use ($filters) {
-                $q->where('volunteer_id', $filters['volunteer_id']);
+                $q->where('volunteer_profile_id', $filters['volunteer_profile_id']);
             });
         }
         
@@ -170,7 +170,7 @@ class TaskService
     public function getVolunteerPerformance(int $volunteerId): array
     {
         $tasks = Task::whereHas('application', function($query) use ($volunteerId) {
-            $query->where('volunteer_id', $volunteerId);
+            $query->where('volunteer_profile_id', $volunteer_profileId);
         })->with(['taskHours', 'feedbacks'])->get();
         
         $totalTasks = $tasks->count();

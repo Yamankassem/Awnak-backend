@@ -44,7 +44,7 @@ class FeedbackPolicy
         if ($user->role === 'volunteer'){
         return $feedback->task &&
                $feedback->task->application &&
-               $feedback->task->application->volunteer_id === $user->id;
+               $feedback->task->application->volunteer_profile_id === $user->id;
         }
 
         if ($user->role === 'coordinator'){

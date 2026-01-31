@@ -44,7 +44,7 @@ class TaskHourPolicy
         if ($user->role === 'volunteer'){
         return $taskHour->task &&
                $taskHour->task->application &&
-               $taskHour->task->application->volunteer_id === $user->id;
+               $taskHour->task->application->volunteer_profile_id === $user->id;
         }
 
         if ($user->role === 'coordinator'){

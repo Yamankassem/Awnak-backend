@@ -71,7 +71,7 @@ class TaskQueryBuilder extends Builder
     public function forVolunteer(int $volunteerId): self
     {
         return $this->whereHas('application', function($query) use ($volunteerId) {
-            $query->where('volunteer_id', $volunteerId);
+            $query->where('volunteer_profile_id', $volunteerId);
         });
     }
 

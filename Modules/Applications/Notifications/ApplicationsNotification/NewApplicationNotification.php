@@ -73,7 +73,7 @@ class NewApplicationNotification extends Notification implements ShouldQueue
             'title' => 'New Volunteer Request',
             'message' => 'Step'. $this->application->volunteer->name . 'For the opportunity: ' . $this->application->opportunity->title,
             'application_id' => $this->application->id,
-            'volunteer_id' => $this->application->volunteer_id,
+            'volunteer_profile_id' => $this->application->volunteer_profile_id,
             'opportunity_id' => $this->application->opportunity_id,
             'type' => 'new_application',
             'icon' => 'fa-user-plus',

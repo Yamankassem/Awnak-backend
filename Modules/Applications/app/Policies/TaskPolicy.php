@@ -43,7 +43,7 @@ class TaskPolicy
 
         if ($user->role === 'volunteer'){
         return $task->application &&
-               $task->application->volunteer_id === $user->id;
+               $task->application->volunteer_profile_id === $user->id;
         }
 
         if ($user->role === 'coordinator'){
@@ -141,7 +141,7 @@ class TaskPolicy
 
         if ($user->role === 'volunteer'){
         return $task->application && 
-               $task->application->volunteer_id === $user->id;
+               $task->application->volunteer_profile_id === $user->id;
         }
 
         return false;
@@ -158,7 +158,7 @@ class TaskPolicy
     {
         if ($user->role === 'volunteer')
         return $task->application &&
-               $task->application->volunteer_id === $user->id;
+               $task->application->volunteer_profile_id === $user->id;
       
         if ($user->role === 'coordinator')
         return $task->application &&
@@ -181,7 +181,7 @@ class TaskPolicy
     {
         if ($user->role === 'volunteer'){
         return $task->application &&
-               $task->application->volunteer_id === $user->id &&
+               $task->application->volunteer_profile_id === $user->id &&
                $task->status === 'complete';
         }
 
@@ -228,7 +228,7 @@ class TaskPolicy
 
         if ($user->role === 'volunteer'){
         return $task->application &&
-               $task->application->volunteer_id === $user->id;
+               $task->application->volunteer_profile_id === $user->id;
         }
 
         if ($user->role === 'coordinator'){

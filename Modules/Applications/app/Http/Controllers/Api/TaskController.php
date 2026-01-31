@@ -204,7 +204,7 @@ class TaskController extends Controller
         'title' => $task->title,
         'old_status' => $oldStatus,
         'new_status' => $task->status,
-        'volunteer_id' => $task->application->volunteer_id ?? null
+        'volunteer_profile_id' => $task->application->volunteer_profile_id ?? null
         ]);
 
         $this->sendStatusChangeNotifications($task, $oldStatus);

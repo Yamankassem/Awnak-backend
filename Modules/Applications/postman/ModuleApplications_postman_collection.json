@@ -25,7 +25,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"opportunity_id\":1,\"volunteer_id\":1,\"coordinator_id\":1,\"description\":\"Application\",\"status\":\"pending\"}"
+              "raw": "{\"opportunity_id\":1,\"volunteer_profile_id\":1,\"coordinator_id\":1,\"description\":\"Application\",\"status\":\"pending\"}"
             },
             "url": {
               "raw": "{{base_url}}/applications",
@@ -40,7 +40,7 @@
           "response": []
         },
         {
-          "name": "PATCH /applications/{id}/status",
+          "name": "PATCH /applications/{application_id}/status",
           "id": "bf253381-380a-47ba-9d0b-d00c8efd5b94",
           "request": {
             "method": "PATCH",
@@ -59,7 +59,7 @@
               "raw": "{\"status\":\"approved\"}"
             },
             "url": {
-              "raw": "{{base_url}}/applications/1/status",
+              "raw": "{{base_url}}/applications/application_id/status",
               "host": [
                 "{{base_url}}"
               ],
@@ -86,7 +86,7 @@
               }
             ],
             "url": {
-              "raw": "http://localhost:8000/api/v1/applications?per_page=15",
+              "raw": "{{base_url}}/applications",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -160,7 +160,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"application_id\":1,\"title\":\"Task\",\"description\":\"Description\",\"status\":\"active\",\"due_date\":\"2024-12-31\"}"
+              "raw": "{\"application_id\":{{application_id}},\"title\":\"Task\",\"description\":\"Description\",\"status\":\"active\",\"due_date\":\"2024-12-31\"}"
             },
             "url": {
               "raw": "{{base_url}}/tasks",
@@ -175,7 +175,7 @@
           "response": []
         },
         {
-          "name": "POST /tasks/{id}/log-hours",
+          "name": "POST /tasks/{task_id}/log-hours",
           "id": "3e9c8be3-4136-434c-ab09-6d1cd64ee8b3",
           "request": {
             "method": "POST",
@@ -194,7 +194,7 @@
               "raw": "{\"hours\":5,\"started_date\":\"2024-01-15\",\"ended_date\":\"2024-01-15\",\"note\":\"Work\"}"
             },
             "url": {
-              "raw": "{{base_url}}/tasks/1/log-hours",
+              "raw": "{{base_url}}/tasks/task_id/log-hours",
               "host": [
                 "{{base_url}}"
               ],
@@ -230,7 +230,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"task_id\":1,\"name_of_org\":\"Org\",\"name_of_vol\":\"Volunteer\",\"rating\":4,\"comment\":\"Good\"}"
+              "raw": "{\"task_id\":{{task_id}},\"name_of_org\":\"Org\",\"name_of_vol\":\"Volunteer\",\"rating\":4,\"comment\":\"Good\"}"
             },
             "url": {
               "raw": "{{base_url}}/feedbacks",
@@ -257,7 +257,7 @@
     {
       "id": "4df728ee-7627-4016-8d89-2be6fa0663b8",
       "key": "token",
-      "value": "YOUR_TOKEN"
+      "value": "test_123"
     }
   ]
 }

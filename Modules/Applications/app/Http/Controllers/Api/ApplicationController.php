@@ -103,7 +103,7 @@ class ApplicationController extends Controller
         $this->auditService->log('created', 'Application', auth()->user(), [
         'application_id' => $application->id,
         'status' => $application->status,
-        'volunteer_id' => $application->volunteer_id,
+        'volunteer_profile_id' => $application->volunteer_profile_id,
         'opportunity_id' => $application->opportunity_id
         ]);
 

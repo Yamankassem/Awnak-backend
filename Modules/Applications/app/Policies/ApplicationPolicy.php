@@ -43,7 +43,7 @@ class ApplicationPolicy
         }
 
         if ($user->role === 'volunteer') {
-            return $application->volunteer_id === $user->id;
+            return $application->volunteer_profile_id === $user->id;
         }
 
         if ($user->role === 'coordinator') {
@@ -97,7 +97,7 @@ class ApplicationPolicy
         }
 
         if ($user->role === 'volunteer') {
-            return $application->volunteer_id === $user->id &&
+            return $application->volunteer_profile_id === $user->id &&
                    $application->status === 'pending';
         }
 

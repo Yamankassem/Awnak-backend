@@ -17,7 +17,7 @@ class FeedbackSeeder extends Seeder
         
         for ($i = 1; $i <= 5; $i++) {
             $feedbacks[] = [
-                'task_id'      => rand(1, 5),
+                'task_id'      => 1,
                 'name_of_org'  => $this->getRandomOrgName(),
                 'name_of_vol'  => $this->getRandomVolName(),
                 'rating'       => rand(1, 5),

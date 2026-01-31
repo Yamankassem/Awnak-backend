@@ -17,8 +17,8 @@ class TaskHourSeeder extends Seeder
         
         for ($i = 1; $i <= 5; $i++) {
             $taskHours[] = [
-                'task_id'      => rand(1, 5),
-                'hours'        => rand(1, 8),
+                'task_id'      => 1,
+                'hours'        => 1,
                 'started_date' => $this->getRandomStartDate(),
                 'ended_date'   => $this->getRandomEndDate(),
                 'note'         => $this->getRandomNote(),

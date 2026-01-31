@@ -15,12 +15,12 @@ class ApplicationSeeder extends Seeder
             $status = $this->getRandomStatus();
             
             $applications[] = [
-                'opportunity_id' => rand(1, 3), 
-                'volunteer_id'   => rand(1, 3),
-                'coordinator_id' => rand(1, 2), 
+                'opportunity_id' => 1, 
+                'volunteer_profile_id'   => 1,
+                'coordinator_id' => 1, 
                 'status'         => $this->getRandomStatus(), 
                 'description'    => $this->getRandomDescription(), 
-                'assigned_at'    => $this->getAssignedAtBasedOnStatus($status), 
+                'assigned_at'    => now(), 
                 'created_at'     => now(),
                 'updated_at'     => now(),
             ];
@@ -33,7 +33,7 @@ class ApplicationSeeder extends Seeder
     
     private function getRandomStatus(): string
     {
-        $statuses = ['pending', 'approved', 'rejected', 'under_review'];
+        $statuses = ['pending', 'approved', 'rejected'];
         return $statuses[array_rand($statuses)];
     }
     
