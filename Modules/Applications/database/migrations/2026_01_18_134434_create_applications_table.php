@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('opportunity_id')->constrained('opportunities')->onDelete('cascade');
-            $table->foreignId('volunteer_id')->constrained('volunteerProfiles')->onDelete('cascade');
+            $table->foreignId('volunteer_id')->constrained('volunteer_profiles')->onDelete('cascade');
             $table->foreignId('coordinator_id')->constrained('users')->onDelete('cascade');
             $table->date('assigned_at')->nullable;
             $table->text('description');

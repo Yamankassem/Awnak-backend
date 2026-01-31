@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Applications\Database\Factories\TaskHourFactory;
-use Modules\Applications\QueryBuilders\TaskHourQueryBuilder;
 
 /**
  * TaskHour Model
@@ -67,18 +66,13 @@ class TaskHour extends Model
         'ended_date' => 'date',
     ];
     
-    /**
-     * Create a new Eloquent query builder for the model.
-     * 
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return TaskHourQueryBuilder
-     */
-    public function newEloquentBuilder($query): TaskHourQueryBuilder
+ 
+
+    protected static function newFactory()
     {
-        return new TaskHourQueryBuilder($query);
+        return TaskHourFactory::new();
     }
 
-    
     /**
      * Get the task that owns the TaskHour
      *

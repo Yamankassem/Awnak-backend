@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Applications\Database\Factories\TaskFactory;
-use Modules\Applications\QueryBuilders\TaskQueryBuilder;
 
 /**
  * Task Model
@@ -73,18 +72,10 @@ class Task extends Model
     ];
 
 
-    /**
-     * Create a new Eloquent query builder for the model.
-     * 
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return TaskQueryBuilder
-     */
-    public function newEloquentBuilder($query): TaskQueryBuilder
+    protected static function newFactory()
     {
-        return new TaskQueryBuilder($query);
+        return TaskFactory::new();
     }
-
-    
 
     /**
      * Get the application that owns the Task

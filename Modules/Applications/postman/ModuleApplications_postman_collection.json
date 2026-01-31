@@ -1,5 +1,6 @@
 {
   "info": {
+    "_postman_id": "b9dbc414-45ee-41ba-83c3-e58c83c26cfd",
     "name": "Applications API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -8,111 +9,255 @@
       "name": "Applications",
       "item": [
         {
-          "name": "GET /applications",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-            "url": "{{base_url}}/applications?per_page=15"
-          }
-        },
-        {
           "name": "POST /applications",
+          "id": "58b56be7-b7c2-41c7-ab69-62cfe3d37a9f",
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{token}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\"opportunity_id\":1,\"volunteer_id\":1,\"coordinator_id\":1,\"description\":\"Application\",\"status\":\"pending\"}"
             },
-            "url": "{{base_url}}/applications"
-          }
+            "url": {
+              "raw": "{{base_url}}/applications",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "applications"
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "PATCH /applications/{id}/status",
+          "id": "bf253381-380a-47ba-9d0b-d00c8efd5b94",
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{token}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\"status\":\"approved\"}"
             },
-            "url": "{{base_url}}/applications/1/status"
-          }
+            "url": {
+              "raw": "{{base_url}}/applications/1/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "applications",
+                "1",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /applications",
+          "id": "a912eeb3-61f0-46b9-9afa-d457c65c9e17",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "uuid": "015840bc-61ca-4f45-b677-8144bfc5b3ff"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8000/api/v1/applications?per_page=15",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "applications"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "uuid": "91dc0d67-e615-434a-aad9-debe15751e8d"
+                }
+              ]
+            }
+          },
+          "response": []
         }
-      ]
+      ],
+      "id": "2f77551f-c1d5-47cc-bb5c-9727ef408e2f"
     },
     {
       "name": "Tasks",
       "item": [
         {
           "name": "GET /tasks",
+          "id": "9f2926ba-288d-44d8-92dc-f785f02cdbd2",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-            "url": "{{base_url}}/tasks?per_page=15"
-          }
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tasks?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "POST /tasks",
+          "id": "698ad694-cac9-4929-b094-948cef666e8d",
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{token}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\"application_id\":1,\"title\":\"Task\",\"description\":\"Description\",\"status\":\"active\",\"due_date\":\"2024-12-31\"}"
             },
-            "url": "{{base_url}}/tasks"
-          }
+            "url": {
+              "raw": "{{base_url}}/tasks",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tasks"
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "POST /tasks/{id}/log-hours",
+          "id": "3e9c8be3-4136-434c-ab09-6d1cd64ee8b3",
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{token}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\"hours\":5,\"started_date\":\"2024-01-15\",\"ended_date\":\"2024-01-15\",\"note\":\"Work\"}"
             },
-            "url": "{{base_url}}/tasks/1/log-hours"
-          }
+            "url": {
+              "raw": "{{base_url}}/tasks/1/log-hours",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tasks",
+                "1",
+                "log-hours"
+              ]
+            }
+          },
+          "response": []
         }
-      ]
+      ],
+      "id": "3c47a34f-bd07-4c8c-8f16-d4c21b1012fd"
     },
     {
       "name": "Feedbacks",
       "item": [
         {
           "name": "POST /feedbacks",
+          "id": "039ef0ed-1777-4b92-9431-aac78286f669",
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{token}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\"task_id\":1,\"name_of_org\":\"Org\",\"name_of_vol\":\"Volunteer\",\"rating\":4,\"comment\":\"Good\"}"
             },
-            "url": "{{base_url}}/feedbacks"
-          }
+            "url": {
+              "raw": "{{base_url}}/feedbacks",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "feedbacks"
+              ]
+            }
+          },
+          "response": []
         }
-      ]
+      ],
+      "id": "d44f4acf-f8bb-4a89-bf90-07e26aa3df2d"
     }
   ],
   "variable": [
-    {"key": "base_url", "value": "http://localhost:8000/api/v1"},
-    {"key": "token", "value": "YOUR_TOKEN"}
+    {
+      "id": "4211b226-4362-452a-ab5e-d2180a4e44ec",
+      "key": "base_url",
+      "value": "http://localhost:8000/api/v1"
+    },
+    {
+      "id": "4df728ee-7627-4016-8d89-2be6fa0663b8",
+      "key": "token",
+      "value": "YOUR_TOKEN"
+    }
   ]
 }

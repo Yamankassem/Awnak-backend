@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Applications\Database\Factories\FeedbackFactory;
-use Modules\Applications\QueryBuilders\FeedbackQueryBuilder;
 
 /**
  * Feedback Model
@@ -66,17 +65,13 @@ class Feedback extends Model
         'rating' => 'integer',
     ];
 
-    /**
-     * Create a new Eloquent query builder for the model.
-     * 
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return FeedbackQueryBuilder
-     */
-    public function newEloquentBuilder($query): FeedbackQueryBuilder
-    {
-        return new FeedbackQueryBuilder($query);
-    }
+  
     
+    protected static function newFactory()
+    {
+        return FeedbackFactory::new();
+    }
+
    /**
     * Get the task that owns the Feedback
     *

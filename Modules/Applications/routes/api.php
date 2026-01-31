@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Applications\Http\Controllers\CalendarController;
-use Modules\Applications\Http\Controllers\NotificationController;
-use Modules\Applications\Http\Controllers\TasksController\TaskController;
-use Modules\Applications\Http\Controllers\FeedbackController\FeedbackController;
-use Modules\Applications\Http\Controllers\TaskHoursController\TaskHourController;
-use Modules\Applications\Http\Controllers\ApplicationsController\ApplicationController;
+use Modules\Applications\Http\Controllers\Api\CalendarController;
+use Modules\Applications\Http\Controllers\Api\NotificationController;
+use Modules\Applications\Http\Controllers\Api\TasksController\TaskController;
+use Modules\Applications\Http\Controllers\Api\FeedbackController\FeedbackController;
+use Modules\Applications\Http\Controllers\Api\TaskHoursController\TaskHourController;
+use Modules\Applications\Http\Controllers\Api\ApplicationsController\ApplicationController;
 
 Route::middleware(['auth:sanctum', 'throttle:api'])->prefix('v1')->group(function () {
 

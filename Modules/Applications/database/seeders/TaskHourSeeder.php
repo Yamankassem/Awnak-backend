@@ -3,25 +3,54 @@
 namespace Modules\Applications\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Modules\Applications\Models\TaskHour;
+use Illuminate\Support\Facades\DB;
 
-/**
- * TaskHour Seeder
- * 
- * Seeds taskHours table with sample data.
- * 
- * @package Modules\Applications\Database\Seeders
- * @author Your Name
- */
 class TaskHourSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     * 
-     * @return void
-     */
     public function run(): void
     {
-        TaskHour::factory()->count(100)->create();
+        if (DB::table('tasks')->count() == 0) {
+            $this->call(TaskSeeder::class);
+        }
+        
+        $taskHours = [];
+        
+        for ($i = 1; $i <= 5; $i++) {
+            $taskHours[] = [
+                'task_id'      => rand(1, 5),
+                'hours'        => rand(1, 8),
+                'started_date' => $this->getRandomStartDate(),
+                'ended_date'   => $this->getRandomEndDate(),
+                'note'         => $this->getRandomNote(),
+                'created_at'   => now(),
+                'updated_at'   => now(),
+            ];
+        }
+        
+        DB::table('task_hours')->insert($taskHours);
+        
+        $this->command->info('5 random work hours were successfully generated!');
+    }
+    
+    private function getRandomStartDate(): string
+    {
+        return now()->subDays(rand(1, 10))->subHours(rand(1, 5))->format('Y-m-d H:i:s');
+    }
+    
+    private function getRandomEndDate(): string
+    {
+        return now()->subDays(rand(0, 9))->addHours(rand(1, 8))->format('Y-m-d H:i:s');
+    }
+    
+    private function getRandomNote(): string
+    {
+        $notes = [
+            'Good and meticulous work',
+            'The task was completed successfully',
+            'Needs more time',
+            'Excellent performance',
+            'Good follow-up'
+        ];
+        return $notes[array_rand($notes)];
     }
 }

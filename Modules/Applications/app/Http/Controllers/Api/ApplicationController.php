@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Applications\Http\Controllers;
+namespace Modules\Applications\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
