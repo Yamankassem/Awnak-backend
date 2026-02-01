@@ -26,14 +26,10 @@ return new class extends Migration
             // Title or name of the document
             $table->string('title');
 
-            // File path where the document is stored (e.g., storage/app/public/…)
-            $table->string('file_path');
 
-            // File type (e.g., pdf, jpg, docx) - optional
-            $table->string('file_type')->nullable();
+            $table->string('description');
 
-            // File size in kilobytes - optional
-            $table->integer('file_size')->nullable();
+
 
             // Timestamps for created_at and updated_at
             $table->timestamps();

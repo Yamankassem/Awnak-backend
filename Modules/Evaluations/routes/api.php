@@ -1,8 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Evaluations\Http\Controllers\EvaluationsController;
+use Modules\Evaluations\Http\Controllers\BadgeController;
+use Modules\Evaluations\Http\Controllers\CertificateController;
+use Modules\Evaluations\Http\Controllers\EvaluationController;
+use Modules\Evaluations\Http\Controllers\ReportController;
+use Modules\Evaluations\Http\Controllers\VolunteerBadgeController;
+
+   // Route::apiResource('badges', BadgeController::class)->names('badges');
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('evaluations', EvaluationsController::class)->names('evaluations');
+    Route::apiResource('evaluations', EvaluationController::class)->names('evaluations');
+    Route::apiResource('badges', BadgeController::class)->names('badges');
+    Route::apiResource('volunteerBadges', VolunteerBadgeController::class)->names('volunteerBadges');
+    Route::apiResource('certificates', CertificateController::class)->names('certificates');
+    Route::apiResource('reports', ReportController::class)->names('reports');
+
 });
+
+
+

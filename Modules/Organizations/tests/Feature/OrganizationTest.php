@@ -23,13 +23,15 @@ class OrganizationTest extends TestCase
      */
     public function test_it_can_create_an_organization()
     {
-        $this->actingAs(User::factory()->create(), 'sanctum');
+       $user = User::factory()->create();
+       $this->actingAs($user, 'sanctum');
 
-        $response = $this->postJson('/api/organizations', [
+        $response = $this->postJson('/api/v1/organizations', [
             'license_number' => 'ABC123',
             'type' => 'NGO',
             'bio' => 'Non-profit organization focused on education',
             'website' => 'https://example.org',
+            'user_id' => $user->id,
         ]);
 
         $response->assertStatus(201)
@@ -42,6 +44,7 @@ class OrganizationTest extends TestCase
                  'website',
                  'created_at',
                  'updated_at',
+                 
              ]
          ]);
 
@@ -62,7 +65,7 @@ class OrganizationTest extends TestCase
     {
         $this->actingAs(User::factory()->create(), 'sanctum');
 
-        $response = $this->getJson('/api/organizations/999');
+        $response = $this->getJson('/api/v1/organizations/999');
         $response->assertStatus(404);
     }
 }

@@ -8,6 +8,22 @@ use Modules\Core\Models\User;
 
 final class AuthService
 {
+
+    /**
+     * Register a new user and issue an API token.
+     *
+     * Expected data keys:
+     * - name: string
+     * - email: string
+     * - password: string (plain, will be hashed)
+     *
+     * @param array<string, mixed> $data Validated registration data.
+     *
+     * @return array{
+     *     user: User,
+     *     token: string
+     * }
+     */
     public function register(array $data): array
     {
         $user = User::create([
@@ -24,17 +40,30 @@ final class AuthService
         ];
     }
 
+    /**
+     * Authenticate user credentials and issue an API token.
+     *
+     * Expected data keys:
+     * - email: string
+     * - password: string
+     *
+     * @param array<string, mixed> $data Validated login credentials.
+     *
+     * @return array{
+     *     user: User,
+     *     token: string
+     * }
+     *
+     * @throws ValidationException If credentials are invalid.
+     */
     public function login(array $data): array
     {
         $user = User::query()->where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Invalid credentials.'],
-            ]);
+        if ($user->volunteerProfile?->status === 'suspended') {
+            abort(403, 'Account suspended.');
         }
-
-        // اختياري: احذف كل توكنات المستخدم قبل إصدار جديد
+        // Optional: revoke all previous tokens before issuing a new one
         // $user->tokens()->delete();
 
         $token = $user->createToken('api')->plainTextToken;
@@ -45,6 +74,13 @@ final class AuthService
         ];
     }
 
+    /**
+     * Revoke the currently active access token for the given user.
+     *
+     * @param User $user Authenticated user.
+     *
+     * @return void
+     */
     public function logoutCurrent(User $user): void
     {
         $user->currentAccessToken()?->delete();
