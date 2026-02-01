@@ -16,6 +16,7 @@ class VolunteersDatabaseSeeder extends Seeder
         $this->call([
             SkillsSeeder::class,
             InterestsSeeder::class,
+            LanguagesSeeder::class,
             VolunteerProfilesSeeder::class,
         ]);
 

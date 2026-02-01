@@ -34,7 +34,8 @@ class VolunteerAvailabilityController extends Controller
 
         $availability = $this->service->create(
             $profile,
-            $request->validated()
+            $request->validated(),
+            $request->user()
         );
 
         return static::success(
@@ -50,7 +51,8 @@ class VolunteerAvailabilityController extends Controller
 
         $availability = $this->service->update(
             $availability,
-            $request->validated()
+            $request->validated(),
+            $request->user()
         );
 
         return static::success(
@@ -59,11 +61,11 @@ class VolunteerAvailabilityController extends Controller
         );
     }
 
-    public function destroy(VolunteerAvailability $availability)
+    public function destroy(VolunteerAvailability $availability,Request $request)
     {
         $this->authorize('delete', $availability);
 
-        $this->service->delete($availability);
+        $this->service->delete($availability,$request->user());
 
         return static::success(
             message: 'availability.deleted'
