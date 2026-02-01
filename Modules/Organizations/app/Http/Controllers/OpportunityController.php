@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * Delegates business logic to OpportunityService for cleaner code,
  * improved testability, and easier maintenance.
  * All responses are returned as JSON for consistency.
+ *
+ * Authorization:
+ * - Uses OpportunityPolicy for create, update, and delete actions.
  */
 class OpportunityController extends Controller
 {
@@ -34,40 +37,14 @@ class OpportunityController extends Controller
         $this->opportunityService = $opportunityService;
     }
 
-    /**
-     * Retrieve a paginated list of opportunities with their organizations.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @apiResponse 200 {
-     *   "status": "success",
-     *   "message": "Opportunity retrieved successfully.",
-     *   "data": [
-     *     {
-     *       "id": 1,
-     *       "title": "Volunteer Program",
-     *       "description": "Community volunteering opportunity",
-     *       "organization": {
-     *         "id": 2,
-     *         "name": "Helping Hands"
-     *       }
-     *     },
-     *     {
-     *       "id": 2,
-     *       "title": "Internship",
-     *       "description": "Summer internship program",
-     *       "organization": {
-     *         "id": 3,
-     *         "name": "Tech Corp"
-     *       }
-     *     }
-     *   ],
-     *   "meta": {
-     *     "current_page": 1,
-     *     "total": 25
-     *   }
-     * }
-     */
+    /** * Retrieve a paginated list of opportunities with their organizations. *
+     * * Input: * - No parameters, retrieves all opportunities with pagination. *
+     * * Output: * - JSON response containing paginated opportunities with organization data. *
+     *  * @return JsonResponse *
+     *  * @apiResponse 200 { * "status": "success", * "message": "Opportunity retrieved successfully.",
+     * * "data": [...], * "meta": { "current_page": 1, "total": 25 } * }
+     * */
+
     public function index(): JsonResponse
     {
         $opportunities = Opportunity::with('organization')->paginate(10);
@@ -85,39 +62,47 @@ class OpportunityController extends Controller
     /**
      * Create a new opportunity.
      *
+     * Authorizes via OpportunityPolicy::create.
+     * Validates input with OpportunityRequest, delegates creation to OpportunityService,
+     * and returns formatted data using OpportunityResource.
+     *
+     * Input:
+     * - OpportunityRequest: validated data including title, description, organization_id,
+     *   location_id OR location array, optional skills.
+     *
+     * Output:
+     * - JSON response with created opportunity data.
+     *
      * @param OpportunityRequest $request Validated request containing opportunity data
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      *
-     * @apiResponse 201 {
-     *   "status": "success",
-     *   "message": "Opportunity created successfully.",
-     *   "data": {
-     *     "id": 1,
-     *     "title": "Volunteer Program",
-     *     "description": "Community volunteering opportunity",
-     *     "organization": {
-     *       "id": 2,
-     *       "name": "Helping Hands"
-     *     }
-     *   }
-     * }
+     * @throws \Illuminate\Auth\Access\AuthorizationException If user is not authorized
      *
-     * @apiResponse 400 {
-     *   "status": "error",
-     *   "message": "Invalid opportunity data provided."
-     * }
-     *
-     * @apiResponse 500 {
-     *   "status": "error",
-     *   "message": "Failed to create opportunity",
-     *   "error": "Exception message"
-     * }
+     * @apiResponse 201 { "status": "success", "message": "Opportunity created successfully.", "data": {...} }
+     * @apiResponse 403 { "status": "error", "message": "This action is unauthorized." }
+     * @apiResponse 500 { "status": "error", "message": "Failed to create opportunity" }
      */
+
     public function store(OpportunityRequest $request): JsonResponse
     {
         try {
-            $opportunity = $this->opportunityService->create($request->validated());
-            $opportunity->load('organization');
+            $this->authorize('create', Opportunity::class);
+
+            $data = $request->validated();
+
+            // if send location_id direct when the location is already saved
+            if ($request->has('location_id')) {
+                $data['location'] = ['id' => $request->location_id];
+            }
+
+            //   if send new location  (lat/lng + name/type)
+            if ($request->has('location')) {
+                $data['location'] = $request->location;
+            }
+
+            $opportunity = $this->opportunityService->create($data);
+            $opportunity->load(['organization', 'location', 'skills']);
+
             return response()->json([
                 'status' => 'success',
                 'message' => __('opportunities.created'),
@@ -132,12 +117,14 @@ class OpportunityController extends Controller
         }
     }
 
-    /**
-     * Show: Display a specific opportunity by ID.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
-     */
+
+  /** * Show a specific opportunity by ID. *
+   *  * Input: * - int $id: Opportunity ID. *
+   * * Output: * - JSON response with opportunity data. *
+   *  * @param int $id * @return JsonResponse * * @apiResponse 200 { "data": {...} } *
+   *  @apiResponse 404 { "status": "error", "message": "Opportunity not found." }
+   *  */
+
     public function show($id)
     {
         $opportunity = Opportunity::with('organization')->findOrFail($id);
@@ -147,38 +134,32 @@ class OpportunityController extends Controller
         ]);
     }
 
-    /**
+   /**
      * Update an existing opportunity.
+     *
+     * Authorizes via OpportunityPolicy::update.
+     * Validates input with OpportunityRequest, delegates update to OpportunityService,
+     * and returns formatted data using OpportunityResource.
+     *
+     * Input:
+     * - OpportunityRequest: validated data.
+     * - int $id: Opportunity ID.
+     *
+     * Output:
+     * - JSON response with updated opportunity data.
      *
      * @param OpportunityRequest $request Validated request containing opportunity data
      * @param int $id The ID of the opportunity to update
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      *
-     * @apiResponse 200 {
-     *   "status": "success",
-     *   "message": "Opportunity updated successfully.",
-     *   "data": {
-     *     "id": 1,
-     *     "title": "Updated Volunteer Program",
-     *     "description": "New description",
-     *     "organization": {
-     *       "id": 2,
-     *       "name": "Helping Hands"
-     *     }
-     *   }
-     * }
+     * @throws \Illuminate\Auth\Access\AuthorizationException If user is not authorized
      *
-     * @apiResponse 404 {
-     *   "status": "error",
-     *   "message": "Opportunity not found."
-     * }
-     *
-     * @apiResponse 500 {
-     *   "status": "error",
-     *   "message": "Failed to update opportunity",
-     *   "error": "Exception message"
-     * }
+     * @apiResponse 200 { "status": "success", "message": "Opportunity updated successfully.", "data": {...} }
+     * @apiResponse 403 { "status": "error", "message": "This action is unauthorized." }
+     * @apiResponse 404 { "status": "error", "message": "Opportunity not found." }
+     * @apiResponse 500 { "status": "error", "message": "Failed to update opportunity" }
      */
+
     public function update(OpportunityRequest $request, $id): JsonResponse
     {
         try {
@@ -197,25 +178,55 @@ class OpportunityController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Failed to update opportunity', 'error' => $e->getMessage(),], 500);
         }
     }
+
+
     /**
-     * Destroy: Delete an opportunity.
+     * Delete an opportunity.
      *
-     * Removes the opportunity record from the database using the service.
-     * Returns a success message as JSON.
+     * Authorizes via OpportunityPolicy::delete.
+     * Delegates deletion to OpportunityService.
      *
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * Input:
+     * - int $id: Opportunity ID.
+     *
+     * Output:
+     * - JSON response with success or error message.
+     *
+     * @param int $id The ID of the opportunity to delete
+     * @return JsonResponse
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException If user is not authorized
+     *
+     * @apiResponse 200 { "status": "success", "message": "Opportunity deleted successfully." }
+     * @apiResponse 403 { "status": "error", "message": "This action is unauthorized." }
+     * @apiResponse 404 { "status": "error", "message": "Opportunity not found." }
+     * @apiResponse 500 { "status": "error", "message": "Failed to delete opportunity" }
      */
-    public function destroy($id)
+
+    public function destroy($id): \Illuminate\Http\JsonResponse
     {
-        $opportunity = Opportunity::findOrFail($id);
+        try {
+            $opportunity = Opportunity::findOrFail($id);
 
-        $this->authorize('delete', $opportunity);
+            $this->authorize('delete', $opportunity);
 
-        $this->opportunityService->delete($opportunity);
+            $this->opportunityService->delete($opportunity);
 
-        return response()->json([
-            'message' => __('opportunities.deleted')
-        ]);
+            return response()->json([
+                'status'  => 'success',
+                'message' => __('opportunities.deleted'),
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Opportunity not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Failed to delete opportunity',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
     }
 }
