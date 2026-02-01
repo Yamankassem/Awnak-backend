@@ -26,7 +26,7 @@ class TaskHourPolicy
      */
      public function viewAny(User $user):bool 
     {
-        return in_array($user->role, ['admin', 'coordinator', 'opportunity_manager', 'evaluator']);
+        return in_array($user->role, ['super_admin', 'coordinator', 'opportunity_manager', 'evaluator']);
     }
 
     /**
@@ -38,13 +38,13 @@ class TaskHourPolicy
      */
     public function view(User $user, TaskHour $taskHour):bool 
     {
-        if ($user->role === 'admin')
+        if ($user->role === 'super_admin')
         return true;
 
         if ($user->role === 'volunteer'){
         return $taskHour->task &&
                $taskHour->task->application &&
-               $taskHour->task->application->volunteer_id === $user->id;
+               $taskHour->task->application->volunteer_profile_id === $user->volunteer_profile->id;
         }
 
         if ($user->role === 'coordinator'){
@@ -81,7 +81,7 @@ class TaskHourPolicy
      */
     public function create(User $user):bool 
     {
-         if ($user->role ==='admin')
+         if ($user->role ==='super_admin')
             return true;
 
          if ($user->role ==='volunteer')
@@ -102,7 +102,7 @@ class TaskHourPolicy
      */
     public function update(User $user, TaskHour $taskHour):bool 
     {
-        if ($user->role === 'admin')
+        if ($user->role === 'super_admin')
         return true;
 
         if ($taskHour->created_by === $user->id)
@@ -126,7 +126,7 @@ class TaskHourPolicy
      */
      public function delete(User $user, TaskHour $taskHour):bool 
     {
-        if ($user->role === 'admin')
+        if ($user->role === 'super_admin')
             return true;
 
         if ($taskHour->created_by === $user->id)

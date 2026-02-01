@@ -26,7 +26,7 @@ class TaskPolicy
      */
     public function viewAny(User $user):bool 
     {
-        return in_array($user->role, ['admin', 'coordinator', 'opportunity_manager', 'volunteer', 'evaluator']);
+        return in_array($user->role, ['super_admin', 'coordinator', 'opportunity_manager', 'volunteer', 'evaluator']);
     }
        
     /**
@@ -38,12 +38,12 @@ class TaskPolicy
      */
     public function view(User $user, Task $task):bool 
     {
-        if ($user->role === 'admin')
+        if ($user->role === 'super_admin')
         return true;
 
         if ($user->role === 'volunteer'){
         return $task->application &&
-               $task->application->volunteer_id === $user->id;
+               $task->application->volunteer_profile_id === $user->volunteer_profile->id;
         }
 
         if ($user->role === 'coordinator'){
@@ -77,7 +77,7 @@ class TaskPolicy
      */   
     public function create(User $user):bool 
     {
-        return in_array($user->role, ['admin', 'coordinator', 'opportunity_manager']);
+        return in_array($user->role, ['super_admin', 'coordinator', 'opportunity_manager']);
     }
 
 
@@ -90,7 +90,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task):bool 
     {
-        if ($user->role === 'admin')
+        if ($user->role === 'super_admin')
         return true;
 
         if ($user->role === 'coordinator')
@@ -116,7 +116,7 @@ class TaskPolicy
      */
      public function delete(User $user, Task $task):bool 
     {
-        return $user->role === 'admin';
+        return $user->role === 'super_admin';
     }
 
     /**
@@ -128,7 +128,7 @@ class TaskPolicy
      */
     public function changeStatus(User $user, Task $task):bool 
     {
-        if ($user->role === 'admin')
+        if ($user->role === 'super_admin')
         return true;
 
         if ($user->role === 'coordinator')
@@ -141,7 +141,7 @@ class TaskPolicy
 
         if ($user->role === 'volunteer'){
         return $task->application && 
-               $task->application->volunteer_id === $user->id;
+               $task->application->volunteer_profile_id === $user->volunteer_profile->id;
         }
 
         return false;
@@ -158,13 +158,13 @@ class TaskPolicy
     {
         if ($user->role === 'volunteer')
         return $task->application &&
-               $task->application->volunteer_id === $user->id;
+               $task->application->volunteer_profile_id === $user->volunteer_profile->id;
       
         if ($user->role === 'coordinator')
         return $task->application &&
                $task->application->coordinator_id === $user->id;
                
-        if ($user->role === 'admin')
+        if ($user->role === 'super_admin')
         return true;
        
         return false;
@@ -181,7 +181,7 @@ class TaskPolicy
     {
         if ($user->role === 'volunteer'){
         return $task->application &&
-               $task->application->volunteer_id === $user->id &&
+               $task->application->volunteer_profile_id === $user->volunteer_profile->id &&
                $task->status === 'complete';
         }
 
@@ -196,7 +196,7 @@ class TaskPolicy
                $task->application->opportunity->organization_id  === $user->organization_id;
         }
 
-        if ($user->role === 'admin')
+        if ($user->role === 'super_admin')
         return true;
 
         return false;
@@ -223,12 +223,12 @@ class TaskPolicy
      */
      public function viewFeedbacks(User $user, Task $task):bool 
     {
-        if (in_array($user->role, ['admin', 'evaluator']))
+        if (in_array($user->role, ['super_admin', 'evaluator']))
             return true;
 
         if ($user->role === 'volunteer'){
         return $task->application &&
-               $task->application->volunteer_id === $user->id;
+               $task->application->volunteer_profile_id === $user->volunteer_profile->id;
         }
 
         if ($user->role === 'coordinator'){

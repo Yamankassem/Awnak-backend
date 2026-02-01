@@ -27,6 +27,13 @@ class VolunteerProfileController extends Controller
         );
     }
 
+    public function index(Request $request)
+    {
+        $items = $this->service->list($request->user());
+
+        return static::success(data: $items);
+    }
+
     public function update(UpdateVolunteerProfileRequest $request)
     {
         $profile = $this->service->getByUser($request->user());
@@ -35,7 +42,8 @@ class VolunteerProfileController extends Controller
 
         $profile = $this->service->update(
             $profile,
-            $request->validated()
+            $request->validated(),
+            $request->user()
         );
 
         return static::success(

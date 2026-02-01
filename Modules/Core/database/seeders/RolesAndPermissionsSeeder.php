@@ -42,6 +42,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'interests.create',
             'interests.update',
             'interests.delete',
+            'languages.read',
+            'languages.create',
+            'languages.update',
+            'languages.delete',
 
 
             // Volunteer
@@ -112,6 +116,10 @@ class RolesAndPermissionsSeeder extends Seeder
                 'interests.create',
                 'interests.update',
                 'interests.delete',
+                'languages.read',
+                'languages.create',
+                'languages.update',
+                'languages.delete',
 
             ],
 
@@ -126,6 +134,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'notes.create.assigned_tasks',
                 'skills.read',
                 'interests.read',
+                'languages.read',
             ],
 
             'opportunity-manager' => [
@@ -139,6 +148,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'volunteers.assign',
                 'skills.read',
                 'interests.read',
+                'languages.read',
             ],
 
             'organization-admin' => [
@@ -150,6 +160,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'organization.opportunities.publish',
                 'skills.read',
                 'interests.read',
+                'languages.read',
             ],
 
             'volunteer-coordinator' => [
@@ -159,12 +170,14 @@ class RolesAndPermissionsSeeder extends Seeder
                 'notifications.send',
                 'skills.read',
                 'interests.read',
+                'languages.read',
             ],
 
             'performance-auditor' => [
                 'reports.performance.read',
                 'skills.read',
                 'interests.read',
+                'languages.read',
             ],
         ];
 

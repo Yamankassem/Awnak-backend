@@ -29,7 +29,7 @@ class ApplicationObserver
         app(CacheService::class)->clearTags([
         'applications',
         'dashboard',
-        'user_' . $application->volunteer_id,
+        'user_' . $application->volunteer_profile_id,
         'user_' . $application->coordinator_id
          ]);
 
@@ -61,7 +61,7 @@ class ApplicationObserver
         app(CacheService::class)->clearTags([
         'applications',
         'dashboard',
-        'user_' . $application->volunteer_id,
+        'user_' . $application->volunteer_profile_id,
         'user_' . $application->coordinator_id
         ]);
         

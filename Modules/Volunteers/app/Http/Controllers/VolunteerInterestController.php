@@ -29,7 +29,7 @@ class VolunteerInterestController extends Controller
         $profile = $request->user()->volunteerProfile;
 
         return static::success(
-            data: $this->service->create($profile, $request->validated()),
+            data: $this->service->create($profile, $request->validated(),$request->user()),
             message: 'interest.added',
             status: 201
         );
@@ -40,16 +40,16 @@ class VolunteerInterestController extends Controller
         $this->authorize('update', $volunteerInterest);
 
         return static::success(
-            data: $this->service->update($volunteerInterest, $request->validated()),
+            data: $this->service->update($volunteerInterest, $request->validated(),$request->user()),
             message: 'interest.updated'
         );
     }
 
-    public function destroy(VolunteerInterest $volunteerInterest)
+    public function destroy(VolunteerInterest $volunteerInterest,Request $request)
     {
         $this->authorize('delete', $volunteerInterest);
 
-        $this->service->delete($volunteerInterest);
+        $this->service->delete($volunteerInterest,$request->user());
 
         return static::success(message: 'interest.deleted');
     }

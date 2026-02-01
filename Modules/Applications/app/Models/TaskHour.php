@@ -5,10 +5,9 @@ namespace Modules\Applications\Models;
 use Modules\Applications\Models\Task;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Applications\Policies\TaskHourPolicy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Applications\Database\Factories\TaskHourFactory;
-use Modules\Applications\QueryBuilders\TaskHourQueryBuilder;
 
 /**
  * TaskHour Model
@@ -66,19 +65,11 @@ class TaskHour extends Model
         'started_date' => 'date',
         'ended_date' => 'date',
     ];
-    
-    /**
-     * Create a new Eloquent query builder for the model.
-     * 
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return TaskHourQueryBuilder
-     */
-    public function newEloquentBuilder($query): TaskHourQueryBuilder
-    {
-        return new TaskHourQueryBuilder($query);
-    }
+   
+    protected $policies = [
+    TaskHour::class => TaskHourPolicy::class,
+    ];
 
-    
     /**
      * Get the task that owns the TaskHour
      *

@@ -101,6 +101,14 @@ class VolunteerProfile extends Model implements HasMedia
         return $this->belongsTo(Location::class);
     }
 
+    public function languages()
+    {
+        return $this->belongsToMany(
+            Language::class,
+            'volunteer_languages'
+        )->withPivot('level')->withTimestamps();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Accessors
@@ -127,5 +135,4 @@ class VolunteerProfile extends Model implements HasMedia
     {
         return $query->where('is_verified', true);
     }
-
 }

@@ -23,7 +23,7 @@ class IndexTaskRequest extends FormRequest
     {
         return [
             'application_id'  => 'sometimes|exists:applications,id',
-            'volunteer_id'  => 'sometimes|exists:volunteerProfiles,id',
+            'volunteer_profile_id'  => 'sometimes|exists:volunteerProfiles,id',
             'title'           => 'sometimes|string|max:255',
             'status'          => 'sometimes|in:preparation,active,complete,cancelled',
             'due_date_from'   => 'sometimes|date',

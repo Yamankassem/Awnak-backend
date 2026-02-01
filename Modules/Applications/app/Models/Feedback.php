@@ -5,10 +5,9 @@ namespace Modules\Applications\Models;
 use Modules\Applications\Models\Task;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Applications\Policies\FeedbackPolicy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Applications\Database\Factories\FeedbackFactory;
-use Modules\Applications\QueryBuilders\FeedbackQueryBuilder;
 
 /**
  * Feedback Model
@@ -65,18 +64,11 @@ class Feedback extends Model
     protected $casts = [
         'rating' => 'integer',
     ];
+   
+    protected $policies = [
+    Feedback::class => FeedbackPolicy::class,
+    ];
 
-    /**
-     * Create a new Eloquent query builder for the model.
-     * 
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return FeedbackQueryBuilder
-     */
-    public function newEloquentBuilder($query): FeedbackQueryBuilder
-    {
-        return new FeedbackQueryBuilder($query);
-    }
-    
    /**
     * Get the task that owns the Feedback
     *

@@ -74,7 +74,7 @@ class TaskObserver
         app(CacheService::class)->clearTags([
         'tasks',
         'applications',
-        'user_' . $task->application->volunteer_id,
+        'user_' . $task->application->volunteer_profile_id,
         'user_' . $task->application->coordinator_id
         ]);
         

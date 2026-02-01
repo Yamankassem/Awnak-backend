@@ -82,9 +82,9 @@ class TaskHourService
             $query->where('task_id', $filters['task_id']);
         }
         
-        if (isset($filters['volunteer_id'])) {
+        if (isset($filters['volunteer_profile_id'])) {
             $query->whereHas('task.application', function($q) use ($filters) {
-                $q->where('volunteer_id', $filters['volunteer_id']);
+                $q->where('volunteer_profile_id', $filters['volunteer_profile_id']);
             });
         }
         
@@ -107,9 +107,9 @@ class TaskHourService
             
             $monthHours = TaskHour::whereYear('started_date', $date->year)
                 ->whereMonth('started_date', $date->month)
-                ->when(isset($filters['volunteer_id']), function($query) use ($filters) {
+                ->when(isset($filters['volunteer_profile_id']), function($query) use ($filters) {
                     $query->whereHas('task.application', function($q) use ($filters) {
-                        $q->where('volunteer_id', $filters['volunteer_id']);
+                        $q->where('volunteer_profile_id', $filters['volunteer_profile_id']);
                     });
                 })
                 ->sum('hours');
@@ -135,9 +135,9 @@ class TaskHourService
             ->orderByDesc('total_hours')
             ->limit(10);
         
-        if (isset($filters['volunteer_id'])) {
+        if (isset($filters['volunteer_profile_id'])) {
             $query->whereHas('task.application', function($q) use ($filters) {
-                $q->where('volunteer_id', $filters['volunteer_id']);
+                $q->where('volunteer_profile_id', $filters['volunteer_profile_id']);
             });
         }
         
@@ -167,9 +167,9 @@ class TaskHourService
             $query->where('task_id', $filters['task_id']);
         }
         
-        if (isset($filters['volunteer_id'])) {
+        if (isset($filters['volunteer_profile_id'])) {
             $query->whereHas('task.application', function($q) use ($filters) {
-                $q->where('volunteer_id', $filters['volunteer_id']);
+                $q->where('volunteer_profile_id', $filters['volunteer_profile_id']);
             });
         }
         
@@ -193,7 +193,7 @@ class TaskHourService
             'total_records' => $hours->count(),
             'total_hours' => $hours->sum('hours'),
             'average_hours_per_day' => $this->calculateAvgHoursPerDay($hours),
-            'volunteers_count' => $hours->groupBy('task.application.volunteer_id')->count(),
+            'volunteers_count' => $hours->groupBy('task.application.volunteer_profile_id')->count(),
             'tasks_count' => $hours->groupBy('task_id')->count(),
         ];
         
