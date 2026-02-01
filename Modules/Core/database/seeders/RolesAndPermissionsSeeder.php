@@ -31,6 +31,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'badges.create',
             'badges.update',
             'badges.delete',
+            'organization.status.update',
+
+
             'skills.read',
             'skills.create',
             'skills.update',
@@ -39,6 +42,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'interests.create',
             'interests.update',
             'interests.delete',
+
 
             // Volunteer
             'profile.read.own',
@@ -64,6 +68,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'organization.volunteers.read',
             'organization.volunteers.evaluate',
             'organization.opportunities.create',
+            'organization.opportunities.update',
+            'organization.opportunities.delete',
             'organization.opportunities.publish',
 
             // Volunteer Coordinator
@@ -96,6 +102,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'badges.create',
                 'badges.update',
                 'badges.delete',
+                'organization.status.update',
+
                 'skills.read',
                 'skills.create',
                 'skills.update',
@@ -104,6 +112,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'interests.create',
                 'interests.update',
                 'interests.delete',
+
             ],
 
             'volunteer' => [
@@ -136,6 +145,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'organization.volunteers.read',
                 'organization.volunteers.evaluate',
                 'organization.opportunities.create',
+                'organization.opportunities.update',
+                'organization.opportunities.delete',
                 'organization.opportunities.publish',
                 'skills.read',
                 'interests.read',

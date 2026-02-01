@@ -13,9 +13,8 @@ use Illuminate\Support\Facades\Schema;
  * include spatial location data for advanced queries.
  *
  * Notes:
- * - In production (MySQL), the 'coordinates' column is created as a geometry type.
- * - In testing (SQLite), the 'coordinates' column is created as a string
- *   to avoid errors since SQLite does not support spatial indexes.
+ * - In production (MySQL), the 'coordinates' column can be defined as a geometry type.
+ * - In testing (SQLite), spatial columns may be simplified to avoid errors.
  */
 return new class extends Migration {
     /**
@@ -23,7 +22,21 @@ return new class extends Migration {
      *
      * Creates the opportunities table with attributes such as title,
      * description, type, start/end dates, status, organization linkage,
-     * and spatial location.
+     * and timestamps.
+     *
+     * Columns:
+     * - id: Primary key (auto-increment)
+     * - title: Opportunity title
+     * - description: Detailed description (nullable)
+     * - type: Type of opportunity (volunteering, training, job, etc.)
+     * - start_date: Opportunity start date (nullable)
+     * - end_date: Opportunity end date (nullable)
+     * - status: Enum (approved, rejected, pending), default 'pending'
+     * - organization_id: Foreign key linking to organizations table
+     * - timestamps: created_at and updated_at
+     *
+     * Relationships:
+     * - organization_id references organizations.id (cascade on delete)
      *
      * @return void
      */
@@ -37,26 +50,17 @@ return new class extends Migration {
             $table->string('type')->nullable(); // Type (volunteering, training, job, etc.)
             $table->date('start_date')->nullable(); // Start date
             $table->date('end_date')->nullable(); // End date
-            $table->enum('status', ['approved', 'rejected', 'pending'])->default('pending'); // Status
+            $table->enum('status', ['approved', 'rejected', 'pending'])->default('pending'); // Status of Opportunity
 
             $table->unsignedBigInteger('organization_id'); // Foreign key to organizations
-
-            // Spatial location column
-            if (app()->environment('testing')) {
-                // SQLite does not support spatial indexes → use string in testing
-                $table->string('coordinates')->nullable();
-            } else {
-                // MySQL/MariaDB supports geometry → use geometry in production
-                $table->geometry('coordinates')->nullable();
-            }
 
             $table->timestamps(); // created_at and updated_at
 
             // Foreign key relationship: each opportunity belongs to one organization
             $table->foreign('organization_id')
-                  ->references('id')
-                  ->on('organizations')
-                  ->onDelete('cascade'); // Cascade delete if organization is removed
+                ->references('id')
+                ->on('organizations')
+                ->onDelete('cascade'); // Cascade delete if organization is removed
         });
     }
 

@@ -33,7 +33,8 @@ class Organization extends Model
         'type',
         'bio',
         'website',
-        'user_id'
+        'user_id',
+        'status'
     ];
     // Function of logactivity
     public function getActivitylogOptions(): LogOptions
@@ -46,12 +47,13 @@ class Organization extends Model
 
     public function volunteers()
     {
-        return $this->hasMany(\Modules\Volunteers\Models\VolunteerProfile::class , 'user_id');
+        // wait for organization_id from VolunteerProfile
+        return $this->hasMany(\Modules\Volunteers\Models\VolunteerProfile::class, 'user_id');
     }
 
     public function applications()
     {
-        return $this->hasMany(\Modules\Applications\Models\Application::class );
+        return $this->hasMany(\Modules\Applications\Models\Application::class);
     }
 
     // public function documents()
@@ -62,5 +64,54 @@ class Organization extends Model
     public function evaluations()
     {
         return $this->hasMany(\Modules\Evaluations\Models\Evaluation::class);
+    }
+
+    #<----------------------------Scopes-------------------------->
+
+    /**
+     * Scope a query to only include organizations owned by a specific user.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $userId The ID of the user who owns the organization.
+     * @return \Illuminate\Database\Eloquent\Builder
+     *
+     * Example:
+     * Organization::ownedBy(5)->get();
+     * // Returns all organizations where user_id = 5
+     */
+    public function scopeOwnedBy($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+    /**
+     * Scope a query to only include active organizations.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     *
+     * Example:
+     * Organization::active()->get();
+     * // Returns all organizations where status = 'active'
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    /**
+     * Scope a query to only include organizations of a given type.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $type The type of organization (e.g., 'NGO', 'Company').
+     * @return \Illuminate\Database\Eloquent\Builder
+     *
+     * Example:
+     * Organization::ofType('NGO')->get();
+     * // Returns all organizations where type = 'NGO'
+     */
+
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('type', $type);
     }
 }

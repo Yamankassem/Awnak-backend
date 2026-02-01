@@ -7,6 +7,7 @@ use MatanYadaev\EloquentSpatial\Objects\Point;
 use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
 use Modules\Core\Database\Factories\LocationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Organizations\Models\Opportunity;
 
 // use Modules\Core\Database\Factories\LocationFactory;
 
@@ -25,4 +26,7 @@ class Location extends Model
     {
         return LocationFactory::new();
     }
+
+    public function opportunities()
+    { return $this->hasMany(Opportunity::class); }
 }

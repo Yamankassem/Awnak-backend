@@ -8,7 +8,9 @@ use Modules\Organizations\Http\Requests\OrganizationRequest;
 use Modules\Organizations\Transformers\OrganizationResource;
 use Modules\Organizations\Models\Organization;
 use Modules\Organizations\Services\OrganizationService;
+use Modules\Volunteers\Models\VolunteerProfile;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller: OrganizationsController
@@ -17,6 +19,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * Delegates business logic to OrganizationService for cleaner code,
  * improved testability, and easier maintenance.
  * All responses are returned as JSON for consistency.
+ *
+ * Authorization:
+ * - Uses OrganizationPolicy for create, update, delete, and status updates.
  */
 class OrganizationsController extends Controller
 {
@@ -37,6 +42,9 @@ class OrganizationsController extends Controller
     /**
      * Retrieve a paginated list of organizations.
      *
+     * Note:
+     * - Only organizations with status = "active" are returned.
+     *
      * @return \Illuminate\Http\JsonResponse
      *
      * @apiResponse 200 {
@@ -45,8 +53,11 @@ class OrganizationsController extends Controller
      *   "data": [
      *     {
      *       "id": 1,
-     *       "name": "Helping Hands",
-     *       "description": "Community support organization"
+     *       "license_number": "LIC-001",
+     *       "type": "NGO",
+     *       "bio": "Humanitarian organization providing aid and relief.",
+     *       "website": "https://redcrescent.org",
+     *       "status": "active"
      *     }
      *   ],
      *   "meta": {
@@ -57,7 +68,7 @@ class OrganizationsController extends Controller
      */
     public function index(): JsonResponse
     {
-        $organizations = Organization::paginate(10);
+        $organizations = Organization::active()->paginate(10);;
         return response()->json([
             'status'  => 'success',
             'message' => __('organizations.retrieved'),
@@ -69,39 +80,28 @@ class OrganizationsController extends Controller
         ], 200);
     }
 
-    /**
-     * Create a new organization.
-     *
-     * @param OrganizationRequest $request Validated request containing organization data
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @apiResponse 201 {
-     *   "status": "success",
-     *   "message": "Organization created successfully.",
-     *   "data": {
-     *     "id": 1,
-     *     "name": "Helping Hands",
-     *     "description": "Community support organization",
-     *     "created_at": "2026-01-29T00:00:00Z",
-     *     "updated_at": "2026-01-29T00:00:00Z"
-     *   }
-     * }
-     *
-     * @apiResponse 400 {
-     *   "status": "error",
-     *   "message": "Invalid organization data provided."
-     * }
-     *
-     * @apiResponse 500 {
-     *   "status": "error",
-     *   "message": "Failed to create organization",
-     *   "error": "Exception message"
-     * }
+    /** * Create a new organization. *
+     *  * Authorizes via OrganizationPolicy::create.
+     * Validates input with OrganizationRequest, delegates creation to OrganizationService,
+     *  * and returns formatted data using OrganizationResource. *
+     *  * @param OrganizationRequest $request Validated request containing organization data
+     * * @return JsonResponse *
+     *  * @throws \Illuminate\Auth\Access\AuthorizationException If user is not authorized *
+     *  * @apiResponse 201 { "status": "success", "message": "Organization created successfully.", "data": {...} } *
+     *  @apiResponse 400 { "status": "error", "message": "Invalid organization data provided." } *
+     *  @apiResponse 500 { "status": "error", "message": "Failed to create organization" }
      */
     public function store(OrganizationRequest $request): JsonResponse
     {
         try {
-            //   $this->authorize('create', Organization::class);
+            $this->authorize('create', Organization::class);
+
+            if ($request->user()->hasRole('system-admin') && $request->has('status')) {
+                $data['status'] = $request->input('status');
+            } else {
+                $data['status'] = 'notactive';
+            }
+
             $organization = $this->organizationService->create($request->validated());
             return response()->json([
                 'status' => 'success',
@@ -195,28 +195,14 @@ class OrganizationsController extends Controller
     }
 
 
-    /**
-     * Delete an existing organization.
-     *
-     * @param int $id The ID of the organization to delete
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @apiResponse 200 {
-     *   "status": "success",
-     *   "message": "Organization deleted successfully."
-     * }
-     *
-     * @apiResponse 404 {
-     *   "status": "error",
-     *   "message": "Organization not found."
-     * }
-     *
-     * @apiResponse 500 {
-     *   "status": "error",
-     *   "message": "Failed to delete organization",
-     *   "error": "Exception message"
-     * }
-     */
+    /** * Delete an existing organization. *
+     *  * Authorizes via OrganizationPolicy::delete. * Delegates deletion to OrganizationService. *
+     * * @param int $id Organization ID * @return JsonResponse *
+     * * @throws \Illuminate\Auth\Access\AuthorizationException If user is not authorized *
+     *  * @apiResponse 200 { "status": "success", "message": "Organization deleted successfully." }
+     * * @apiResponse 404 { "status": "error", "message": "Organization not found." }
+     * * @apiResponse 500 { "status": "error", "message": "Failed to delete organization" }
+     *  */
     public function destroy($id): JsonResponse
     {
         try {
@@ -232,44 +218,121 @@ class OrganizationsController extends Controller
     }
 
     /**
-     * Retrieve volunteers associated with a specific organization.
+     * Get Volunteers of a Specific Organization
+     *
+     * Retrieves all volunteers who applied to opportunities belonging to a given organization.
+     * The volunteers are fetched via the applications table, which links volunteer_id with opportunity_id.
      *
      * @param int $id The ID of the organization
      * @return \Illuminate\Http\JsonResponse
      *
+     * @route GET /api/v1/organizations/{id}/volunteers
+     *
      * @apiResponse 200 {
      *   "status": "success",
      *   "message": "Volunteers retrieved successfully.",
-     *   "organization_id": 1,
-     *   "organization_name": "ORG-12345",
-     *   "volunteers": [
+     *   "data": [
      *     {
-     *       "id": 10,
-     *       "name": "Aya Barghouth",
-     *       "email": "aya@example.com",
-     *       "phone": "+963999999999"
+     *       "id": 1,
+     *       "name": "Volunteer A",
+     *       "email": "volunteerA@example.com",
+     *       "phone": "123456789"
      *     },
      *     {
-     *       "id": 11,
-     *       "name": "Omar Khaled",
-     *       "email": "omar@example.com",
-     *       "phone": "+963888888888"
+     *       "id": 2,
+     *       "name": "Volunteer B",
+     *       "email": "volunteerB@example.com",
+     *       "phone": "987654321"
      *     }
      *   ]
      * }
      *
      * @apiResponse 404 {
      *   "status": "error",
-     *   "message": "Organization not found."
+     *   "message": "Organization not found"
+     * }
+     *
+     * @apiResponse 403 {
+     *   "status": "error",
+     *   "message": "Access denied: not authorized to view volunteers of this organization"
      * }
      */
-    public function volunteers($id): JsonResponse
+    public function getOrganizationVolunteers($id)
+    {
+        $volunteers = VolunteerProfile::whereIn('id', function ($query) use ($id) {
+            $query->select('applications.volunteer_id')
+                ->from('applications')
+                ->join('opportunities', 'applications.opportunity_id', '=', 'opportunities.id')
+                ->where('opportunities.organization_id', $id);
+        })->get();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Volunteers retrieved successfully.',
+            'data'    => $volunteers
+        ], 200);
+    }
+
+    /**
+     * Activate an organization.
+     *
+     * Authorizes via OrganizationPolicy::updateStatus.
+     * Sets status to active and saves.
+     *
+     * @param Request $request
+     * @param Organization $organization
+     * @return JsonResponse
+     *
+     * @apiResponse 200 { "status": "success", "message": "Organization activated.", "data": {...} }
+     * @apiResponse 500 { "status": "error", "message": "Failed to activate organization" }
+     */
+
+    public function activate(Request $request, Organization $organization): JsonResponse
     {
         try {
-            $organization = Organization::with('volunteers:id,first_name,last_name,phone')->findOrFail($id);
-            return response()->json(['status' => 'success', 'message' => 'Volunteers retrieved successfully', 'organization_id' => $organization->id, 'organization_name' => $organization->license_number, 'volunteers' => $organization->volunteers,], 200);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json(['status' => 'error', 'message' => __('organizations.not_found'),], 404);
+            // only system-admin can change status
+            $this->authorize('updateStatus', $organization);
+
+            $organization->status = 'active';
+            $organization->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => __('organizations.activated'),
+                'data' => new OrganizationResource($organization)
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to activate organization',
+                'error' => $e->getMessage(),
+            ], 500);
         }
+    }
+
+    /**
+     * List all not-active organizations.
+     *
+     * Restricted to system-admin role.
+     *
+     * @return JsonResponse
+     *
+     * @apiResponse 200 { "status": "success", "data": [...] }
+     * @apiResponse 403 { "status": "error", "message": "Unauthorized" }
+     */
+
+    public function listNotActive(): JsonResponse
+    {
+        // System-admin role only can list
+        if (!auth()->user()->hasRole('system-admin')) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 403);
+        }
+
+        $organizations = Organization::where('status', 'notactive')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => OrganizationResource::collection($organizations)
+        ]);
     }
 }

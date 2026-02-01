@@ -8,18 +8,22 @@ use Modules\Organizations\Transformers\OrganizationResource as ResourcesOrganiza
 /**
  * Resource: OpportunityResource
  *
- * Transforms opportunity data into a structured JSON response.
- * Includes core attributes, related organization, and associated skills.
+ * Transforms Opportunity model data into a structured JSON response.
+ * Includes core attributes, related organization, location, and skills.
  *
- * Fields:
- * - id: Unique identifier of the opportunity
- * - title: Title of the opportunity
+ * Input:
+ * - Opportunity model (with relationships loaded: organization, location, skills)
+ *
+ * Output (JSON):
+ * - id: Unique identifier
+ * - title: Opportunity title
  * - description: Detailed description
  * - type: Type of opportunity (volunteering, training, job, etc.)
- * - start_date / end_date: Opportunity timeline
+ * - start_date / end_date: Timeline
  * - status: Current status (approved, rejected, pending)
  * - organization: Related organization data (via OrganizationResource)
  * - skills: Associated skills (via OpportunitySkillResource)
+ * - location: { id, lat, lng, name, type }
  */
 
 class OpportunityResource extends JsonResource
@@ -36,6 +40,16 @@ class OpportunityResource extends JsonResource
             'status'        => $this->status,
             'organization'  => new OrganizationResource($this->whenLoaded('organization')),
             'skills'        => OpportunitySkillResource::collection($this->whenLoaded('skills')),
+            'location' => $this->location
+                ? [
+                    'id' => $this->location->id,
+                    'lat' => $this->location->coordinates->latitude,
+                    'lng' => $this->location->coordinates->longitude,
+                    'name' => $this->location->name ?? null,
+                    'type' => $this->location->type ?? null,
+                ]
+                : null,
+
         ];
     }
 }

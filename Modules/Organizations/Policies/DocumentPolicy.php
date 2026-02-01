@@ -4,34 +4,84 @@ namespace Modules\Organizations\Policies;
 
 use Modules\Core\Models\User;
 use Modules\Organizations\Models\Document;
-use Modules\Organizations\Models\Opportunity;
 
+/**
+ * Policy: DocumentPolicy
+ *
+ * Defines authorization rules for Document actions.
+ * - All users can view documents.
+ * - Only system-admin, opportunity-manager, or the organization owner
+ *   can create, update, or delete documents.
+ * - Uses Spatie permissions for fine-grained control.
+ */
 class DocumentPolicy
 {
-    public function viewAny(User $user)
-    { // أي مستخدم مسجل دخول بيقدر يشوف
-        return $user->exists;
+    /**
+     * Determine whether the user can view any documents.
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function viewAny(User $user): bool
+    {
+        // Any Authintication User
+        return $user !== null;
     }
 
-
-    public function view(User $user, Document $document)
-    { // الكل بيقدر يشوف وثيقة محددة
+    /**
+     * Determine whether the user can view a specific document.
+     *
+     * @param User $user
+     * @param Document $document
+     * @return bool
+     */
+    public function view(User $user, Document $document): bool
+    {
         return true;
     }
 
-    public function create(User $user)
-    { // بس أدوار معينة بيقدروا ينشئوا
-        return $user->hasRole(['system-admin', 'opportunity-manager', 'organization-admin']);
-    }
-
-    public function update(User $user, Document $document)
-    { // نفس المنطق: أدوار معينة أو صاحب المنظمة
-        return $user->hasRole(['system-admin', 'opportunity-manager', 'organization-admin']) || $document->opportunity->organization->user_id === $user->id;
-    }
-
-    public function delete(User $user, Document $document)
+    /**
+     * Determine whether the user can create a document.
+     *
+     * @param User $user
+     * @param Document $document
+     * @return bool
+     */
+    public function create(User $user): bool
     {
-        // نفس منطق التعديل
-        return $user->hasRole(['system-admin', 'opportunity-manager', 'organization-admin']) || $document->opportunity->organization->user_id === $user->id;
+        return $user->hasRole('system-admin')
+            || $user->can('organization.opportunities.create')
+            || $user->can('opportunities.create');
+    }
+
+
+    /**
+     * Determine whether the user can update a document.
+     *
+     * @param User $user
+     * @param Document $document
+     * @return bool
+     */
+    public function update(User $user, Document $document): bool
+    {
+        return $user->hasRole('system-admin')
+            || $user->can('organization.opportunities.update')
+            || $user->can('opportunities.update.own')
+            || $document->opportunity->organization->user_id === $user->id;
+    }
+
+    /**
+     * Determine whether the user can delete a document.
+     *
+     * @param User $user
+     * @param Document $document
+     * @return bool
+     */
+    public function delete(User $user, Document $document): bool
+    {
+        return $user->hasRole('system-admin')
+            || $user->can('organization.opportunities.delete')
+            || $user->can('opportunities.delete.own')
+            || $document->opportunity->organization->user_id === $user->id;
     }
 }

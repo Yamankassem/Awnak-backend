@@ -12,14 +12,26 @@ class DocumentRequest extends FormRequest
     }
 
     public function rules(): array
-    {
-        return [
-            'title'          => 'required|string|max:255',
-            'description'    => 'nullable|string|max:1000',
-            'file'           => 'required|file|mimes:pdf,docx,txt|max:10240',
-            'opportunity_id' => 'required|exists:opportunities,id',
-        ];
+{
+    $rules = [
+        'title'          => $this->isMethod('post') ? 'required|string|max:255' : 'sometimes|string|max:255',
+        'description'    => 'nullable|string|max:1000',
+        'opportunity_id' => $this->isMethod('post') ? 'required|exists:opportunities,id' : 'sometimes|exists:opportunities,id',
+    ];
+
+    if ($this->isMethod('post')) {
+        $rules['file'] = 'required|file|mimes:pdf,docx,txt|max:10240';
     }
+
+    if ($this->isMethod('put') || $this->isMethod('patch')) {
+        $rules['file'] = 'nullable|file|mimes:pdf,docx,txt|max:10240';
+    }
+
+    return $rules;
+}
+
+
+
 
     public function messages(): array
     {

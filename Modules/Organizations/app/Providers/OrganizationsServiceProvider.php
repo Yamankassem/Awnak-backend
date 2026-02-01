@@ -38,6 +38,7 @@ class OrganizationsServiceProvider extends ServiceProvider
           $router->aliasMiddleware( 'org.access', \Modules\Organizations\Http\Middleware\OrganizationAccessMiddleware::class );
           $router->aliasMiddleware( 'opportunity.access', \Modules\Organizations\Http\Middleware\OpportunityAccessMiddleware::class );
           $router->aliasMiddleware( 'document.access', \Modules\Organizations\Http\Middleware\DocumentAccessMiddleware::class );
+          $router->aliasMiddleware('opportunity.skills.access', \Modules\Organizations\Http\Middleware\OpportunitySkillAccessMiddleware::class);
     }
 
     /**
