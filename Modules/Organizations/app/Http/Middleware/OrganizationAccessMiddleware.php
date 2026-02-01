@@ -5,54 +5,63 @@ namespace Modules\Organizations\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Modules\Organizations\Models\Organization;
-
 /**
  * Middleware: OrganizationAccessMiddleware
  *
- * Controls access to organization-related requests.
+ * Controls access to organization-related routes based on HTTP method
+ * and user role. Ensures that only authorized users can perform
+ * sensitive actions such as creating, updating, or deleting organizations.
  *
  * Rules:
- * - GET (index/show): allowed for all authenticated users.
- * - POST/PUT/DELETE (create/update/delete): restricted to role ['system-admin'] only.
+ * - GET requests:
+ *   - Route `api/v1/organizations/notactive`: only accessible by system-admin.
+ *   - Other GET routes: accessible by all authenticated users.
  *
- * @param Request $request The incoming HTTP request
- * @param Closure $next The next middleware/controller in the pipeline
- * @return \Illuminate\Http\JsonResponse|mixed
+ * - POST, PUT, PATCH, DELETE requests:
+ *   - Only accessible by system-admin.
  *
- * @apiResponse 200 {
- *   "status": "success",
- *   "message": "Authorized request"
- * }
+ * - Route parameters:
+ *   - If an organization ID is provided in the route, ensures that the
+ *     organization exists. Returns 404 if not found.
  *
- * @apiResponse 403 {
- *   "message": "Access denied: only system-admin can manage organizations"
- * }
- *
- * @apiResponse 404 {
- *   "message": "Organization not found"
- * }
+ * Responses:
+ * - 403: Access denied if user lacks required role.
+ * - 404: Organization not found if ID is invalid.
  */
-
 class OrganizationAccessMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
         $user = $request->user();
-        $organizationId = $request->route('organization') ?? $request->route('id');
 
-
+        // Allow GET requests
         if ($request->isMethod('GET')) {
+            // Special case: notactive organizations require system-admin
+            if ($request->is('api/v1/organizations/notactive')) {
+                if ($user->hasRole('system-admin')) {
+                    return $next($request);
+                }
+                return response()->json([
+                    'message' => 'Access denied: only system-admin can view notactive organizations'
+                ], 403);
+            }
+
+            // Other GET routes are allowed
             return $next($request);
         }
 
-        if (in_array($request->method(), ['POST', 'PUT', 'DELETE'])) {
+        // Restrict POST/PUT/PATCH/DELETE to system-admin
+        if (in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             if ($user->hasRole('system-admin')) {
                 return $next($request);
             }
-            return response()->json(['message' => 'Access denied: only system-admin can manage organizations'], 403);
+            return response()->json([
+                'message' => 'Access denied: only system-admin can manage organizations'
+            ], 403);
         }
 
-    
+        // Validate organization existence if ID is provided in route
+        $organizationId = $request->route('organization') ?? $request->route('id');
         if ($organizationId) {
             $organization = Organization::find($organizationId);
 
