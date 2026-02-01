@@ -24,7 +24,7 @@ class IndexTaskHourRequest extends FormRequest
         return [
             'task_id'         => 'sometimes|exists:tasks,id',
             'application_id'  => 'sometimes|exists:applications,id',
-            'volunteer_id'    => 'sometimes|exists:volunteerProfiles,id',
+            'volunteer_profile_id'    => 'sometimes|exists:volunteerProfiles,id',
             'hours'           => 'sometimes|integer|min:1|max:12',
             'started_date_from'    => 'sometimes|date',
             'started_date_to'    => 'sometimes|date',

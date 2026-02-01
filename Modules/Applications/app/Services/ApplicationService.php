@@ -172,8 +172,8 @@ class ApplicationService
             $query->where('status', $filters['status']);
         }
 
-        if (isset($filters['volunteer_id'])) {
-            $query->where('volunteer_id', $filters['volunteer_id']);
+        if (isset($filters['volunteer_profile_id'])) {
+            $query->where('volunteer_profile_id', $filters['volunteer_profile_id']);
         }
 
         if (isset($filters['opportunity_id'])) {

@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Organizations\Models\Opportunity;
 use Modules\Volunteers\Models\VolunteerProfile;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Applications\Policies\ApplicationPolicy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Applications\App\QueryBuilders\ApplicationQueryBuilder;
 
 /**
  * Application Model
@@ -23,7 +23,7 @@ use Modules\Applications\App\QueryBuilders\ApplicationQueryBuilder;
  * 
  * @property int $id
  * @property int $opportunity_id
- * @property int $volunteer_id
+ * @property int $volunteer_profile_id
  * @property int $coordinator_id
  * @property \Carbon\Carbon|null $assigned_at
  * @property string $description
@@ -49,24 +49,18 @@ class Application extends Model
      */
     protected $fillable = [
        'opportunity_id',
-       'volunteer_id',
+       'volunteer_profile_id',
        'coordinator_id',
        'assigned_at',
        'description',
        'status',
     ];
-     /**
-     * Create a new Eloquent query builder for the model.
-     * 
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @return ApplicationQueryBuilder
-     */
-    public function newEloquentBuilder($query): ApplicationQueryBuilder
-    {
-        return new ApplicationQueryBuilder($query);
-    }
 
+    protected $policies = [
+    Application::class => ApplicationPolicy::class,
+    ];
     
+
     /**
     * Get all of the tasks for the application
     *
@@ -94,9 +88,9 @@ class Application extends Model
     *
     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
     */
-    public function volunteer(): BelongsTo
+    public function volunteerProfile(): BelongsTo
     {
-        return $this->belongsTo (VolunteerProfile::class, 'volunteer_id');
+        return $this->belongsTo (VolunteerProfile::class, 'volunteer_profile_id');
     }
 
     

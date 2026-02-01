@@ -23,7 +23,7 @@ class IndexApplicationRequest extends FormRequest
     {
         return [
             'opportunity_id'  => 'sometimes|exists:opportunities,id',
-            'volunteer_id'    => 'sometimes|exists:volunteerProfiles,id',
+            'volunteer_profile_id'    => 'sometimes|exists:volunteerProfiles,id',
             'coordinator_id'  => 'sometimes|exists:users,id',
             'status'          => 'sometimes|in:pending,approved,rejected',
             'from_date'       => 'sometimes|date',
