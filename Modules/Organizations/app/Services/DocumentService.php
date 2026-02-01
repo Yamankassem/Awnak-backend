@@ -46,18 +46,24 @@ class DocumentService
      */
     public function update(Document $document, array $data): Document
     {
-        $document->update([
-            'title' => $data['title'],
-             'description' => $data['description'] ?? $document->description,
+        $updateData = []; if (array_key_exists('title', $data))
+         { $updateData['title'] = $data['title']; }
+         if (array_key_exists('description', $data))
+          { $updateData['description'] = $data['description']; }
+           if (array_key_exists('opportunity_id', $data))
+         { $updateData['opportunity_id'] = $data['opportunity_id']; }
 
-             ]);
-             
+       if (!empty($updateData))
+         { $document->update($updateData); }
+
         if (!empty($data['file'])) {
             $document->clearMediaCollection('documents');
             $document->addMediaFromRequest('file')->toMediaCollection('documents');
         }
+
         return $document;
     }
+
 
     /**
      * Delete a document and its associated media files.

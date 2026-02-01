@@ -31,6 +31,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'badges.create',
             'badges.update',
             'badges.delete',
+            'organization.status.update',
+
 
             // Volunteer
             'profile.read.own',
@@ -56,6 +58,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'organization.volunteers.read',
             'organization.volunteers.evaluate',
             'organization.opportunities.create',
+            'organization.opportunities.update',
+            'organization.opportunities.delete',
             'organization.opportunities.publish',
 
             // Volunteer Coordinator
@@ -88,6 +92,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'badges.create',
                 'badges.update',
                 'badges.delete',
+                'organization.status.update',
 
             ],
 
@@ -117,6 +122,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'organization.volunteers.read',
                 'organization.volunteers.evaluate',
                 'organization.opportunities.create',
+                'organization.opportunities.update',
+                'organization.opportunities.delete',
                 'organization.opportunities.publish',
             ],
 

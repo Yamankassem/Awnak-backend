@@ -28,6 +28,8 @@ return new class extends Migration
 
             // Foreign key linking to the users table (Core module)
             $table->unsignedBigInteger('user_id');
+            // Status default notactive and System admin can change it later 
+            $table->enum('status', ['active', 'notactive'])->default('notactive');
 
             $table->string('license_number')->unique(); // Unique license number
             $table->string('type'); // Type of organization (NGO, school, charity, etc.)
