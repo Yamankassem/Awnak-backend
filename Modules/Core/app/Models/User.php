@@ -6,6 +6,7 @@ namespace Modules\Core\Models;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Modules\Volunteers\Models\VolunteerProfile;
 use Modules\Core\Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -56,5 +57,13 @@ class User extends Authenticatable
     protected static function newFactory()
     {
         return UserFactory::new();
+    }
+
+    public function volunteerProfile(){
+        return $this->hasOne(
+        VolunteerProfile::class,
+        'user_id',   
+        'id'         
+    );
     }
 }

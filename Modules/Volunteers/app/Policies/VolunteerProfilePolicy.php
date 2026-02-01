@@ -63,4 +63,16 @@ class VolunteerProfilePolicy
     {
         return $user->hasRole('system-admin');
     }
+    public function viewPending(User $user): bool
+    {
+        return
+            $user->hasRole('system-admin') ||
+            $user->hasPermissionTo('organization.volunteers.read');
+    }
+    public function manageStatus(User $user): bool
+    {
+        return
+            $user->hasRole('system-admin') ||
+            $user->hasPermissionTo('organization.volunteers.evaluate');
+    }
 }

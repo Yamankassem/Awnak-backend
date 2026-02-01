@@ -9,7 +9,7 @@ use Modules\Core\Models\User;
 final class AuthService
 {
 
- /**
+    /**
      * Register a new user and issue an API token.
      *
      * Expected data keys:
@@ -60,12 +60,9 @@ final class AuthService
     {
         $user = User::query()->where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Invalid credentials.'],
-            ]);
+        if ($user->volunteerProfile?->status === 'suspended') {
+            abort(403, 'Account suspended.');
         }
-
         // Optional: revoke all previous tokens before issuing a new one
         // $user->tokens()->delete();
 
@@ -77,7 +74,7 @@ final class AuthService
         ];
     }
 
-     /**
+    /**
      * Revoke the currently active access token for the given user.
      *
      * @param User $user Authenticated user.

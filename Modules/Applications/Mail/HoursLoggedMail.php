@@ -21,10 +21,10 @@ class HoursLoggedMail extends Mailable
         $this->task = $taskHour->task;
         
         $this->viewData = array_merge([
-            'subject' => 'تم تسجيل ساعات عمل جديدة',
-            'title' => 'تسجيل ساعات العمل',
-            'recipientRole' => 'coordinator', 
-            'actionText' => 'عرض التفاصيل',
+            'subject' => 'New work hours recorded',
+            'title' => 'Record work hours',
+            'recipientRole' => 'Coordinator', 
+            'actionText' => 'View details',
             'actionUrl' => url('/task-hours/' . $taskHour->id),
         ], $viewData);
     }

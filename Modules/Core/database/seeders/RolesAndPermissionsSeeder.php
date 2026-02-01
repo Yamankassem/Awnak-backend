@@ -34,6 +34,16 @@ class RolesAndPermissionsSeeder extends Seeder
             'organization.status.update',
 
 
+            'skills.read',
+            'skills.create',
+            'skills.update',
+            'skills.delete',
+            'interests.read',
+            'interests.create',
+            'interests.update',
+            'interests.delete',
+
+
             // Volunteer
             'profile.read.own',
             'profile.update.own',
@@ -94,6 +104,15 @@ class RolesAndPermissionsSeeder extends Seeder
                 'badges.delete',
                 'organization.status.update',
 
+                'skills.read',
+                'skills.create',
+                'skills.update',
+                'skills.delete',
+                'interests.read',
+                'interests.create',
+                'interests.update',
+                'interests.delete',
+
             ],
 
             'volunteer' => [
@@ -105,6 +124,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'tasks.update.assigned',
                 'evaluations.read.own',
                 'notes.create.assigned_tasks',
+                'skills.read',
+                'interests.read',
             ],
 
             'opportunity-manager' => [
@@ -116,6 +137,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'applications.review',
                 'volunteers.read.applicants',
                 'volunteers.assign',
+                'skills.read',
+                'interests.read',
             ],
 
             'organization-admin' => [
@@ -125,6 +148,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'organization.opportunities.update',
                 'organization.opportunities.delete',
                 'organization.opportunities.publish',
+                'skills.read',
+                'interests.read',
             ],
 
             'volunteer-coordinator' => [
@@ -132,10 +157,14 @@ class RolesAndPermissionsSeeder extends Seeder
                 'tasks.read.managed',
                 'evaluations.create',
                 'notifications.send',
+                'skills.read',
+                'interests.read',
             ],
 
             'performance-auditor' => [
                 'reports.performance.read',
+                'skills.read',
+                'interests.read',
             ],
         ];
 

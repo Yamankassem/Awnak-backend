@@ -14,6 +14,7 @@ class VolunteersDatabaseSeeder extends Seeder
         $this->command->info('🌱 Seeding Volunteers Module...');
 
         $this->call([
+            SkillsSeeder::class,
             InterestsSeeder::class,
             VolunteerProfilesSeeder::class,
         ]);

@@ -21,9 +21,9 @@ class FeedbackReceivedMail extends Mailable
         $this->task = $feedback->task;
         
         $this->viewData = array_merge([
-            'subject' => 'تقييم جديد على أدائك',
-            'title' => 'تقييم الأداء',
-            'actionText' => 'عرض التقييم',
+            'subject' => 'New evaluation of your performance',
+            'title' => 'Performance evaluation',
+            'actionText' => 'View evaluation',
             'actionUrl' => url('/feedbacks/' . $feedback->id),
             'showRatingStars' => true,
         ], $viewData);
