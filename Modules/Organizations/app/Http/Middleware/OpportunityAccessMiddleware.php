@@ -56,7 +56,7 @@ class OpportunityAccessMiddleware
             return response()->json(['message' => __('opportunities.create_denied')], 403);
         }
 
-        
+
         $opportunity = Opportunity::with('organization')->find($opportunityId);
 
         if (! $opportunity) {
