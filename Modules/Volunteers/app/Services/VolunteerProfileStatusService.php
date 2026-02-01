@@ -19,6 +19,7 @@ class VolunteerProfileStatusService
             'status' => 'active',
         ]);
 
+        //activity log
         activity('audit')
             ->performedOn($volunteerProfile)
             ->causedBy($actor)
@@ -40,6 +41,7 @@ class VolunteerProfileStatusService
             'status' => 'suspended',
         ]);
 
+        //activity log
         activity('audit')
             ->performedOn($volunteerProfile)
             ->causedBy($actor)

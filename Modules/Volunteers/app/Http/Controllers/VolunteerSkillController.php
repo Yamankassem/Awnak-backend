@@ -31,7 +31,8 @@ class VolunteerSkillController extends Controller
 
         $skill = $this->service->create(
             $profile,
-            $request->validated()
+            $request->validated(),
+            $request->user()
         );
 
         return static::success(
@@ -47,7 +48,8 @@ class VolunteerSkillController extends Controller
 
         $skill = $this->service->update(
             $volunteerSkill,
-            $request->validated()
+            $request->validated(),
+            $request->user()
         );
 
         return static::success(
@@ -56,11 +58,11 @@ class VolunteerSkillController extends Controller
         );
     }
 
-    public function destroy(VolunteerSkill $volunteerSkill)
+    public function destroy(VolunteerSkill $volunteerSkill,Request $request)
     {
         $this->authorize('delete', $volunteerSkill);
 
-        $this->service->delete($volunteerSkill);
+        $this->service->delete($volunteerSkill,$request->user());
 
         return static::success(message: 'skill.deleted');
     }

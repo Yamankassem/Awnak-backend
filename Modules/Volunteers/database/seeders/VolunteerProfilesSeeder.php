@@ -5,6 +5,7 @@ namespace Modules\Volunteers\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Modules\Volunteers\Models\Skill;
 use Modules\Volunteers\Models\Interest;
+use Modules\Volunteers\Models\Language;
 use Modules\Volunteers\Models\VolunteerProfile;
 use Modules\Volunteers\Models\VolunteerAvailability;
 
@@ -22,6 +23,11 @@ class VolunteerProfilesSeeder extends Seeder
                 $profile->skills()->attach(
                     Skill::inRandomOrder()->take(2)->pluck('id'),
                     ['level' => 'advanced']
+                );
+
+                $profile->languages()->attach(
+                    Language::inRandomOrder()->take(2)->pluck('id'),
+                    ['level' => 'intermediate']
                 );
 
                 $profile->interests()->attach(
