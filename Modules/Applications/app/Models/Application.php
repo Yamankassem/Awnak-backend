@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Organizations\Models\Opportunity;
 use Modules\Volunteers\Models\VolunteerProfile;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Applications\Policies\ApplicationPolicy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Applications\Database\Factories\ApplicationFactory;
 
 /**
  * Application Model
@@ -56,11 +56,11 @@ class Application extends Model
        'status',
     ];
 
-    protected static function newFactory()
-    {
-        return ApplicationFactory::new();
-    }
+    protected $policies = [
+    Application::class => ApplicationPolicy::class,
+    ];
     
+
     /**
     * Get all of the tasks for the application
     *

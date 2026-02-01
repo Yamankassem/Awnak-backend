@@ -5,9 +5,9 @@ namespace Modules\Applications\Models;
 use Modules\Applications\Models\Task;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Applications\Policies\FeedbackPolicy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Applications\Database\Factories\FeedbackFactory;
 
 /**
  * Feedback Model
@@ -64,13 +64,10 @@ class Feedback extends Model
     protected $casts = [
         'rating' => 'integer',
     ];
-
-  
-    
-    protected static function newFactory()
-    {
-        return FeedbackFactory::new();
-    }
+   
+    protected $policies = [
+    Feedback::class => FeedbackPolicy::class,
+    ];
 
    /**
     * Get the task that owns the Feedback

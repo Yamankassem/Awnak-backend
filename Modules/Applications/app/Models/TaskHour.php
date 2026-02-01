@@ -5,9 +5,9 @@ namespace Modules\Applications\Models;
 use Modules\Applications\Models\Task;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Applications\Policies\TaskHourPolicy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Applications\Database\Factories\TaskHourFactory;
 
 /**
  * TaskHour Model
@@ -65,13 +65,10 @@ class TaskHour extends Model
         'started_date' => 'date',
         'ended_date' => 'date',
     ];
-    
- 
-
-    protected static function newFactory()
-    {
-        return TaskHourFactory::new();
-    }
+   
+    protected $policies = [
+    TaskHour::class => TaskHourPolicy::class,
+    ];
 
     /**
      * Get the task that owns the TaskHour

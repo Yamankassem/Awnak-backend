@@ -26,7 +26,7 @@ class FeedbackPolicy
      */
     public function viewAny(User $user):bool 
     {
-       return in_array($user->role, ['admin', 'coordinator', 'opportunity_manager','volunteer', 'evaluator']);
+       return in_array($user->role, ['super_admin', 'coordinator', 'opportunity_manager','volunteer', 'evaluator']);
     }
 
     /**
@@ -38,13 +38,13 @@ class FeedbackPolicy
      */
     public function view(User $user, Feedback $feedback):bool 
     {
-        if ($user->role === 'admin')
+        if ($user->role === 'super_admin')
         return true;
 
         if ($user->role === 'volunteer'){
         return $feedback->task &&
                $feedback->task->application &&
-               $feedback->task->application->volunteer_profile_id === $user->id;
+               $feedback->task->application->volunteer_profile_id === $user->volunteer_profile->id;
         }
 
         if ($user->role === 'coordinator'){
@@ -82,7 +82,7 @@ class FeedbackPolicy
      */
     public function create(User $user):bool 
     {
-       return in_array($user->role, ['admin', 'coordinator', 'opportunity_manager','volunteer']);
+       return in_array($user->role, ['super_admin', 'coordinator', 'opportunity_manager','volunteer']);
     }
 
     /**
@@ -94,7 +94,7 @@ class FeedbackPolicy
      */
     public function update(User $user, Feedback $feedback):bool 
     {
-        if ($user->role === 'admin')
+        if ($user->role === 'super_admin')
         return true;
 
         if ($feedback->created_by === $user->id)
@@ -118,7 +118,7 @@ class FeedbackPolicy
      */
     public function delete(User $user, Feedback $feedback):bool 
     {
-        if ($user->role === 'admin')
+        if ($user->role === 'super_admin')
             return true;
 
 
@@ -144,7 +144,7 @@ class FeedbackPolicy
     public function evaluatePerformance(User $user): bool
     {
         return in_array($user->role, [
-            'admin',
+            'super_admin',
             'coordinator',
             'opportunity_manager',
             'organization_admin'
@@ -160,7 +160,7 @@ class FeedbackPolicy
     public function reviewTasks(User $user): bool
     {
         return in_array($user->role, [
-            'admin',
+            'super_admin',
             'volunteer', 
             'coordinator',
             'opportunity_manager',
@@ -177,7 +177,7 @@ class FeedbackPolicy
     public function viewPerformanceReports(User $user): bool
     {
         return in_array($user->role, [
-            'admin',
+            'super_admin',
             'coordinator',
             'opportunity_manager',
             'organization_admin',

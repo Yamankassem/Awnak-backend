@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Applications\Http\Controllers\Api;
+namespace Modules\Applications\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
@@ -253,7 +253,7 @@ class NotificationController extends Controller
     }
     
     /**
-     * Return paginated JSON response with additional data.
+     * Return paginatedNotifications JSON response with additional data.
      * 
      * @param LengthAwarePaginator $paginator
      * @param string $message Translation key
@@ -261,7 +261,7 @@ class NotificationController extends Controller
      * @param array $extraData Additional data to include
      * @return JsonResponse
      */
-    private function paginated(LengthAwarePaginator $paginator, string $message, int $status = 200, array $extraData = []): JsonResponse
+    private function paginatedNotifications(LengthAwarePaginator $paginator, string $message, int $status = 200, array $extraData = []): JsonResponse
     {
         $responseData = [
             'status' => 'success',
@@ -280,6 +280,6 @@ class NotificationController extends Controller
             $responseData = array_merge($responseData, $extraData);
         }
         
-        return response()->json($responseData, $status);
+        return self::paginated($paginator, 'notifications.fetched');
     }
 }

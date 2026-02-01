@@ -26,7 +26,7 @@ class ApplicationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['admin', 'coordinator', 'opportunity_manager','volunteer', 'organization_admin', 'evaluator']);
+        return in_array($user->role, ['super_admin', 'coordinator', 'opportunity_manager','volunteer', 'organization_admin', 'evaluator']);
     }
 
     /**
@@ -38,12 +38,12 @@ class ApplicationPolicy
      */
     public function view(User $user, Application $application): bool
     {
-        if ($user->role === 'admin') {
+        if ($user->role === 'super_admin') {
             return true;
         }
 
         if ($user->role === 'volunteer') {
-            return $application->volunteer_profile_id === $user->id;
+            return $application->volunteer_profile_id === $user->volunteer_profile->id;
         }
 
         if ($user->role === 'coordinator') {
@@ -88,7 +88,7 @@ class ApplicationPolicy
      */
     public function update(User $user, Application $application): bool
     {
-        if ($user->role === 'admin') {
+        if ($user->role === 'super_admin') {
             return true;
         }
 
@@ -97,7 +97,7 @@ class ApplicationPolicy
         }
 
         if ($user->role === 'volunteer') {
-            return $application->volunteer_profile_id === $user->id &&
+            return $application->volunteer_profile_id === $user->volunteer_profile->id &&
                    $application->status === 'pending';
         }
 
@@ -118,7 +118,7 @@ class ApplicationPolicy
      */
     public function delete(User $user, Application $application): bool
     {
-        return $user->role === 'admin';
+        return $user->role === 'super_admin';
     }
 
     /**
@@ -130,7 +130,7 @@ class ApplicationPolicy
      */
     public function changeStatus(User $user, Application $application): bool
     {
-        if ($user->role === 'admin') {
+        if ($user->role === 'super_admin') {
             return true;
         }
         
@@ -161,7 +161,7 @@ class ApplicationPolicy
     public function assignCoordinator(User $user, Application $application): bool
     {
         return in_array($user->role, [
-            'admin',
+            'super_admin',
             'opportunity_manager',
             'organization_admin'
         ]);
