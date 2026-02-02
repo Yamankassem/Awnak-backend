@@ -9,12 +9,27 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\DatabaseMessage;
 use Modules\Applications\Models\Application;
 
+/**
+ * New Application Notification
+ * 
+ * Notifies volunteers when a new application is assigned.
+ * Sent via database and email.
+ * 
+ * @package Modules\Applications\Notifications\ApplicationsNotification
+ * @author Your Name
+ */
 class NewApplicationNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    /** @var Application The newly assigned application */
     protected $application;
-
+    
+    /**
+     * Create a new notification instance.
+     * 
+     * @param Application $application
+     */
     public function __construct(Application $application)
     {
         $this->application = $application;
@@ -26,25 +41,37 @@ class NewApplicationNotification extends Notification implements ShouldQueue
         return ['database', 'mail']; 
     }
 
+    /**
+     * Get the mail representation of the notification.
+     * 
+     * @param mixed $notifiable
+     * @return MailMessage
+     */
     public function toMail($notifiable): MailMessage
     {
         $url = url('/admin/applications/' . $this->application->id);
         
         return (new MailMessage)
-            ->subject('طلب تطوع جديد - ' . config('app.name'))
-            ->greeting('مرحباً ' . $notifiable->name)
-            ->line('تم تقديم طلب تطوع جديد.')
-            ->line('المتطوع: ' . $this->application->volunteer->name)
-            ->line('الفرصة: ' . $this->application->opportunity->title)
-            ->action('عرض الطلب', $url)
-            ->line('شكراً لاستخدامك منصتنا!');
+            ->subject('New Volunteer Request - ' . config('app.name'))
+            ->greeting('Hello' . $notifiable->name)
+            ->line('A new volunteer application has been submitted.')
+            ->line('Volunteer: ' . $this->application->volunteer->name)
+            ->line('Opportunity: ' . $this->application->opportunity->title)
+            ->action('Offer Order', $url)
+            ->line('Thank you for using our platform!');
     }
 
+    /**
+     * Get the array representation for database storage.
+     * 
+     * @param mixed $notifiable
+     * @return array<string, mixed>
+     */
     public function toDatabase($notifiable): array
     {
         return [
-            'title' => 'طلب تطوع جديد',
-            'message' => 'قدم ' . $this->application->volunteer->name . ' طلباً للفرصة: ' . $this->application->opportunity->title,
+            'title' => 'New Volunteer Request',
+            'message' => 'Step'. $this->application->volunteer->name . 'For the opportunity: ' . $this->application->opportunity->title,
             'application_id' => $this->application->id,
             'volunteer_id' => $this->application->volunteer_id,
             'opportunity_id' => $this->application->opportunity_id,
@@ -59,7 +86,7 @@ class NewApplicationNotification extends Notification implements ShouldQueue
     {
         return [
             'application_id' => $this->application->id,
-            'message' => 'طلب تطوع جديد',
+            'message' => 'New Volunteer Request',
         ];
     }
 }

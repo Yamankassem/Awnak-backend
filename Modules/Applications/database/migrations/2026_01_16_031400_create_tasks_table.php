@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('application_id')->constrained('applications')->onDelete('cascade');
             $table->string('title');
             $table->text('description');
-            $table->enum('status' ,[ 'active' ,'complete' ] )->default('active');
+            $table->enum('status' ,[ 'preparation', 'active' ,'complete', 'cancelled' ] )->default('active');
             $table->date('due_date');
             $table->softDeletes();
             $table->timestamps();

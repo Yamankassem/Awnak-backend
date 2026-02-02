@@ -2,17 +2,18 @@
 
 namespace Modules\Applications\Services;
 
-use Modules\Applications\Models\Application;
+use Log;
+use Exception;
+use Illuminate\Support\Facades\Mail;
 use Modules\Applications\Models\Task;
-use Modules\Applications\Models\TaskHour;
 use Modules\Applications\Models\Feedback;
+use Modules\Applications\Models\TaskHour;
+use Modules\Applications\Models\Application;
+use Modules\Applications\Mail\HoursLoggedMail;
+use Modules\Applications\Mail\TaskAssignedMail;
+use Modules\Applications\Mail\FeedbackReceivedMail;
 use Modules\Applications\Mail\ApplicationCreatedMail;
 use Modules\Applications\Mail\ApplicationStatusChangedMail;
-use Modules\Applications\Mail\TaskAssignedMail;
-use Modules\Applications\Mail\HoursLoggedMail;
-use Modules\Applications\Mail\FeedbackReceivedMail;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
 
 class MailService
 {
@@ -22,29 +23,29 @@ class MailService
             if (!$recipient) {
                 Mail::to($application->volunteer->email)
                     ->queue(new ApplicationCreatedMail($application, [
-                        'subject' => 'تم استلام طلبك التطوعي',
-                        'title' => 'تم استلام طلبك',
+                        'subject' => 'Your volunteer application has been received',
+                        'title' => 'Your application has been received',
                         'recipientRole' => 'volunteer',
-                        'actionText' => 'تابع حالة طلبك',
+                        'actionText' => 'Follow your application status',
                     ]));
                 
                 if ($application->coordinator) {
                     Mail::to($application->coordinator->email)
                         ->queue(new ApplicationCreatedMail($application, [
-                            'subject' => 'طلب تطوع جديد - يتطلب مراجعتك',
-                            'title' => 'طلب تطوع جديد',
+                            'subject' => 'New volunteer application - requires your review',
+                            'title' => 'New volunteer application',
                             'recipientRole' => 'coordinator',
-                            'actionText' => 'مراجعة الطلب',
+                            'actionText' => 'Review application',
                         ]));
                 }
                 
                 if ($application->opportunity && $application->opportunity->createdBy) {
                     Mail::to($application->opportunity->createdBy->email)
                         ->queue(new ApplicationCreatedMail($application, [
-                            'subject' => 'طلب جديد على فرصتك التطوعية',
-                            'title' => 'طلب جديد على فرصتك',
+                            'subject' => 'New request for your volunteer opportunity',
+                            'title' => 'New request for your opportunity',
                             'recipientRole' => 'opportunity_manager',
-                            'actionText' => 'عرض الطلبات',
+                            'actionText' => 'View applications',
                         ]));
                 }
             } else {
@@ -55,7 +56,7 @@ class MailService
             Log::info('Application created mail sent', ['application_id' => $application->id]);
             return true;
             
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to send application created mail', [
                 'application_id' => $application->id,
                 'error' => $e->getMessage(),
@@ -76,8 +77,8 @@ class MailService
             if ($application->coordinator) {
                 Mail::to($application->coordinator->email)
                     ->queue(new ApplicationStatusChangedMail($application, $oldStatus, $newStatus, [
-                        'subject' => 'تم تحديث حالة طلب متطوع',
-                        'title' => 'تحديث حالة الطلب',
+                        'subject' => 'Volunteer application status updated',
+                        'title' => 'Update application status',
                         'recipientName' => $application->coordinator->name,
                         'showNextSteps' => false,
                     ]));
@@ -90,7 +91,7 @@ class MailService
             ]);
             return true;
             
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to send status changed mail', [
                 'application_id' => $application->id,
                 'error' => $e->getMessage(),
@@ -112,8 +113,8 @@ class MailService
             if ($task->application->coordinator) {
                 Mail::to($task->application->coordinator->email)
                     ->later(now()->addMinutes(5), new TaskAssignedMail($task, [
-                        'subject' => 'تم تعيين مهمة لمتطوع',
-                        'title' => 'تعيين مهمة',
+                        'subject' => 'A task has been assigned to a volunteer',
+                        'title' => 'Assign task',
                         'showInstructions' => false,
                     ]));
             }
@@ -121,7 +122,7 @@ class MailService
             Log::info('Task assigned mail sent', ['task_id' => $task->id]);
             return true;
             
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to send task assigned mail', [
                 'task_id' => $task->id,
                 'error' => $e->getMessage(),

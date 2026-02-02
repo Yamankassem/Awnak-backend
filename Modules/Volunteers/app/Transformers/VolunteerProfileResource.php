@@ -32,7 +32,9 @@ class VolunteerProfileResource extends JsonResource
 
             // status
             'status' => $this->status,
-            'is_verified' => $this->is_verified,
+            'verified_at' => $this->verified_at
+                ? $this->verified_at->toDateTimeString()
+                : null,
 
             // relations (only if loaded)
             'skills' => $this->whenLoaded('skills'),
@@ -44,7 +46,7 @@ class VolunteerProfileResource extends JsonResource
                 'name' => $this->location?->name,
             ]),
 
-            'created_at' => $this->created_at->toDateTimeString(),
+            'created_at' => $this->created_at?->toDateTimeString(),
         ];
     }
 }

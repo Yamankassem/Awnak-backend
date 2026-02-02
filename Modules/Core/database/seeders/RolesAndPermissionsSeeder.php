@@ -36,6 +36,14 @@ class RolesAndPermissionsSeeder extends Seeder
             'certificates.delete',
             'certificate.view',
             'certificate.viewAny',
+            'skills.read',
+            'skills.create',
+            'skills.update',
+            'skills.delete',
+            'interests.read',
+            'interests.create',
+            'interests.update',
+            'interests.delete',
 
             // Volunteer
             'profile.read.own',
@@ -112,6 +120,14 @@ class RolesAndPermissionsSeeder extends Seeder
                 'evaluations.view',
                 'evaluations.viewAny',
 
+                'skills.read',
+                'skills.create',
+                'skills.update',
+                'skills.delete',
+                'interests.read',
+                'interests.create',
+                'interests.update',
+                'interests.delete',
             ],
 
             'volunteer' => [
@@ -123,6 +139,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'tasks.update.assigned',
                 'evaluations.read.own',
                 'notes.create.assigned_tasks',
+                'skills.read',
+                'interests.read',
             ],
 
             'opportunity-manager' => [
@@ -134,6 +152,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'applications.review',
                 'volunteers.read.applicants',
                 'volunteers.assign',
+                'skills.read',
+                'interests.read',
             ],
 
             'organization-admin' => [
@@ -142,6 +162,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'organization.opportunities.create',
                 'organization.opportunities.publish',
                 
+                'skills.read',
+                'interests.read',
             ],
 
             'volunteer-coordinator' => [
@@ -154,6 +176,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'evaluations.delete',
                 'evaluations.view',
                 'evaluations.viewAny',
+                'skills.read',
+                'interests.read',
             ],
 
             'performance-auditor' => [
@@ -163,6 +187,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'certificates.delete',
                 'certificate.view',
                 'certificate.viewAny',
+                'skills.read',
+                'interests.read',
             ],
         ];
 

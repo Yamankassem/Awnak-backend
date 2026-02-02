@@ -21,8 +21,8 @@ class EvaluationsDatabaseSeeder extends Seeder
             BadgesSeeder::class,
             CertificatesSeeder::class,
             EvaluationsSeeder::class,
-            // ReportsSeeder::class,
-            // VolunteerBadgesSeeder::class,
+            ReportsSeeder::class,
+            VolunteerBadgesSeeder::class,
     ]);
     }
 }
