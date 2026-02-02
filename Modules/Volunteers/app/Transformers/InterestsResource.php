@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class InterestsResource extends JsonResource
-{
-    /**
+{/**
      * Transform the resource into an array.
+     *
+     * @param Request $request Current HTTP request
+     * @return array<string, mixed> Serialized interest data
      */
     public function toArray(Request $request): array
     {

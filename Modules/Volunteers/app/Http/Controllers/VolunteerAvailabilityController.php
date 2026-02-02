@@ -10,12 +10,24 @@ use Modules\Volunteers\Transformers\VolunteerAvailabilityResource;
 use Modules\Volunteers\Http\Requests\Availability\StoreVolunteerAvailabilityRequest;
 use Modules\Volunteers\Http\Requests\Availability\UpdateVolunteerAvailabilityRequest;
 
+/**
+ * Class VolunteerAvailabilityController
+ *
+ * Handles CRUD operations for volunteer availability schedules.
+ * All actions are scoped to the authenticated volunteer profile.
+ *
+ * @package Modules\Volunteers\Http\Controllers
+ */
 class VolunteerAvailabilityController extends Controller
 {
-    public function __construct(
-        private VolunteerAvailabilityService $service
-    ) {}
+    public function __construct(private VolunteerAvailabilityService $service) {}
 
+    /**
+     * List availability entries for the authenticated volunteer.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(Request $request)
     {
         $profile = $request->user()->volunteerProfile;
@@ -26,10 +38,18 @@ class VolunteerAvailabilityController extends Controller
             data: VolunteerAvailabilityResource::collection($items)
         );
     }
-
+    /**
+     * Create a new availability slot.
+     *
+     * @param StoreVolunteerAvailabilityRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(StoreVolunteerAvailabilityRequest $request)
     {
         $this->authorize('create', VolunteerAvailability::class);
+
         $profile = $request->user()->volunteerProfile;
 
         $availability = $this->service->create(
@@ -44,7 +64,13 @@ class VolunteerAvailabilityController extends Controller
             status: 201
         );
     }
-
+    /**
+     * Update an existing availability slot.
+     *
+     * @param UpdateVolunteerAvailabilityRequest $request
+     * @param VolunteerAvailability $availability
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(UpdateVolunteerAvailabilityRequest $request, VolunteerAvailability $availability)
     {
         $this->authorize('update', $availability);
@@ -60,7 +86,13 @@ class VolunteerAvailabilityController extends Controller
             message: 'availability.updated'
         );
     }
-
+    /**
+     * Delete an availability slot.
+     *
+     * @param VolunteerAvailability $availability
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy(VolunteerAvailability $availability,Request $request)
     {
         $this->authorize('delete', $availability);

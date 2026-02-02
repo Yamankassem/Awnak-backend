@@ -4,6 +4,14 @@ namespace Modules\Volunteers\Http\Requests\Availability;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class StoreVolunteerAvailabilityRequest
+ *
+ * Validates input for creating a new availability slot
+ * for the authenticated volunteer.
+ *
+ * @package Modules\Volunteers\Http\Requests\Availability
+ */
 class StoreVolunteerAvailabilityRequest extends FormRequest
 {
     /**
@@ -19,7 +27,12 @@ class StoreVolunteerAvailabilityRequest extends FormRequest
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Authorization check for creating availability.
+     *
+     * Currently allowed for authenticated users.
+     * Authorization is enforced at controller/policy level.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {

@@ -3,7 +3,13 @@
 namespace Modules\Volunteers\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+/**
+ * Class StoreVolunteerDocumentRequest
+ *
+ * Validates document uploads for volunteer profiles.
+ *
+ * @package Modules\Volunteers\Http\Requests
+ */
 class StoreVolunteerDocumentRequest extends FormRequest
 {
     /**
@@ -16,8 +22,12 @@ class StoreVolunteerDocumentRequest extends FormRequest
         ];
     }
 
-    /**
-     * Determine if the user is authorized to make this request.
+     /**
+     * Authorization check.
+     *
+     * Requires `profile.update.own` permission.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {

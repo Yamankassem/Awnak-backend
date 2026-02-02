@@ -3,7 +3,14 @@
 namespace Modules\Volunteers\Http\Requests\VolunteerInterest;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+/**
+ * Class StoreVolunteerInterestRequest
+ *
+ * Validates input for attaching an interest
+ * to the authenticated volunteer profile.
+ *
+ * @package Modules\Volunteers\Http\Requests\VolunteerInterest
+ */
 class StoreVolunteerInterestRequest extends FormRequest
 {
     /**
@@ -16,8 +23,12 @@ class StoreVolunteerInterestRequest extends FormRequest
         ];
     }
 
-    /**
-     * Determine if the user is authorized to make this request.
+     /**
+     * Authorization check.
+     *
+     * Requires `profile.update.own` permission.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {

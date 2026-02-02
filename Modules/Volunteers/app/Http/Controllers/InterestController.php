@@ -12,10 +12,16 @@ use Modules\Volunteers\Http\Requests\Interests\UpdateInterestRequest;
 
 class InterestController extends Controller
 {
-    public function __construct(
-        private InterestService $service
-    ) {}
+    /**
+     * @param InterestService $service Interest business logic service
+     */
+    public function __construct(private InterestService $service) {}
 
+    /**
+     * List interests with pagination.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         $paginator = $this->service->paginate();
@@ -30,6 +36,12 @@ class InterestController extends Controller
         );
     }
 
+    /**
+     * Store a new interest.
+     *
+     * @param StoreInterestRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(StoreInterestRequest $request)
     {
         $interest = $this->service->create($request->validated());
@@ -41,6 +53,13 @@ class InterestController extends Controller
         );
     }
 
+    /**
+     * Update an existing interest.
+     *
+     * @param UpdateInterestRequest $request
+     * @param Interest $interest
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(UpdateInterestRequest $request, Interest $interest)
     {
         $interest = $this->service->update($interest, $request->validated());
@@ -51,6 +70,12 @@ class InterestController extends Controller
         );
     }
 
+    /**
+     * Delete an interest.
+     *
+     * @param Interest $interest
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy(Interest $interest)
     {
         $this->service->delete($interest);

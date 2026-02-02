@@ -38,11 +38,13 @@ class VolunteerProfileService
 
     public function list(User $user)
     {
+        $profile = $user->volunteerProfile;
+
         return Application::with([
-                'opportunity:id,title',
-                'task:id,title'
-            ])
-            ->where('volunteer_id', $user->id)
+            'opportunity:id,title',
+            'tasks:id,title'
+        ])
+            ->where('volunteer_profile_id', $profile->id)
             ->orderByDesc('created_at')
             ->get();
     }

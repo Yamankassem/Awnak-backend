@@ -65,10 +65,6 @@ final class AuthService
         //         'email' => ['Invalid credentials.'],
         //     ]);
         // }
-
-        if ($user->volunteerProfile?->status === 'suspended') {
-            abort(403, 'Account suspended.');
-        }
         // Optional: revoke all previous tokens before issuing a new one
         // $user->tokens()->delete();
 

@@ -10,13 +10,27 @@ use Modules\Volunteers\Traits\LogsVolunteerActivity;
 class VolunteerSkillService
 {
     use LogsVolunteerActivity;
-    public function handle() {}
 
+    /**
+     * List all skills associated with a volunteer profile.
+     *
+     * @param VolunteerProfile $profile
+     * @return \Illuminate\Support\Collection
+     */
     public function list(VolunteerProfile $profile)
     {
         return $profile->skills()->withPivot('level')->get();
     }
-
+    /**
+     * Attach a new skill to a volunteer profile.
+     *
+     * Prevents duplicate skill assignment.
+     *
+     * @param VolunteerProfile $profile
+     * @param array{skill_id:int, level:string} $data
+     * @param User $actor
+     * @return VolunteerSkill
+     */
     public function create(VolunteerProfile $profile, array $data, User $actor): VolunteerSkill
     {
         // do not repeat the skill
@@ -43,7 +57,14 @@ class VolunteerSkillService
         );
         return $skills;
     }
-
+     /**
+     * Update a volunteer skill level.
+     *
+     * @param VolunteerSkill $skill
+     * @param array{level:string} $data
+     * @param User $actor
+     * @return VolunteerSkill
+     */
     public function update(VolunteerSkill $skill, array $data, User $actor): VolunteerSkill
     {
         $skill->update($data);
@@ -58,7 +79,13 @@ class VolunteerSkillService
         
         return $skill->refresh();
     }
-
+    /**
+     * Remove a skill from a volunteer profile.
+     *
+     * @param VolunteerSkill $skill
+     * @param User $actor
+     * @return void
+     */
     public function delete(VolunteerSkill $skill, User $actor): void
     {
         //activity log

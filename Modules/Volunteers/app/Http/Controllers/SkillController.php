@@ -12,10 +12,12 @@ use Modules\Volunteers\Http\Requests\Skills\UpdateSkillRequest;
 
 class SkillController extends Controller
 {
-    public function __construct(
-        private SkillService $service
-    ) {}
-
+    public function __construct(private SkillService $service ) {}
+    /**
+     * Display paginated list of skills.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         $skills = $this->service->list();
@@ -24,7 +26,12 @@ class SkillController extends Controller
             message: 'skills.listed'
         );
     }
-
+    /**
+     * Create a new skill.
+     *
+     * @param StoreSkillRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(StoreSkillRequest $request)
     {
         $skill = $this->service->create($request->validated());
@@ -34,7 +41,13 @@ class SkillController extends Controller
             message: 'skill.created'
         );
     }
-
+    /**
+     * Update an existing skill.
+     *
+     * @param UpdateSkillRequest $request
+     * @param Skill $skill
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(UpdateSkillRequest $request, Skill $skill)
     {
         $skill = $this->service->update($skill, $request->validated());
@@ -44,7 +57,12 @@ class SkillController extends Controller
             message: 'skill.updated'
         );
     }
-
+    /**
+     * Delete a skill.
+     *
+     * @param Skill $skill
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy(Skill $skill)
     {
         $this->service->delete($skill);

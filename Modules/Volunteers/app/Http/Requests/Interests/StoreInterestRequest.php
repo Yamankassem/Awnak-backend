@@ -4,20 +4,31 @@ namespace Modules\Volunteers\Http\Requests\Interests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class StoreInterestRequest
+ *
+ * Handles validation and authorization for creating interests.
+ *
+ * @package Modules\Volunteers\Http\Requests\Interests
+ */
 class StoreInterestRequest extends FormRequest
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Validation rules for storing a new interest.
+     *
+     * @return array<string, mixed>
      */
     public function rules(): array
     {
-         return [
+        return [
             'name' => ['required', 'string', 'max:100', 'unique:interests,name'],
         ];
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Authorization logic for the request.
+     *
+     * @return bool True if user can create interests
      */
     public function authorize(): bool
     {

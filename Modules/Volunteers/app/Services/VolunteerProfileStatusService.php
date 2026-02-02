@@ -4,11 +4,25 @@ namespace Modules\Volunteers\Services;
 
 use Modules\Core\Models\User;
 use Modules\Volunteers\Models\VolunteerProfile;
-
+/**
+ * Class VolunteerProfileStatusService
+ *
+ * Manages activation and suspension of volunteer profiles
+ * with audit logging for administrative actions.
+ *
+ * @package Modules\Volunteers\Services
+ */
 class VolunteerProfileStatusService
 {
-    public function handle() {}
-
+    /**
+     * Activate a volunteer profile.
+     *
+     * Prevents activating an already active profile.
+     *
+     * @param VolunteerProfile $volunteerProfile
+     * @param User $actor
+     * @return VolunteerProfile
+     */
     public function activate(VolunteerProfile $volunteerProfile, User $actor): VolunteerProfile
     {
         if ($volunteerProfile->status === 'active') {
@@ -31,6 +45,15 @@ class VolunteerProfileStatusService
         return $volunteerProfile->refresh();
     }
 
+     /**
+     * Suspend a volunteer profile.
+     *
+     * Prevents suspending an already suspended profile.
+     *
+     * @param VolunteerProfile $volunteerProfile
+     * @param User $actor
+     * @return VolunteerProfile
+     */
     public function suspend(VolunteerProfile $volunteerProfile, User $actor): VolunteerProfile
     {
         if ($volunteerProfile->status === 'suspended') {

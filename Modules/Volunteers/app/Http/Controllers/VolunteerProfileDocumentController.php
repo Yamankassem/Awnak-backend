@@ -9,12 +9,22 @@ use Modules\Volunteers\Transformers\VolunteerDocumentResource;
 use Modules\Volunteers\Services\VolunteerProfileDocumentService;
 use Modules\Volunteers\Http\Requests\StoreVolunteerDocumentRequest;
 
+/**
+ * Class VolunteerProfileDocumentController
+ *
+ * Handles volunteer document uploads and management.
+ *
+ * @package Modules\Volunteers\Http\Controllers
+ */
 class VolunteerProfileDocumentController extends Controller
 {
-    public function __construct(
-        private VolunteerProfileDocumentService $service
-    ) {}
-
+    public function __construct(private VolunteerProfileDocumentService $service) {}
+    /**
+     * List documents uploaded by the volunteer.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(Request $request)
     {
         $profile = $request->user()->volunteerProfile;
@@ -25,7 +35,12 @@ class VolunteerProfileDocumentController extends Controller
             )
         );
     }
-
+     /**
+     * Upload a new volunteer document.
+     *
+     * @param StoreVolunteerDocumentRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(StoreVolunteerDocumentRequest $request)
     {
         $profile = $request->user()->volunteerProfile;
@@ -41,7 +56,12 @@ class VolunteerProfileDocumentController extends Controller
             status: 201
         );
     }
-
+    /**
+     * Delete a volunteer document.
+     *
+     * @param Media $media
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy(Media $media)
     {
         $this->authorize('delete', $media);

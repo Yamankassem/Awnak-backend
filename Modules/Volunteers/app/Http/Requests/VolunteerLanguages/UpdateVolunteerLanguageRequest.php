@@ -4,6 +4,13 @@ namespace Modules\Volunteers\Http\Requests\VolunteerLanguages;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class UpdateVolunteerLanguageRequest
+ *
+ * Validates updating a volunteer language level.
+ *
+ * @package Modules\Volunteers\Http\Requests\VolunteerLanguages
+ */
 class UpdateVolunteerLanguageRequest extends FormRequest
 {
     /**

@@ -4,7 +4,13 @@ namespace Modules\Volunteers\Http\Requests;
 
 
 use Illuminate\Foundation\Http\FormRequest;
-
+/**
+ * Class UpdateVolunteerProfileRequest
+ *
+ * Validates updates to volunteer profile information.
+ *
+ * @package Modules\Volunteers\Http\Requests
+ */
 class UpdateVolunteerProfileRequest extends FormRequest
 {
     /**
@@ -23,9 +29,10 @@ class UpdateVolunteerProfileRequest extends FormRequest
             'previous_experience_details' => ['sometimes', 'string'],
         ];
     }
-
     /**
-     * Determine if the user is authorized to make this request.
+     * Authorization is enforced via policy.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {

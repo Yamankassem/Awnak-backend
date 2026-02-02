@@ -14,21 +14,39 @@ class EnsureVolunteerIsActive
     {
         $user = $request->user();
 
-        // لا يوجد مستخدم (احتياط)
+        //  Ignore auth paths completely
+        if ($request->routeIs('auth.*')) {
+            return $next($request);
+        }
+
+        // Unregistered user
         if (!$user) {
             abort(401, 'Unauthenticated.');
         }
 
-        // ليس متطوعًا → تجاهل
+        // Not a volunteer → Ignore
         if (!$user->volunteerProfile) {
-            return $next($request);
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Volunteer profile not found.',
+            ], 403);
         }
 
         $profile = $user->volunteerProfile;
 
-        if ($profile->status !== 'active') {
-            abort(403, 'volunteer.inactive');
+        // Profile suspended 
+        if ($user->volunteerProfile->status === 'suspended') {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Your account has been suspended.',
+            ], 403);
         }
+
+        if ($profile->status !== 'active') {
+            abort(403, 'Volunteer account inactive');
+        }
+
+
 
         return $next($request);
     }

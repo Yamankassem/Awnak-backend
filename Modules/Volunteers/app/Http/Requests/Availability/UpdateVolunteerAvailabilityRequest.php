@@ -3,7 +3,13 @@
 namespace Modules\Volunteers\Http\Requests\Availability;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+/**
+ * Class UpdateVolunteerAvailabilityRequest
+ *
+ * Validates input for updating an existing availability slot.
+ *
+ * @package Modules\Volunteers\Http\Requests\Availability
+ */
 class UpdateVolunteerAvailabilityRequest extends FormRequest
 {
     /**
@@ -19,7 +25,11 @@ class UpdateVolunteerAvailabilityRequest extends FormRequest
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Authorization check.
+     *
+     * Actual permission is validated via policy.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {

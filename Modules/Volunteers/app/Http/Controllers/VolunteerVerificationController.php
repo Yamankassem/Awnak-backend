@@ -8,12 +8,24 @@ use Modules\Volunteers\Models\VolunteerProfile;
 use Modules\Volunteers\Services\VolunteerVerificationService;
 use Modules\Volunteers\Transformers\VolunteerProfileResource;
 
+/**
+ * Class VolunteerVerificationController
+ *
+ * Handles verification workflow for volunteer profiles
+ * (approve / reject / list pending).
+ *
+ * @package Modules\Volunteers\Http\Controllers
+ */
 class VolunteerVerificationController extends Controller
 {
-    public function __construct(
-        private VolunteerVerificationService $service
-    ) {}
-
+    public function __construct(private VolunteerVerificationService $service) {}
+    /**
+     * Verify a volunteer profile.
+     *
+     * @param Request $request
+     * @param VolunteerProfile $volunteerProfile
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function verify(Request $request, VolunteerProfile $volunteerProfile)
     {
         $this->authorize('verify', $volunteerProfile);
@@ -28,7 +40,13 @@ class VolunteerVerificationController extends Controller
             message: 'volunteer.verified'
         );
     }
-
+    /**
+     * Reject a volunteer profile.
+     *
+     * @param Request $request
+     * @param VolunteerProfile $volunteerProfile
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function reject(Request $request, VolunteerProfile $volunteerProfile)
     {
         $this->authorize('verify', $volunteerProfile);
@@ -43,7 +61,12 @@ class VolunteerVerificationController extends Controller
             message: 'volunteer.rejected'
         );
     }
-
+    /**
+     * List pending volunteer profiles awaiting verification.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function pending(Request $request)
     {
         $this->authorize('viewPending', VolunteerProfile::class);

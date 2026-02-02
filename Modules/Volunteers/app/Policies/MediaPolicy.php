@@ -7,14 +7,7 @@ use Modules\Core\Models\Media;
 
 class MediaPolicy
 {
-    /**
-     * Create a new policy instance.
-     */
-    public function __construct()
-    {
-        //
-    }
-
+    //just system admin and who has the profile can delete documents from media 
     public function delete(User $user, Media $media): bool
     {
         return

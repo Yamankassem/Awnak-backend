@@ -7,7 +7,9 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreLanguageRequest extends FormRequest
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Validation rules for storing a new language.
+     *
+     * @return array<string, mixed>
      */
     public function rules(): array
     {
@@ -18,7 +20,9 @@ class StoreLanguageRequest extends FormRequest
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Authorization logic for the request.
+     *
+     * @return bool True if user can create languages
      */
     public function authorize(): bool
     {
