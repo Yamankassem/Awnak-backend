@@ -1,18 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Applications\Http\Controllers\CalendarController;
+use Modules\Applications\Http\Controllers\TaskController;
+use Modules\Applications\Http\Controllers\FeedbackController;
+use Modules\Applications\Http\Controllers\TaskHourController;
+use Modules\Applications\Http\Controllers\ApplicationController;
 use Modules\Applications\Http\Controllers\NotificationController;
-use Modules\Applications\Http\Controllers\TasksController\TaskController;
-use Modules\Applications\Http\Controllers\FeedbackController\FeedbackController;
-use Modules\Applications\Http\Controllers\TaskHoursController\TaskHourController;
-use Modules\Applications\Http\Controllers\ApplicationsController\ApplicationController;
 
-Route::middleware(['auth:sanctum', 'throttle:api'])->prefix('v1')->group(function () {
+Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
     // Application
     Route::apiResource('applications', ApplicationController::class)->names('applications');
-    Route::patch('/applications/{id}/status', [ApplicationController::class, 'updateStatus']);
+    Route::patch('/applications/{application}/status', [ApplicationController::class, 'updateStatus']);
     Route::get('/pending', [ApplicationController::class, 'pending']);
     Route::get('/waiting-list', [ApplicationController::class, 'waitingList']);
     Route::get('/approved', [ApplicationController::class, 'approved']);
@@ -21,7 +20,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->prefix('v1')->group(functio
 
     //  Task
     Route::apiResource('tasks', TaskController::class)->names('tasks');
-    Route::patch('/tasks/{id}/status', [TaskController::class, 'updateStatus']);
+    Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus']);
 
     // TaskHour
     Route::apiResource('task-hours', TaskHourController::class)->names('taskHours');
@@ -35,12 +34,12 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->prefix('v1')->group(functio
     Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);
         Route::get('/unread-count', [NotificationController::class, 'unreadCount']);
-        Route::get('/{id}', [NotificationController::class, 'show']);
-        Route::post('/{id}/read', [NotificationController::class, 'markAsRead']);
+        Route::get('/{notification}', [NotificationController::class, 'show']);
+        Route::post('/{notification}/read', [NotificationController::class, 'markAsRead']);
         Route::post('/read-all', [NotificationController::class, 'markAllAsRead']);
-        Route::delete('/{id}', [NotificationController::class, 'destroy']);
+        Route::delete('/{notification}', [NotificationController::class, 'destroy']);
         Route::delete('/', [NotificationController::class, 'destroyAll']);
-        Route::post('/send-test', [NotificationController::class, 'sendTestNotification'])->middleware('can:admin');
+        Route::post('/send-test', [NotificationController::class, 'sendTestNotification'])->middleware('can:super_admin');
     });
 
 });

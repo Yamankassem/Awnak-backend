@@ -47,6 +47,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'interests.create',
             'interests.update',
             'interests.delete',
+            'languages.read',
+            'languages.create',
+            'languages.update',
+            'languages.delete',
 
 
             // Volunteer
@@ -138,6 +142,10 @@ class RolesAndPermissionsSeeder extends Seeder
                 'interests.create',
                 'interests.update',
                 'interests.delete',
+                'languages.read',
+                'languages.create',
+                'languages.update',
+                'languages.delete',
 
                 'volunteerBadges.create',
                 'volunteerBadges.update',
@@ -162,6 +170,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'certificate.viewAny',
                 'volunteerBadges.view',
                 'volunteerBadges.viewAny',
+                'languages.read',
             ],
 
             'opportunity-manager' => [
@@ -175,6 +184,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'volunteers.assign',
                 'skills.read',
                 'interests.read',
+                'languages.read',
             ],
 
             'organization-admin' => [
@@ -187,6 +197,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 
                 'skills.read',
                 'interests.read',
+                'languages.read',
             ],
 
             'volunteer-coordinator' => [
@@ -205,6 +216,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'volunteerBadges.delete',
                 'volunteerBadges.view',
                 'volunteerBadges.viewAny',
+                'languages.read',
             ],
 
             'performance-auditor' => [
@@ -216,6 +228,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'certificate.viewAny',
                 'skills.read',
                 'interests.read',
+                'languages.read',
             ],
         ];
 

@@ -63,9 +63,9 @@ class FeedbackService
             $query->where('task_id', $filters['task_id']);
         }
         
-        if (isset($filters['volunteer_id'])) {
+        if (isset($filters['volunteer_profile_id'])) {
             $query->whereHas('task.application', function($q) use ($filters) {
-                $q->where('volunteer_id', $filters['volunteer_id']);
+                $q->where('volunteer_profile_id', $filters['volunteer_profile_id']);
             });
         }
         

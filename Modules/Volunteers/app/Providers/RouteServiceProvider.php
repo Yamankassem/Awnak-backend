@@ -2,8 +2,9 @@
 
 namespace Modules\Volunteers\Providers;
 
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Modules\Volunteers\Http\Middleware\EnsureVolunteerIsActive;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,11 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         parent::boot();
+
+        $this->app['router']->aliasMiddleware(
+            'volunteer.active',
+            EnsureVolunteerIsActive::class
+        );
     }
 
     /**

@@ -97,7 +97,7 @@ class TaskHourController extends Controller
         'hours' => $taskHour->hours,
         'started_date' => $taskHour->started_date,
         'ended_date' => $taskHour->ended_date,
-        'volunteer_id' => $taskHour->task->application->volunteer_id ?? null
+        'volunteer_profile_id' => $taskHour->task->application->volunteer_profile_id ?? null
         ]);
 
         return $this->success($taskHour, 'messages.taskHour_created', 201);

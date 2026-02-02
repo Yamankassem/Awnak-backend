@@ -7,11 +7,10 @@ use Modules\Applications\Models\Feedback;
 use Modules\Applications\Models\TaskHour;
 use Modules\Applications\Models\Application;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Applications\Policies\TaskPolicy;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Applications\Database\Factories\TaskFactory;
-use Modules\Applications\QueryBuilders\TaskQueryBuilder;
 
 /**
  * Task Model
@@ -71,27 +70,10 @@ class Task extends Model
     protected $casts = [
         'due_date' => 'date',
     ];
-
-   
-    public function getAllowedStatuses(): array
-    {
-        return [
-         'active', 'complete'
-        ];
-    }
-
-    /**
-     * Create a new Eloquent query builder for the model.
-     * 
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return TaskQueryBuilder
-     */
-    public function newEloquentBuilder($query): TaskQueryBuilder
-    {
-        return new TaskQueryBuilder($query);
-    }
-
-    
+ 
+    protected $policies = [
+    Task::class => TaskPolicy::class,
+    ];
 
     /**
      * Get the application that owns the Task
