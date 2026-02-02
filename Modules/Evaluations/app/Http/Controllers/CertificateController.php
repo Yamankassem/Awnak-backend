@@ -9,10 +9,12 @@ use Modules\Evaluations\Http\Resources\CertificateResource;
 use Modules\Evaluations\Http\Traits\ApiResponse;
 use Modules\Evaluations\Models\Certificate;
 use Modules\Evaluations\Services\CertificateServices;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 
 class CertificateController extends Controller
 {
-    use ApiResponse;
+     use AuthorizesRequests;
 
     protected $certificateService;
 
@@ -20,79 +22,87 @@ class CertificateController extends Controller
     {
         $this->certificateService = $certificateService;
     }
+// only system-admin & performance-auditor can getAllCertificates 
+// and the volunteer only can show his certificates
 
-    public function index($taskId)
+    public function index()
     {
-        try {
-            $certificates = $this->certificateService->getByTask($taskId);
+            
+            $this->authorize('viewAny', Certificate::class);
 
-            return $this->successResponse(
-                CertificateResource::collection($certificates),
-                'Certificates retrieved successfully',
-                200
+            $certificates = $this->certificateService->getAll();
+
+            return static::paginated(
+                paginator: $certificates,
+                message: 'certificates.listed'
             );
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
+       
+    }  
 
+    
     public function show($id)
     {
         try {
-            $certificate = $this->certificateService->getById($id);
-
-            return $this->successResponse(
-                new CertificateResource($certificate),
-                'Certificate retrieved successfully',
-                200
-            );
+             $certificate = $this->certificateService->getById($id);
+                $this->authorize('view', $certificate);
+                  return static::success(
+                        data: $certificate,
+                        message: 'certificates.retrieved',
+                        status: 200
+        );
         } catch (\Exception $e) {
-            return $this->errorResponse('Certificate not found', 404);
+            return $this->error('Certificate not found', 404);
         }
     }
-
+// only system-admin & performance-auditor can store certificate
     public function store(StoreCertificateRequest $request)
     {
         try {
-            $certificate = $this->certificateService->createCertificate($request->validated());
-
-            return $this->successResponse(
-                new CertificateResource($certificate),
-                'Certificate created successfully',
-                201
-            );
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode() ?: 500);
+             $this->authorize('create', Certificate::class);
+             $certificate = $this->certificateService->createCertificate($request->validated());
+              return static::success(
+                                        data:  $certificate,
+                                        message: 'certificates.created',
+                                        status: 201
+                                    );
         }
+         catch (\Exception $e) {
+             return $this->error($e->getMessage(), $e->getCode() ?: 500);
+}
+
+        
     }
+// only system-admin & performance-auditor can update certificate
 
     public function update(UpdateCertificateRequest $request, Certificate $certificate)
     {
         try {
-            $updated = $this->certificateService->updateCertificate($certificate, $request->validated());
-
-            return $this->successResponse(
-                new CertificateResource($updated),
-                'Certificate updated successfully',
-                200
+                $data = $request->validated();
+                $this->authorize('update', $certificate);
+                $updated = $this->certificateService->updateCertificate($certificate, $data);
+                return static::success(
+                data: $updated,
+                message: 'certificates.updated',
+                status: 200
             );
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode() ?: 500);
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
+// only system-admin & performance-auditor can destroy certificate
 
     public function destroy(Certificate $certificate)
     {
         try {
+            $this->authorize('delete', $certificate);
             $this->certificateService->deleteCertificate($certificate);
-
-            return $this->successResponse(
-                null,
-                'Certificate deleted successfully',
-                200
+            return $this->success(
+                data: null,
+                message: 'certificates.deleted',
+                status: 200
             );
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode() ?: 500);
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 }

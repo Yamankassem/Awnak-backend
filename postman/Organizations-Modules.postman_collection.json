@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "e9169b5e-db95-4f2e-b4d9-24f090ffe8c1",
-    "name": "Awnak-project",
+    "name": "Organizations-Modules",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "48953436",
     "_collection_link": "https://go.postman.co/collection/48953436-e9169b5e-db95-4f2e-b4d9-24f090ffe8c1?source=collection_link"
@@ -11,7 +11,7 @@
       "name": "Orginization",
       "item": [
         {
-          "name": "Get All Organizations",
+          "name": "Get All Active Organizations",
           "request": {
             "method": "GET",
             "header": [],
@@ -77,6 +77,30 @@
         },
         {
           "name": "Create a new Organization",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Get Volunteers of Organization",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Get Organization not active",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Activate Organization",
           "request": {
             "method": "GET",
             "header": []
@@ -225,6 +249,22 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Find nearest Opportunity",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Find Farther Opportunity",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
         }
       ]
     },
@@ -339,39 +379,40 @@
       "name": "Document(Opportunity)",
       "item": [
         {
+          "name": "Read Document for specific Opportunity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Create Document",
           "request": {
             "method": "GET",
-            "header": []
-          },
-          "response": []
-        },
-        {
-          "name": "Read all",
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
-        },
-        {
-          "name": "Read a Specific Document",
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
-        },
-        {
-          "name": "Update Document",
-          "request": {
-            "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": ""
+            }
           },
           "response": []
         },
         {
           "name": "Delete a Document",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show Specific Document",
           "request": {
             "method": "GET",
             "header": []

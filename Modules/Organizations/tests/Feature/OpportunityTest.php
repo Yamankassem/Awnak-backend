@@ -3,6 +3,8 @@
 namespace Modules\Organizations\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
+use Modules\Core\Models\User;
 use Modules\Organizations\Models\Organization;
 use Tests\TestCase;
 
@@ -13,26 +15,38 @@ class OpportunityTest extends TestCase
     /**
      * Test: Create a new opportunity.
      */
-    public function test_it_can_create_an_opportunity()
-{
-    $user = \Database\Factories\UserFactory::new()->create();
-    $this->actingAs($user, 'sanctum');
+    public function test_it_can_create_an_opportunity_with_location()
+    {
+        $user = \Modules\Core\Models\User::factory()->create();
 
-    $organization = Organization::factory()->create([
-        'user_id' => $user->id,
-    ]);
+        Role::firstOrCreate(['name' => 'system-admin', 'guard_name' => 'sanctum']);
+        $this->actingAs($user, 'sanctum');
+        $user->assignRole('system-admin');
 
-    $response = $this->postJson('/api/opportunities', [
-        'title'           => 'Scholarship Program',
-        'description'     => 'A scholarship opportunity for students',
-        'type'            => 'Scholarship',
-        'start_date'      => now()->toDateString(),
-        'end_date'        => now()->addDays(30)->toDateString(),
-        'organization_id' => $organization->id,
-    ]);
+        $organization = \Modules\Organizations\Models\Organization::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
-    $response->assertStatus(201);
-}
+        // Create a location record using factory
+        $location = \Modules\Core\Models\Location::factory()->create();
+
+        $response = $this->postJson('/api/v1/opportunities', [
+            'title'           => 'Scholarship Program',
+            'description'     => 'A scholarship opportunity for students',
+            'type'            => 'Scholarship',
+            'start_date'      => now()->toDateString(),
+            'end_date'        => now()->addDays(30)->toDateString(),
+            'organization_id' => $organization->id,
+            'location_id'     => $location->id, // added location_id
+        ]);
+
+        $response->assertStatus(201);
+        $response->assertJson([
+            'status'  => 'success',
+            'message' => 'opportunities.created',
+        ]);
+    }
+
 
 
     /**
@@ -40,7 +54,7 @@ class OpportunityTest extends TestCase
      */
     public function test_it_returns_404_if_opportunity_not_found()
     {
-        // أنشئ مستخدم باستخدام الـFactory بشكل صريح
+
         $user = \Database\Factories\UserFactory::new()->create();
         $this->actingAs($user, 'sanctum');
 

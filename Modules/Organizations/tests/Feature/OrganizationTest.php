@@ -2,10 +2,10 @@
 
 namespace Modules\Organizations\Tests\Feature;
 
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-
+use Spatie\Permission\Models\Role;
+use Modules\Core\Models\User;
 
 class OrganizationTest extends TestCase
 {
@@ -23,8 +23,11 @@ class OrganizationTest extends TestCase
      */
     public function test_it_can_create_an_organization()
     {
-       $user = User::factory()->create();
-       $this->actingAs($user, 'sanctum');
+        $user = \Modules\Core\Models\User::factory()->create();
+
+        Role::firstOrCreate(['name' => 'system-admin', 'guard_name' => 'sanctum']);
+        $this->actingAs($user, 'sanctum');
+        $user->assignRole('system-admin');
 
         $response = $this->postJson('/api/v1/organizations', [
             'license_number' => 'ABC123',
@@ -32,21 +35,23 @@ class OrganizationTest extends TestCase
             'bio' => 'Non-profit organization focused on education',
             'website' => 'https://example.org',
             'user_id' => $user->id,
+            'status' => 'active',
         ]);
 
         $response->assertStatus(201)
-         ->assertJsonStructure([
-             'data' => [
-                 'id',
-                 'license_number',
-                 'type',
-                 'bio',
-                 'website',
-                 'created_at',
-                 'updated_at',
-                 
-             ]
-         ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'license_number',
+                    'type',
+                    'bio',
+                    'website',
+                    'created_at',
+                    'updated_at',
+                    'status',
+
+                ]
+            ]);
 
 
         $this->assertDatabaseHas('organizations', [

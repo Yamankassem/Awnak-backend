@@ -12,20 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('evaluations', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('task_id');
-            $table->unsignedBigInteger('volunteer_id');
-            $table->unsignedBigInteger('evaluator_id'); 
-            $table->timestamp('evaluated_at');
-            $table->string('improvement')->nullable();
+           $table->id();
+            $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
+            $table->foreignId('evaluator_id')->constrained('users')->cascadeOnDelete();
+            $table->tinyInteger('score'); //  1 - 5
             $table->string('strengths')->nullable();
-            $table->float('score');
+            $table->string('improvement')->nullable();
             $table->timestamps();
-
-            // $table->foreignId('task_id')->constrained(tasks)->cascadeOnDelete();
-            // $table->foreignId('volunteer_id')->constrained('users')->cascadeOnDelete();
-            // $table->foreignId('evaluator_id')->constrained('users')->cascadeOnDelete();
-
         });
     }
 

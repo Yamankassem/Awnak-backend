@@ -5,7 +5,7 @@ namespace Modules\Evaluations\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Evaluations\Models\Badge as ModelsBadge;
-use Modules\Core\Models\User as ModelsUser;
+use Modules\Core\Models\User ;
 
 
 class VolunteerBadge extends Model
@@ -19,7 +19,6 @@ class VolunteerBadge extends Model
         'volunteer_id',
         'badge_id',
         'awarded_by',
-        'awarded_at',
     ];
 
     protected $casts = [
@@ -30,19 +29,19 @@ class VolunteerBadge extends Model
      *  Relationships
      */
 
-    // The volunteer who received the badge
-    // public function volunteer()
-    // {
-    //     return $this->belongsTo(User::class, 'volunteer_id');
-    // }
-    // // badge
-    // public function badge()
-    // {
-    //     return $this->belongsTo(ModelsBadge::class);
-    // }
-    // // badge giver
-    // public function awardedBy()
-    // {
-    //     return $this->belongsTo(User::class, 'awarded_by');
-    // }
+    //The volunteer who received the badge
+    public function volunteer()
+    {
+        return $this->belongsTo(User::class, 'volunteer_id');
+    }
+    // badge
+    public function badge()
+    {
+        return $this->belongsTo(ModelsBadge::class);
+    }
+    // badge giver
+    public function awardedBy()
+    {
+        return $this->belongsTo(User::class, 'awarded_by');
+    }
 }
