@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Volunteers\Database\Factories\LanguageFactory;
 // use Modules\Volunteers\Database\Factories\LanguageFactory;
 
-class language extends Model
+class Language extends Model
 {
     use HasFactory;
 

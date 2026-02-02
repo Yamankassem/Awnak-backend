@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('volunteer_id');
             $table->unsignedBigInteger('badge_id');
             $table->unsignedBigInteger('awarded_by');
+            $table->timestamp('awarded_at')->nullable();
             $table->timestamps();
         });
     }

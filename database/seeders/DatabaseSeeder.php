@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +16,32 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Core first (users, roles, locations)
+    $this->call([
+        \Modules\Core\Database\Seeders\CoreDatabaseSeeder::class,
+    ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+    // Organizations
+    $this->call([
+        \Modules\Organizations\Database\Seeders\OrganizationsDatabaseSeeder::class,
+    ]);
+
+    // Volunteers
+    $this->call([
+        \Modules\Volunteers\Database\Seeders\SkillsSeeder::class,
+        \Modules\Volunteers\Database\Seeders\InterestsSeeder::class,
+        \Modules\Volunteers\Database\Seeders\LanguagesSeeder::class,
+        \Modules\Volunteers\Database\Seeders\VolunteerProfilesSeeder::class,
+    ]);
+
+    // Applications (depends on opportunities + volunteers)
+    $this->call([
+        \Modules\Applications\Database\Seeders\ApplicationsDatabaseSeeder::class,
+    ]);
+
+    // Evaluations (depends on tasks)
+    $this->call([
+        \Modules\Evaluations\Database\Seeders\EvaluationsDatabaseSeeder::class,
+    ]);
     }
 }
