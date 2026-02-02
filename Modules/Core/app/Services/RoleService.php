@@ -70,7 +70,7 @@ class RoleService
 
     public function delete(Role $role, int $actorId): void
     {
-        // حماية: لا تحذف system-admin
+        // do not delete system-admin
         if ($role->name === 'system-admin') {
             abort(403, 'Cannot delete system-admin role.');
         }

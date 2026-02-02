@@ -59,10 +59,8 @@ class RoleController extends Controller
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function update(UpdateRoleRequest $request, int $id)
+    public function update(UpdateRoleRequest $request, Role $role)
     {
-        $role = Role::findOrFail($id);
-
         $role = $this->service->update($role, $request->validated(), request()->user()->id);
 
         return static::success(
@@ -80,10 +78,8 @@ class RoleController extends Controller
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function destroy(int $id)
+    public function destroy(Role $role)
     {
-        $role = Role::findOrFail($id);
-
         $this->service->delete($role, request()->user()->id);
 
         return static::success(
