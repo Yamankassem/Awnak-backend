@@ -4,6 +4,14 @@ namespace Modules\Volunteers\Http\Requests\VolunteerLanguages;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class StoreVolunteerLanguageRequest
+ *
+ * Validates and authorizes adding a language
+ * to the authenticated volunteer profile.
+ *
+ * @package Modules\Volunteers\Http\Requests\VolunteerLanguages
+ */
 class StoreVolunteerLanguageRequest extends FormRequest
 {
     /**

@@ -10,14 +10,26 @@ use Modules\Volunteers\Traits\LogsVolunteerActivity;
 class VolunteerLanguageService
 {
     use LogsVolunteerActivity;
-    public function handle() {}
-
+    /**
+     * List all languages associated with a volunteer profile.
+     *
+     * @param VolunteerProfile $profile
+     * @return \Illuminate\Support\Collection
+     */
     public function list(VolunteerProfile $profile)
     {
         return $profile->languages()->withPivot('level')->get();
     }
 
-    public function create(VolunteerProfile $profile, array $data , User $actor)
+    /**
+     * Attach a new language to a volunteer profile.
+     *
+     * @param VolunteerProfile $profile
+     * @param array $data Validated input data
+     * @param User $actor The authenticated user performing the action
+     * @return VolunteerLanguage
+     */
+    public function create(VolunteerProfile $profile, array $data, User $actor)
     {
         $exists = $profile->languages()
             ->where('language_id', $data['language_id'])
@@ -44,7 +56,15 @@ class VolunteerLanguageService
         return $language;
     }
 
-    public function update(VolunteerLanguage $language, array $data , User $actor)
+    /**
+     * Update volunteer language level.
+     *
+     * @param VolunteerLanguage $language
+     * @param array $data
+     * @param User $actor
+     * @return VolunteerLanguage
+     */
+    public function update(VolunteerLanguage $language, array $data, User $actor)
     {
         $language->update($data);
 
@@ -58,7 +78,14 @@ class VolunteerLanguageService
         return $language->refresh();
     }
 
-    public function delete(VolunteerLanguage $language , User $actor): void
+    /**
+     * Remove a language from a volunteer profile.
+     *
+     * @param VolunteerLanguage $language
+     * @param User $actor
+     * @return void
+     */
+    public function delete(VolunteerLanguage $language, User $actor): void
     {
         $language->delete();
 

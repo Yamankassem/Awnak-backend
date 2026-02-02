@@ -3,7 +3,14 @@
 namespace Modules\Volunteers\Http\Requests\VolunteerSkill;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+/**
+ * Class StoreVolunteerSkillRequest
+ *
+ * Validates input for attaching a skill
+ * to the volunteer profile with a proficiency level.
+ *
+ * @package Modules\Volunteers\Http\Requests\VolunteerSkill
+ */
 class StoreVolunteerSkillRequest extends FormRequest
 {
     /**
@@ -18,7 +25,9 @@ class StoreVolunteerSkillRequest extends FormRequest
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Authorization is handled via policy.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {

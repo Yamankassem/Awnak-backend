@@ -9,14 +9,10 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class VolunteerProfilePolicy
 {
     use HandlesAuthorization;
-
-    /**
-     * Create a new policy instance.
-     */
-    public function __construct() {}
-
     /**
      * View a volunteer profile
+     * system admin and organization.volunteers.read (organization admin)
+     * and the owner of profile with permiision profile.read.own
      */
     public function view(User $user, VolunteerProfile $profile): bool
     {
@@ -31,8 +27,10 @@ class VolunteerProfilePolicy
             );
     }
 
-    /**
-     * Update volunteer profile
+     /**
+     * update a volunteer profile
+     * system admin 
+     * and the owner of profile with permiision profile.read.own
      */
     public function update(User $user, VolunteerProfile $profile): bool
     {
@@ -47,6 +45,7 @@ class VolunteerProfilePolicy
 
     /**
      * Verify volunteer profile
+     * system admin and organization.volunteers.read (organization admin)
      */
     public function verify(User $user, VolunteerProfile $profile): bool
     {
@@ -57,18 +56,27 @@ class VolunteerProfilePolicy
     }
 
     /**
-     * Delete volunteer profile
+     * delete a volunteer profile
+     * system admin 
      */
     public function delete(User $user, VolunteerProfile $profile): bool
     {
         return $user->hasRole('system-admin');
     }
+    /**
+     * View pending  profiles
+     * system admin and organization.volunteers.read (organization admin)
+     */
     public function viewPending(User $user): bool
     {
         return
             $user->hasRole('system-admin') ||
             $user->hasPermissionTo('organization.volunteers.read');
     }
+    /**
+     * Manage Status of  profiles
+     * system admin and organization.volunteers.read (organization admin)
+     */
     public function manageStatus(User $user): bool
     {
         return

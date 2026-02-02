@@ -11,25 +11,32 @@ class VolunteerSkillPolicy
     use HandlesAuthorization;
 
     /**
-     * Create a new policy instance.
+     * View a volunteer skill.
      */
-    public function __construct() {}
-
     public function view(User $user, VolunteerSkill $skill): bool
     {
         return $skill->volunteerProfile->user_id === $user->id;
     }
 
+    /**
+     * create a volunteer skill.
+     */
     public function create(User $user): bool
     {
         return $user->hasPermissionTo('profile.update.own');
     }
 
+    /**
+     * update a volunteer skill.
+     */
     public function update(User $user, VolunteerSkill $skill): bool
     {
         return $skill->volunteerProfile->user_id === $user->id;
     }
 
+    /**
+     * delete a volunteer skill.
+     */
     public function delete(User $user, VolunteerSkill $skill): bool
     {
         return $skill->volunteerProfile->user_id === $user->id;

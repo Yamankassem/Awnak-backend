@@ -19,17 +19,29 @@ class VolunteerLanguage extends Model
         'language_id',
         'level',
     ];
-
-     protected static function newFactory(): VolunteerLanguageFactory
-     {
-          return VolunteerLanguageFactory::new();
-     }
-
+    /**
+     * Factory for testing/seeding.
+     *
+     * @return VolunteerLanguageFactory
+     */
+    protected static function newFactory(): VolunteerLanguageFactory
+    {
+        return VolunteerLanguageFactory::new();
+    }
+    /**
+     * Parent volunteer profile.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function volunteerProfile()
     {
         return $this->belongsTo(VolunteerProfile::class);
     }
-
+    /**
+     * Associated language.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function language()
     {
         return $this->belongsTo(Language::class);

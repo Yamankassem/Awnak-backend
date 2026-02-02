@@ -11,16 +11,30 @@ class Language extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
+   /**
+     * Mass assignable attributes.
+     *
+     * @var array<int, string>
      */
     protected $fillable = ['name', 'code'];
 
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return LanguageFactory
+     */
      protected static function newFactory(): LanguageFactory
      {
           return LanguageFactory::new();
      }
 
+     /**
+     * Volunteers associated with this language.
+     *
+     * Includes proficiency level in the pivot table.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function volunteers()
     {
         return $this->belongsToMany(

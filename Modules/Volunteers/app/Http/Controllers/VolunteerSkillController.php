@@ -13,7 +13,12 @@ class VolunteerSkillController extends Controller
 {
 
     public function __construct(private VolunteerSkillService $service) {}
-
+    /**
+     * List volunteer skills.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(Request $request)
     {
         $profile = $request->user()->volunteerProfile;
@@ -22,7 +27,12 @@ class VolunteerSkillController extends Controller
 
         return static::success(data: $skills);
     }
-
+    /**
+     * Attach a skill to the volunteer profile.
+     *
+     * @param StoreVolunteerSkillRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(StoreVolunteerSkillRequest $request)
     {
         $this->authorize('create', VolunteerSkill::class);
@@ -41,7 +51,13 @@ class VolunteerSkillController extends Controller
             status: 201
         );
     }
-
+    /**
+     * Update a volunteer skill.
+     *
+     * @param UpdateVolunteerSkillRequest $request
+     * @param VolunteerSkill $volunteerSkill
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(UpdateVolunteerSkillRequest $request, VolunteerSkill $volunteerSkill)
     {
         $this->authorize('update', $volunteerSkill);
@@ -57,7 +73,13 @@ class VolunteerSkillController extends Controller
             message: 'skill.updated'
         );
     }
-
+    /**
+     * Remove a skill from the volunteer profile.
+     *
+     * @param VolunteerSkill $volunteerSkill
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy(VolunteerSkill $volunteerSkill,Request $request)
     {
         $this->authorize('delete', $volunteerSkill);

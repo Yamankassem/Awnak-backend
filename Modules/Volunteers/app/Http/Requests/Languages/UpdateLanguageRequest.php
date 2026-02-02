@@ -8,7 +8,11 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateLanguageRequest extends FormRequest
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Validation rules for updating a language.
+     *
+     * Ensures language code remains unique.
+     *
+     * @return array<string, mixed>
      */
     public function rules(): array
     {
@@ -24,7 +28,9 @@ class UpdateLanguageRequest extends FormRequest
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Authorization logic for the request.
+     *
+     * @return bool True if user can update languages
      */
     public function authorize(): bool
     {

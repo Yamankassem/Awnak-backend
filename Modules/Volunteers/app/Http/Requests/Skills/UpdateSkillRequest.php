@@ -3,7 +3,13 @@
 namespace Modules\Volunteers\Http\Requests\Skills;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+/**
+ * Class UpdateSkillRequest
+ *
+ * Validates input for updating an existing skill.
+ *
+ * @package Modules\Volunteers\Http\Requests\Skills
+ */
 class UpdateSkillRequest extends FormRequest
 {
     /**
@@ -17,7 +23,9 @@ class UpdateSkillRequest extends FormRequest
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Authorization check based on permission.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {

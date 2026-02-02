@@ -21,7 +21,7 @@ class VolunteerVerificationService
             ]);
         }
 
-        if ($volunteerProfile->status !== 'inactive') {
+        if ($volunteerProfile->status !== 'active') {
             abort(422, 'Profile cannot be verified in current status.');
         }
 
@@ -49,7 +49,7 @@ class VolunteerVerificationService
 
     public function reject(VolunteerProfile $profile, User $actor): VolunteerProfile
     {
-        // منع الرفض إذا لم يكن مُتحقق أصلًا (اختياري لكنه منطقي)
+        // Prevent rejection if it is not already verified (optional but logical)
         if (!$profile->is_verified) {
             throw ValidationException::withMessages([
                 'profile' => ['Volunteer is not verified yet.'],

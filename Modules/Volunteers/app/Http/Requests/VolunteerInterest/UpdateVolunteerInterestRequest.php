@@ -3,7 +3,13 @@
 namespace Modules\Volunteers\Http\Requests\VolunteerInterest;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+/**
+ * Class UpdateVolunteerInterestRequest
+ *
+ * Validates input for updating a volunteer interest.
+ *
+ * @package Modules\Volunteers\Http\Requests\VolunteerInterest
+ */
 class UpdateVolunteerInterestRequest extends FormRequest
 {
     /**
@@ -17,7 +23,9 @@ class UpdateVolunteerInterestRequest extends FormRequest
     }
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Authorization check.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
