@@ -11,6 +11,7 @@ use Modules\Evaluations\Models\Evaluation;
 use Modules\Evaluations\Policies\BadgePolicy;
 use Modules\Evaluations\Policies\CertificatePolicy;
 use Modules\Evaluations\Policies\EvaluationPolicy;
+use Modules\Evaluations\Policies\VolunteerBadgePolicy;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -31,6 +32,7 @@ class EvaluationsServiceProvider extends ServiceProvider
         Gate::policy(Badge::class, BadgePolicy::class);
         Gate::policy(Certificate::class, CertificatePolicy::class);
         Gate::policy(Evaluation::class, EvaluationPolicy::class);
+        Gate::policy(Evaluation::class, VolunteerBadgePolicy::class);
         $this->registerCommands();
         $this->registerCommandSchedules();
         $this->registerTranslations();

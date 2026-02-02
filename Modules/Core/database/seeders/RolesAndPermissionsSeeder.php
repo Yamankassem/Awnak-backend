@@ -36,6 +36,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'certificates.delete',
             'certificate.view',
             'certificate.viewAny',
+            'organization.status.update',
+
+
             'skills.read',
             'skills.create',
             'skills.update',
@@ -44,6 +47,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'interests.create',
             'interests.update',
             'interests.delete',
+
 
             // Volunteer
             'profile.read.own',
@@ -54,8 +58,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'tasks.update.assigned',
             'evaluations.read.own',
             'notes.create.assigned_tasks',
-            'certificate.view',
-            'certificate.viewAny',
 
             // Opportunity Manager
             'opportunities.create',
@@ -71,6 +73,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'organization.volunteers.read',
             'organization.volunteers.evaluate',
             'organization.opportunities.create',
+            'organization.opportunities.update',
+            'organization.opportunities.delete',
             'organization.opportunities.publish',
             'evaluations.create',
             'evaluations.update',
@@ -78,10 +82,15 @@ class RolesAndPermissionsSeeder extends Seeder
             'evaluations.view',
             'evaluations.viewAny',
 
+            'volunteerBadges.create',
+            'volunteerBadges.update',
+            'volunteerBadges.delete',
+            'volunteerBadges.view',
+            'volunteerBadges.viewAny',
+
             // Volunteer Coordinator
             'volunteers.read.assigned',
             'tasks.read.managed',
-            'evaluations.create',
             'notifications.send',
             
 
@@ -119,6 +128,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'evaluations.delete',
                 'evaluations.view',
                 'evaluations.viewAny',
+                'organization.status.update',
 
                 'skills.read',
                 'skills.create',
@@ -128,6 +138,13 @@ class RolesAndPermissionsSeeder extends Seeder
                 'interests.create',
                 'interests.update',
                 'interests.delete',
+
+                'volunteerBadges.create',
+                'volunteerBadges.update',
+                'volunteerBadges.delete',
+                'volunteerBadges.view',
+                'volunteerBadges.viewAny',
+
             ],
 
             'volunteer' => [
@@ -141,6 +158,10 @@ class RolesAndPermissionsSeeder extends Seeder
                 'notes.create.assigned_tasks',
                 'skills.read',
                 'interests.read',
+                'certificate.view',
+                'certificate.viewAny',
+                'volunteerBadges.view',
+                'volunteerBadges.viewAny',
             ],
 
             'opportunity-manager' => [
@@ -160,6 +181,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'organization.volunteers.read',
                 'organization.volunteers.evaluate',
                 'organization.opportunities.create',
+                'organization.opportunities.update',
+                'organization.opportunities.delete',
                 'organization.opportunities.publish',
                 
                 'skills.read',
@@ -169,7 +192,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'volunteer-coordinator' => [
                 'volunteers.read.assigned',
                 'tasks.read.managed',
-                'evaluations.create',
                 'notifications.send',
                 'evaluations.create',
                 'evaluations.update',
@@ -178,6 +200,11 @@ class RolesAndPermissionsSeeder extends Seeder
                 'evaluations.viewAny',
                 'skills.read',
                 'interests.read',
+                 'volunteerBadges.create',
+                'volunteerBadges.update',
+                'volunteerBadges.delete',
+                'volunteerBadges.view',
+                'volunteerBadges.viewAny',
             ],
 
             'performance-auditor' => [

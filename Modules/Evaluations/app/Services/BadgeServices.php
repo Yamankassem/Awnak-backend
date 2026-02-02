@@ -4,6 +4,7 @@ namespace Modules\Evaluations\Services;
 
 use Modules\Evaluations\Models\Badge;
 use Illuminate\Support\Facades\Auth;
+use Modules\Applications\Models\Task;
 use Spatie\Activitylog\Models\Activity;
 
 
@@ -90,6 +91,20 @@ class BadgeServices
                                                 'deleted_by' => $user->name,
                                               ],
         ]);
+    }
+
+    
+    public function checkBadgeCondition(int $volunteerId, int $badgeId): bool
+    {
+        $completedTasksCount = Task::where('volunteer_id', $volunteerId)
+                                ->where('status', 'complete')
+                                ->count();
+
+        if ($badgeId == 1 && $completedTasksCount >= 5) {
+            return true;
+        }
+
+        return false;
     }
 
 }

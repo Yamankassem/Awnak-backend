@@ -4,7 +4,7 @@ namespace Modules\Evaluations\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Core\Models\User as ModelsUser;
+use Modules\Core\Models\User ;
 
 class Report extends Model
 {
@@ -32,8 +32,8 @@ class Report extends Model
     */
 
     // Report Writer
-    // public function generator()
-    // {
-    //     return $this->belongsTo(User::class, 'generated_by');
-    // }
+    public function generator()
+    {
+        return $this->belongsTo(User::class, 'generated_by');
+    }
 }
