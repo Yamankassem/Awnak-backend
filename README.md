@@ -57,3 +57,162 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# Evaluations Module
+
+## Overview
+
+The Evaluations module is responsible for managing volunteer performance evaluations, awarding badges automatically based on predefined conditions, generating reports, and issuing certificates.  
+It plays a core role in tracking volunteer contributions and motivating them through a transparent evaluation system.
+
+This module follows a **Service-Oriented Architecture** and integrates with:
+
+- Applications Module
+- Core Module (Users, Roles, Permissions)
+- Spatie Permissions & Activity Log
+
+---
+
+## Features
+
+- Create and manage evaluations for volunteers
+- Calculate performance scores
+- Automatically award badges when conditions are met
+- Manage volunteer badges
+- Generate evaluation reports
+- Role-based access control (RBAC)
+
+---
+
+## Database Tables
+
+### evaluations
+
+Stores evaluation results for volunteers and tasks.
+
+| Column       | Description        |
+| ------------ | ------------------ |
+| id           | Primary key        |
+| task_id      | Related task       |
+| evaluator_id | User who evaluated |
+| score        | Evaluation score   |
+| strengths    | Strength points    |
+| improvement  | Improvement notes  |
+| evaluated_at | Evaluation date    |
+| created_at   | Created at         |
+
+---
+
+### badges
+
+Defines available badges and their conditions.
+
+| Column      | Description       |
+| ----------- | ----------------- |
+| id          | Primary key       |
+| name        | Badge name        |
+| condition   | Badge condition   |
+| description | Badge description |
+
+---
+
+### volunteer_badges
+
+Pivot table linking volunteers with awarded badges.
+
+| Column       | Description      |
+| ------------ | ---------------- |
+| volunteer_id | Volunteer        |
+| badge_id     | Badge            |
+| awarded_by   | User who awarded |
+| created_at   | Awarded date     |
+
+---
+
+### certificate
+
+### report
+
+## Authorization & Policies
+
+### Full Access Roles
+
+- System Admin
+- Volunteer Coordinator
+
+These roles can:
+
+- Create, update, delete evaluations
+- Create and award badges
+- View all evaluations and volunteer badges
+
+---
+
+### Volunteer Access
+
+Volunteers can:
+
+- View their own certificate
+- View their own badges only
+
+Volunteers cannot:
+
+- Award badges
+- View other volunteers' evaluations or badges
+
+Authorization is implemented using:
+
+- Laravel Policies
+- Spatie Permissions
+
+---
+
+## Services Layer
+
+### BadgeServices
+
+Responsible for:
+
+- CRUD operations for badges
+- Validating badge conditions
+
+---
+
+### VolunteerBadgeServices
+
+Responsible for:
+
+- Automatically awarding badges
+- Preventing duplicate badge awards
+- Linking volunteers with badges
+
+#### Awarding Flow
+
+---
+
+## Automatic Badge Awarding
+
+Badges are awarded automatically when predefined conditions are met (e.g. number of completed tasks, evaluation score thresholds).
+
+This logic is handled inside `VolunteerBadgeServices`.
+
+---
+
+## Activity Logging
+
+All critical actions are logged using **Spatie Activity Log** with the log name `audit`, including:
+
+- Badge creation
+- Badge updates
+- Badge deletion
+- Awarding badges to volunteers
+
+---
+
+## Running Seeders
+
+To run all Evaluation module seeders:
+
+```bash
+php artisan module:seed Evaluations
+```
