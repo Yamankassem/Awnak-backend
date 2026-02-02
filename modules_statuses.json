@@ -4,7 +4,5 @@
     "Volunteers": true,
     "Organizations": true,
     "Applications": true,
-    "Evaluations": true,
-    "Communication": true,
-    "Documents": true
+    "Evaluations": true
 }

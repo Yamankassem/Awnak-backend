@@ -63,10 +63,8 @@ class UserController extends Controller
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function update(UpdateUserRequest $request, int $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $user = User::findOrFail($id);
-
         $user = $this->service->update($user, $request->validated(), request()->user()->id);
 
         return static::success(
@@ -84,11 +82,8 @@ class UserController extends Controller
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function destroy(int $id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
-
-        //$this->service->delete($user, auth()->id());
         $this->service->delete(
             $user,
             request()->user()->id
@@ -110,10 +105,8 @@ class UserController extends Controller
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function assignRoles(AssignUserRolesRequest $request, int $id)
+    public function assignRoles(AssignUserRolesRequest $request, User $user)
     {
-        $user = User::findOrFail($id);
-
         $user = $this->service->syncRoles(
             $user,
             $request->validated()['roles'],

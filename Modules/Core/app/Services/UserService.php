@@ -81,9 +81,9 @@ class UserService
 
     public function syncRoles(User $user, array $roles, int $actorId): User
     {
-        // حماية: لا تغيّر دور system-admin لنفسك (اختياري)
+        // do not change role for system-admin 
         if ($user->id === auth()->id() && in_array('system-admin', $roles)) {
-            // مسموح، لا شيء
+            // return error
         }
 
         $user->syncRoles($roles);
