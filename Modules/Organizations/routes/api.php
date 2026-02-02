@@ -89,7 +89,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
      * * @route POST /api/v1/opportunity-skills * @description Create a new opportunity skill. *
      * * @route GET /api/v1/opportunity-skills/{id} * @description Get a specific opportunity skill. *
      * * @route PUT|PATCH /api/v1/opportunity-skills/{id} * @description Update an opportunity skill. *
-     *  * @route DELETE /api/v1/opportunity-skills/{id} *  @description Delete an opportunity skill. */
+     *  * @route DELETE /api/v1/opportunity-skills/{id} *  @description Delete an opportunity skill.
+     *  */
     Route::middleware(['opportunity.skills.access'])->group(function () {
         Route::get('/opportunity-skills', [OpportunitySkillController::class, 'index']);
         Route::post('/opportunity-skills', [OpportunitySkillController::class, 'store']);
