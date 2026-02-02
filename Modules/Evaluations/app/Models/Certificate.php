@@ -4,7 +4,7 @@ namespace Modules\Evaluations\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Applications\Models\Task as ModelsTask;
+use Modules\Applications\Models\Task ;
 
 
 class Certificate extends Model
@@ -29,8 +29,8 @@ class Certificate extends Model
       *  Relationships
     */
 
-    // public function task()
-    // {
-    //     return $this->belongsTo(Task::class);
-    // }
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
 }

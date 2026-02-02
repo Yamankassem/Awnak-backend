@@ -31,6 +31,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'badges.create',
             'badges.update',
             'badges.delete',
+            'certificates.create',
+            'certificates.update',
+            'certificates.delete',
+            'certificate.view',
+            'certificate.viewAny',
             'organization.status.update',
 
 
@@ -75,12 +80,23 @@ class RolesAndPermissionsSeeder extends Seeder
             'organization.opportunities.update',
             'organization.opportunities.delete',
             'organization.opportunities.publish',
+            'evaluations.create',
+            'evaluations.update',
+            'evaluations.delete',
+            'evaluations.view',
+            'evaluations.viewAny',
+
+            'volunteerBadges.create',
+            'volunteerBadges.update',
+            'volunteerBadges.delete',
+            'volunteerBadges.view',
+            'volunteerBadges.viewAny',
 
             // Volunteer Coordinator
             'volunteers.read.assigned',
             'tasks.read.managed',
-            'evaluations.create',
             'notifications.send',
+            
 
             // Auditor
             'reports.performance.read',
@@ -106,6 +122,16 @@ class RolesAndPermissionsSeeder extends Seeder
                 'badges.create',
                 'badges.update',
                 'badges.delete',
+                'certificates.create',
+                'certificates.update',
+                'certificates.delete',
+                'certificate.view',
+                'certificate.viewAny',
+                'evaluations.create',
+                'evaluations.update',
+                'evaluations.delete',
+                'evaluations.view',
+                'evaluations.viewAny',
                 'organization.status.update',
 
                 'skills.read',
@@ -121,6 +147,12 @@ class RolesAndPermissionsSeeder extends Seeder
                 'languages.update',
                 'languages.delete',
 
+                'volunteerBadges.create',
+                'volunteerBadges.update',
+                'volunteerBadges.delete',
+                'volunteerBadges.view',
+                'volunteerBadges.viewAny',
+
             ],
 
             'volunteer' => [
@@ -134,6 +166,10 @@ class RolesAndPermissionsSeeder extends Seeder
                 'notes.create.assigned_tasks',
                 'skills.read',
                 'interests.read',
+                'certificate.view',
+                'certificate.viewAny',
+                'volunteerBadges.view',
+                'volunteerBadges.viewAny',
                 'languages.read',
             ],
 
@@ -158,6 +194,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'organization.opportunities.update',
                 'organization.opportunities.delete',
                 'organization.opportunities.publish',
+                
                 'skills.read',
                 'interests.read',
                 'languages.read',
@@ -166,15 +203,29 @@ class RolesAndPermissionsSeeder extends Seeder
             'volunteer-coordinator' => [
                 'volunteers.read.assigned',
                 'tasks.read.managed',
-                'evaluations.create',
                 'notifications.send',
+                'evaluations.create',
+                'evaluations.update',
+                'evaluations.delete',
+                'evaluations.view',
+                'evaluations.viewAny',
                 'skills.read',
                 'interests.read',
+                 'volunteerBadges.create',
+                'volunteerBadges.update',
+                'volunteerBadges.delete',
+                'volunteerBadges.view',
+                'volunteerBadges.viewAny',
                 'languages.read',
             ],
 
             'performance-auditor' => [
                 'reports.performance.read',
+                'certificates.create',
+                'certificates.update',
+                'certificates.delete',
+                'certificate.view',
+                'certificate.viewAny',
                 'skills.read',
                 'interests.read',
                 'languages.read',

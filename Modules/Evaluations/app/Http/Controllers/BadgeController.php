@@ -14,7 +14,6 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BadgeController extends Controller
 {
-   use ApiResponse;
     use AuthorizesRequests;
 
     protected $badgeService;
@@ -103,5 +102,5 @@ class BadgeController extends Controller
         } catch (\Exception $e) {
                 return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
-}
+    }
 }

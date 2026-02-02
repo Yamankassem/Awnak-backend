@@ -60,6 +60,12 @@ final class AuthService
     {
         $user = User::query()->where('email', $data['email'])->first();
 
+        // if (!$user || !Hash::check($data['password'], $user->password)) {
+        //     throw ValidationException::withMessages([
+        //         'email' => ['Invalid credentials.'],
+        //     ]);
+        // }
+
         if ($user->volunteerProfile?->status === 'suspended') {
             abort(403, 'Account suspended.');
         }
