@@ -105,35 +105,35 @@ Software Requirements:
 8. PHP Extensions:
 
 ## 2. Clone the Repository:
-git clone https://github.com/Yamankassem/Awnak-backend.git
-cd awnak-backend
+- git clone https://github.com/Yamankassem/Awnak-backend.git
+- cd awnak-backend
 
 ## 3. Install Dependencies:
 1. Install PHP dependencies using Composer: composer install
-2. Install PHP dependencies using Composer: composer dump-autoload
+2. If you face any errors when install : composer dump-autoload
 
 ## 4. Environment Configuration:
 
 ### 4.1 Create Environment File: cp .env.example .env
 ### 4.2 Configure Database: 
 Edit the .env file and update the database credentials:
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=awnak_backend
-DB_USERNAME=root
-DB_PASSWORD=
+- DB_CONNECTION=mysql
+- DB_HOST=127.0.0.1
+- DB_PORT=3306
+- DB_DATABASE=awnak_backend
+- DB_USERNAME=root
+- DB_PASSWORD=
 
 ## 5. Generate Application Key:
 - php artisan key:generate
 
 ## 6. Run Migrations:
 Run all module migrations:
-- php artisan module:migrate --all
+- php artisan migrate 
 
 ## 7. Seed the Database:
 Seed all modules (roles, permissions, demo data):
-- php artisan module:seed --all
+- php artisan db:seed
 
 ## 8. Storage & Media Configuration:
 Create the symbolic link for file uploads:
@@ -144,7 +144,7 @@ Ensure these directories are writable:
 
 ## 9. Run the Server:
 Option A: Laravel Built-in Server
-php artisan serve
+- php artisan serve
 
 ## 10. Authentication Flow (Quick Test)
 - Register a user: POST /api/v1/auth/register
